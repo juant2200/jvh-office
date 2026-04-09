@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="JV Cockpit">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0F1E3D">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+
+<title>JV Holdings · Cockpit</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root{
+  --navy:#0F1E3D; --navy-2:#1A2B4A; --navy-3:#243B66;
+  --gold:#C9A84C; --gold-2:#E0BE5F;
+  --bg:#0A1428; --card:#142447; --line:#243B66;
+  --txt:#E8EEF8; --mut:#9AA8C4; --dim:#6A7B9C;
+  --ok:#22C55E; --warn:#F59E0B; --bad:#EF4444; --info:#3B82F6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;font-size:14px;line-height:1.5}
+
+/* ───────── LOGIN ───────── */
+.login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#0A1428 0%,#0F1E3D 60%,#1A2B4A 100%);display:flex;align-items:center;justify-content:center;z-index:1000;padding:24px}
+.login-card{background:rgba(20,36,71,.85);border:1px solid var(--line);border-radius:20px;padding:48px 40px;max-width:480px;width:100%;backdrop-filter:blur(20px);box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.login-logo{width:72px;height:72px;background:linear-gradient(135deg,var(--gold),var(--gold-2));border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:900;color:var(--navy);margin:0 auto 20px}
+.login-card h1{text-align:center;font-size:24px;font-weight:800;margin-bottom:6px}
+.login-card p{text-align:center;color:var(--mut);font-size:13px;margin-bottom:28px}
+.login-card label{display:block;font-size:11px;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.login-card select,.login-card input{width:100%;padding:14px 16px;background:rgba(10,20,40,.6);border:1px solid var(--line);border-radius:12px;color:var(--txt);font-size:15px;font-family:inherit;margin-bottom:18px}
+.login-card select:focus,.login-card input:focus{outline:none;border-color:var(--gold)}
+.login-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--gold),var(--gold-2));color:var(--navy);border:none;border-radius:12px;font-weight:800;font-size:15px;cursor:pointer;letter-spacing:.03em}
+.login-btn:hover{filter:brightness(1.1)}
+.login-hint{margin-top:16px;text-align:center;color:var(--dim);font-size:11px}
+
+/* ───────── HEADER ───────── */
+.app{display:none}
+.app.visible{display:block}
+.topbar{background:linear-gradient(180deg,var(--navy) 0%,var(--navy-2) 100%);border-bottom:2px solid var(--gold);padding:16px 32px;position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:14px}
+.brand-logo{width:44px;height:44px;background:linear-gradient(135deg,var(--gold),var(--gold-2));border-radius:11px;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:var(--navy)}
+.brand h1{font-size:17px;font-weight:800;letter-spacing:.02em}
+.brand p{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.08em}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.user-pill{background:rgba(201,168,76,.15);border:1px solid var(--gold);color:var(--gold-2);padding:8px 14px;border-radius:30px;font-size:12px;font-weight:600;display:flex;align-items:center;gap:8px}
+.curr-toggle{display:flex;background:rgba(255,255,255,.06);border:1px solid var(--line);border-radius:30px;padding:3px}
+.curr-toggle button{background:transparent;border:none;color:var(--mut);padding:7px 14px;border-radius:30px;font-weight:700;font-size:12px;cursor:pointer;font-family:inherit}
+.curr-toggle button.active{background:var(--gold);color:var(--navy)}
+.btn-icon{background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--mut);padding:8px 12px;border-radius:10px;font-size:12px;cursor:pointer;font-family:inherit}
+.btn-icon:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ───────── TABS ───────── */
+.tabs{background:var(--navy-2);border-bottom:1px solid var(--line);padding:0 32px;display:flex;gap:4px;overflow-x:auto;position:sticky;top:77px;z-index:40}
+.tab{background:transparent;border:none;color:var(--mut);padding:16px 20px;font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;font-family:inherit;white-space:nowrap;transition:all .2s}
+.tab:hover{color:var(--txt)}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+
+/* ───────── LAYOUT ───────── */
+.container{padding:28px 32px;max-width:1500px;margin:0 auto}
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:fadeIn .3s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.section-title{font-size:20px;font-weight:800;margin-bottom:6px}
+.section-sub{color:var(--mut);font-size:13px;margin-bottom:24px}
+
+/* KPIs */
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:28px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;position:relative;overflow:hidden;transition:all .2s;cursor:pointer}
+.kpi:hover{border-color:var(--gold);transform:translateY(-2px)}
+.kpi::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:var(--gold)}
+.kpi-label{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:8px}
+.kpi-value{font-size:26px;font-weight:800;color:var(--txt)}
+.kpi-delta{font-size:12px;color:var(--mut);margin-top:6px}
+.kpi-delta.up{color:var(--ok)} .kpi-delta.down{color:var(--bad)}
+
+/* CARDS */
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:28px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;cursor:pointer;transition:all .2s}
+.card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.card-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.card-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.card h3{font-size:15px;font-weight:700}
+.card p{color:var(--mut);font-size:12px;margin-top:2px}
+.card-stats{display:flex;justify-content:space-between;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.card-stat-l{font-size:11px;color:var(--mut);text-transform:uppercase}
+.card-stat-v{font-size:16px;font-weight:700;color:var(--gold-2)}
+.semaforo{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.s-green{background:rgba(34,197,94,.18);color:#86EFAC}
+.s-yellow{background:rgba(245,158,11,.18);color:#FCD34D}
+.s-red{background:rgba(239,68,68,.18);color:#FCA5A5}
+.s-blue{background:rgba(59,130,246,.18);color:#93C5FD}
+
+/* CHART CONTAINERS */
+.chart-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:18px;margin-bottom:28px}
+.chart-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.chart-card h3{font-size:14px;font-weight:700;margin-bottom:4px}
+.chart-card .sub{color:var(--mut);font-size:11px;margin-bottom:14px}
+.chart-wrap{position:relative;height:260px}
+
+/* TABLES */
+.tbl{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:28px}
+.tbl-head{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.tbl-head h3{font-size:14px;font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:12px 20px;background:rgba(255,255,255,.03);color:var(--mut);font-size:11px;text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+td{padding:13px 20px;border-top:1px solid var(--line);color:var(--txt)}
+tr:hover td{background:rgba(201,168,76,.04)}
+.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+
+/* SHARE BAR */
+.share-bar{background:linear-gradient(135deg,rgba(201,168,76,.12),rgba(201,168,76,.05));border:1px solid var(--gold);border-radius:14px;padding:18px 22px;display:flex;align-items:center;gap:16px;margin-bottom:24px;flex-wrap:wrap}
+.share-bar .lbl{flex:1;min-width:200px}
+.share-bar .lbl strong{display:block;font-weight:700}
+.share-bar .lbl span{color:var(--mut);font-size:12px}
+.share-bar button{background:var(--gold);color:var(--navy);border:none;padding:11px 22px;border-radius:10px;font-weight:700;cursor:pointer;font-family:inherit;font-size:13px}
+.share-bar button:hover{filter:brightness(1.1)}
+
+/* EMAIL AUTOMATION */
+.email-section{display:grid;grid-template-columns:380px 1fr;gap:18px;margin-top:18px}
+@media(max-width:980px){.email-section{grid-template-columns:1fr}}
+.email-panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+.email-panel h3{font-size:14px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.field select,.field input,.field textarea{width:100%;padding:11px 14px;background:rgba(10,20,40,.6);border:1px solid var(--line);border-radius:10px;color:var(--txt);font-size:13px;font-family:inherit}
+.field select:focus,.field input:focus,.field textarea:focus{outline:none;border-color:var(--gold)}
+.field textarea{resize:vertical;min-height:80px;line-height:1.6}
+.btn-gen{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold-2));color:var(--navy);border:none;padding:13px;border-radius:10px;font-weight:800;cursor:pointer;font-family:inherit;font-size:13px;margin-top:6px}
+.btn-gen:hover{filter:brightness(1.08)}
+.email-preview{background:#F8FAFC;color:#1E293B;border-radius:14px;overflow:hidden;display:none}
+.email-preview.visible{display:block}
+.email-toolbar{background:#fff;border-bottom:1px solid #E2E8F0;padding:12px 20px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.email-toolbar span{font-size:12px;color:#64748B;margin-right:auto}
+.email-toolbar button{background:#1A2B4A;color:#fff;border:none;padding:8px 14px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;font-family:inherit}
+.email-toolbar button.gold{background:var(--gold);color:var(--navy)}
+.email-meta{padding:14px 22px;border-bottom:1px solid #E2E8F0;font-size:13px}
+.email-meta-row{display:flex;gap:12px;margin-bottom:5px}
+.email-meta-label{color:#64748B;width:50px}
+.email-meta-val{color:#1E293B;font-weight:600}
+.email-subject{font-size:15px;font-weight:700;color:#1A2B4A;padding:14px 22px;border-bottom:1px solid #E2E8F0}
+.email-body{padding:22px;color:#334155;font-size:13px;line-height:1.75;white-space:pre-wrap;min-height:300px}
+
+/* CONTACTS LIST */
+.contacts-list{max-height:280px;overflow-y:auto;border:1px solid var(--line);border-radius:10px;background:rgba(10,20,40,.4)}
+.contacts-list .ci{padding:10px 14px;border-bottom:1px solid var(--line);font-size:12px;cursor:pointer;display:flex;align-items:center;gap:10px}
+.contacts-list .ci:hover{background:rgba(201,168,76,.08)}
+.contacts-list .ci:last-child{border-bottom:none}
+.contacts-list .ci .name{font-weight:600;flex:1}
+.contacts-list .ci .meta{color:var(--mut);font-size:10px}
+.dot{width:8px;height:8px;border-radius:50%}
+.dot.hot{background:#EF4444}.dot.warm{background:#F59E0B}.dot.cold{background:#64748B}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:200;padding:20px;backdrop-filter:blur(6px)}
+.modal-bg.visible{display:flex}
+.modal{background:var(--card);border:1px solid var(--gold);border-radius:18px;max-width:680px;width:100%;max-height:88vh;overflow-y:auto}
+.modal-head{padding:22px 26px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.modal-head h3{font-size:18px;font-weight:800}
+.modal-close{background:none;border:none;color:var(--mut);font-size:26px;cursor:pointer}
+.modal-body{padding:24px 26px}
+.modal-stat{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line)}
+.modal-stat:last-child{border-bottom:none}
+.modal-stat-l{color:var(--mut);font-size:13px}
+.modal-stat-v{font-weight:700;color:var(--gold-2)}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--line);border-radius:10px}
+::-webkit-scrollbar-thumb:hover{background:var(--navy-3)}
+</style>
+</head>
+<body>
+
+<!-- ════════════ LOGIN SCREEN ════════════ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">JV</div>
+    <h1>JV Holdings · Cockpit</h1>
+    <p>Acceso por empresa · cada empresa tiene su propia contraseña</p>
+    <label>Empresa</label>
+    <select id="loginCompany">
+      <option value="">— Selecciona empresa —</option>
+      <option value="holding">👑 JV Holdings (acceso total)</option>
+      <option value="ust">📱 United Smart Tech</option>
+      <option value="gmp">📺 GMP · Global Media Partners</option>
+      <option value="cargx">🚛 CargX</option>
+      <option value="lavazza">☕ Lavazza RD</option>
+    </select>
+    <label>Contraseña de la empresa</label>
+    <input type="password" id="loginPin" placeholder="••••••" maxlength="20">
+    <button class="login-btn" onclick="doLogin()">Entrar al cockpit</button>
+    <div class="login-hint" style="line-height:1.7">
+      <strong style="color:var(--gold-2)">Contraseñas (demo · cámbialas):</strong><br>
+      <code style="color:var(--gold)">JV-2200</code> JV Holdings ·
+      <code style="color:var(--gold)">UST-tech26</code> UST<br>
+      <code style="color:var(--gold)">GMP-screen26</code> GMP ·
+      <code style="color:var(--gold)">CARGX-truck26</code> CargX<br>
+      <code style="color:var(--gold)">LAV-cafe26</code> Lavazza
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ APP ════════════ -->
+<div class="app" id="app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-logo">JV</div>
+      <div>
+        <h1>JV Holdings · Cockpit</h1>
+        <p id="topbarSub">Vista consolidada</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="curr-toggle">
+        <button class="active" data-cur="DOP" onclick="setCurrency('DOP')">RD$</button>
+        <button data-cur="USD" onclick="setCurrency('USD')">US$</button>
+      </div>
+      <div class="user-pill" id="userPill">—</div>
+      <button class="btn-icon" onclick="logout()">Salir</button>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs" id="tabsBar"></div>
+
+  <!-- CONTAINER -->
+  <div class="container">
+
+    <!-- ───────── OVERVIEW ───────── -->
+    <div class="tab-panel" id="panel-overview">
+      <div class="share-bar">
+        <div class="lbl">
+          <strong>Comparte el cockpit con un socio</strong>
+          <span>Cada socio recibe un link con acceso solo a su empresa.</span>
+        </div>
+        <button onclick="copyShareLink()" id="copyBtn">📋 Copiar mi link</button>
+      </div>
+
+      <div class="section-title">Resumen ejecutivo · JV Holdings</div>
+      <div class="section-sub">Consolidado en tiempo real · al <span id="todayDate"></span></div>
+
+      <div class="kpi-grid">
+        <div class="kpi" onclick="openModal('rev')">
+          <div class="kpi-label">Ingresos MTD (todas)</div>
+          <div class="kpi-value" data-money="2074850">—</div>
+          <div class="kpi-delta up">↑ vs mes anterior</div>
+        </div>
+        <div class="kpi" onclick="openModal('opex')">
+          <div class="kpi-label">OPEX consolidado</div>
+          <div class="kpi-value" data-money="1487874">—</div>
+          <div class="kpi-delta">Incluye CargX RD$161,583</div>
+        </div>
+        <div class="kpi" onclick="openModal('pipe')">
+          <div class="kpi-label">Pipeline total potencial</div>
+          <div class="kpi-value" data-money="6235000">—</div>
+          <div class="kpi-delta up">10 anunciantes GMP + 28 Lavazza</div>
+        </div>
+        <div class="kpi" onclick="openModal('cash')">
+          <div class="kpi-label">Cash neto disponible</div>
+          <div class="kpi-value" data-money="586976">—</div>
+          <div class="kpi-delta">Ingresos − OPEX</div>
+        </div>
+      </div>
+
+      <div class="section-title" style="margin-top:8px">Empresas del grupo</div>
+      <div class="section-sub">Click en cualquier card para abrir su tab</div>
+
+      <div class="cards-grid">
+        <div class="card" data-emp="ust" onclick="goTab('ust')">
+          <div class="card-head">
+            <div class="card-icon" style="background:rgba(59,130,246,.2)">📱</div>
+            <div><h3>United Smart Tech</h3><p>Distribución + financiamiento nómina</p></div>
+          </div>
+          <span class="semaforo s-green">🟢 Activo</span>
+          <div class="card-stats">
+            <div><div class="card-stat-l">Ingresos MTD</div><div class="card-stat-v" data-money="859350">—</div></div>
+            <div><div class="card-stat-l">CxC</div><div class="card-stat-v" data-money="686851">—</div></div>
+          </div>
+        </div>
+
+        <div class="card" data-emp="gmp" onclick="goTab('gmp')">
+          <div class="card-head">
+            <div class="card-icon" style="background:rgba(245,158,11,.2)">📺</div>
+            <div><h3>GMP · Global Media Partners</h3><p>Digital Out-of-Home Punta Cana</p></div>
+          </div>
+          <span class="semaforo s-yellow">🟡 En desarrollo</span>
+          <div class="card-stats">
+            <div><div class="card-stat-l">Pipeline</div><div class="card-stat-v" data-money="1840000">—</div></div>
+            <div><div class="card-stat-l">Pantallas</div><div class="card-stat-v">5</div></div>
+          </div>
+        </div>
+
+        <div class="card" data-emp="cargx" onclick="goTab('cargx')">
+          <div class="card-head">
+            <div class="card-icon" style="background:rgba(34,197,94,.2)">🚛</div>
+            <div><h3>CargX</h3><p>Transporte y logística</p></div>
+          </div>
+          <span class="semaforo s-yellow">🟡 Próximo lanzamiento</span>
+          <div class="card-stats">
+            <div><div class="card-stat-l">OPEX/mes</div><div class="card-stat-v" data-money="161583">—</div></div>
+            <div><div class="card-stat-l">Esc. mejor</div><div class="card-stat-v" data-money="506000">—</div></div>
+          </div>
+        </div>
+
+        <div class="card" data-emp="lavazza" onclick="goTab('lavazza')">
+          <div class="card-head">
+            <div class="card-icon" style="background:rgba(139,69,19,.25)">☕</div>
+            <div><h3>Lavazza RD</h3><p>Café premium HORECA</p></div>
+          </div>
+          <span class="semaforo s-green">🟢 Activo</span>
+          <div class="card-stats">
+            <div><div class="card-stat-l">Clientes potenciales</div><div class="card-stat-v">28</div></div>
+            <div><div class="card-stat-l">Hoteles top</div><div class="card-stat-v">10</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-grid">
+        <div class="chart-card">
+          <h3>P&L consolidado por empresa</h3>
+          <div class="sub">Ingresos vs OPEX · Click para drill-down</div>
+          <div class="chart-wrap"><canvas id="chartPL"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Distribución del pipeline (potencial)</h3>
+          <div class="sub">Por empresa</div>
+          <div class="chart-wrap"><canvas id="chartPipe"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Evolución de ingresos UST (últimos 4 meses)</h3>
+          <div class="sub">Diciembre 25 → Marzo 26</div>
+          <div class="chart-wrap"><canvas id="chartTrend"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>OPEX CargX desglosado</h3>
+          <div class="sub">RD$ 161,583 mensual</div>
+          <div class="chart-wrap"><canvas id="chartCargxOpex"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── UST ───────── -->
+    <div class="tab-panel" id="panel-ust">
+      <div class="section-title">📱 United Smart Tech</div>
+      <div class="section-sub">Distribución de tecnología y financiamiento por nómina · Juan Tomás 70% · Joan Marcos 30%</div>
+
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi-label">Ingresos MTD</div><div class="kpi-value" data-money="859350">—</div><div class="kpi-delta up">5 locaciones activas</div></div>
+        <div class="kpi"><div class="kpi-label">OPEX</div><div class="kpi-value" data-money="1326291">—</div></div>
+        <div class="kpi"><div class="kpi-label">CxC pendiente</div><div class="kpi-value" data-money="686851">—</div><div class="kpi-delta down">4 cuentas activas</div></div>
+        <div class="kpi"><div class="kpi-label">Préstamos JM activos</div><div class="kpi-value">19</div><div class="kpi-delta">RD$128k capital</div></div>
+      </div>
+
+      <div class="chart-grid">
+        <div class="chart-card">
+          <h3>Ingresos por categoría</h3>
+          <div class="sub">Vapes · Accesorios · Financiamiento</div>
+          <div class="chart-wrap"><canvas id="chartUstCat"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Locaciones activas</h3>
+          <div class="sub">Ranking por ingresos</div>
+          <div class="chart-wrap"><canvas id="chartUstLoc"></canvas></div>
+        </div>
+      </div>
+
+      <div class="tbl">
+        <div class="tbl-head"><h3>Cuentas por cobrar</h3></div>
+        <table>
+          <thead><tr><th>Cliente</th><th>Tipo</th><th class="num">Monto</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr><td>CCS Farmacias</td><td>Distribución</td><td class="num" data-money="285400">—</td><td><span class="semaforo s-yellow">30 días</span></td></tr>
+            <tr><td>United Petroleum (FMS)</td><td>Distribución</td><td class="num" data-money="198750">—</td><td><span class="semaforo s-green">15 días</span></td></tr>
+            <tr><td>United Store CCS</td><td>Consignación</td><td class="num" data-money="142200">—</td><td><span class="semaforo s-green">Al día</span></td></tr>
+            <tr><td>Préstamos JM (19)</td><td>Financiamiento</td><td class="num" data-money="60501">—</td><td><span class="semaforo s-blue">Activos</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- EMAIL AUTOMATION UST -->
+      <div class="section-title" style="margin-top:24px">✉️ Email Automation · UST</div>
+      <div class="section-sub">Genera propuestas para cadenas y proveedores</div>
+      <div class="email-section">
+        <div class="email-panel">
+          <h3>🎯 Generar propuesta</h3>
+          <div class="field"><label>Contacto</label>
+            <select id="ustProspect" onchange="loadProspect('ust', this.value)">
+              <option value="">— Selecciona —</option>
+            </select>
+          </div>
+          <div class="field"><label>Tipo de propuesta</label>
+            <select id="ustType">
+              <option value="distribucion">📦 Distribución retail</option>
+              <option value="financiamiento">💳 Financiamiento por nómina</option>
+              <option value="alianza">🤝 Alianza estratégica</option>
+            </select>
+          </div>
+          <button class="btn-gen" onclick="generateEmail('ust')">⚡ Generar email</button>
+          <div style="margin-top:14px"><label style="display:block;font-size:11px;color:var(--mut);font-weight:600;text-transform:uppercase;margin-bottom:6px">Contactos cargados</label>
+            <div class="contacts-list" id="ustContactList"></div>
+          </div>
+        </div>
+        <div class="email-preview" id="ustPreview">
+          <div class="email-toolbar">
+            <span>Email generado</span>
+            <button onclick="copyEmailBody('ust')">📋 Copiar</button>
+            <button class="gold" onclick="openGmail('ust')">📤 Crear borrador en Gmail</button>
+          </div>
+          <div class="email-meta">
+            <div class="email-meta-row"><span class="email-meta-label">Para:</span><span class="email-meta-val" id="ustTo"></span></div>
+            <div class="email-meta-row"><span class="email-meta-label">De:</span><span class="email-meta-val">Juan Tomás Díaz · United Smart Tech</span></div>
+          </div>
+          <div class="email-subject" id="ustSubject"></div>
+          <div class="email-body" id="ustBody"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── GMP ───────── -->
+    <div class="tab-panel" id="panel-gmp">
+      <div class="section-title">📺 GMP · Global Media Partners</div>
+      <div class="section-sub">Digital Out-of-Home · Punta Cana · Juan Tomás 90% · Jean Paul 10% · (Marcos/Javier tentativos)</div>
+
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi-label">Pantallas activas</div><div class="kpi-value">5</div><div class="kpi-delta">United Petroleum PC</div></div>
+        <div class="kpi"><div class="kpi-label">Pipeline potencial</div><div class="kpi-value" data-money="1840000">—</div><div class="kpi-delta up">10 anunciantes</div></div>
+        <div class="kpi"><div class="kpi-label">Tarifa video/mes</div><div class="kpi-value" data-money-usd="600">—</div><div class="kpi-delta">USD · 12 seg loop</div></div>
+        <div class="kpi"><div class="kpi-label">Cap table</div><div class="kpi-value">2 socios</div><div class="kpi-delta">JT 90% / JP 10%</div></div>
+      </div>
+
+      <div class="chart-grid">
+        <div class="chart-card">
+          <h3>Pipeline GMP por industria</h3>
+          <div class="sub">10 anunciantes prospecto</div>
+          <div class="chart-wrap"><canvas id="chartGmpInd"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Tarifas USD por formato (mensual)</h3>
+          <div class="sub">Por pantalla · Descuento 5% (3m) y 15% (6m)</div>
+          <div class="chart-wrap"><canvas id="chartGmpTarifa"></canvas></div>
+        </div>
+      </div>
+
+      <div class="tbl">
+        <div class="tbl-head"><h3>Pipeline anunciantes</h3></div>
+        <table>
+          <thead><tr><th>Empresa</th><th>Industria</th><th>Estado</th><th class="num">Potencial/mes</th></tr></thead>
+          <tbody id="gmpPipelineTbl"></tbody>
+        </table>
+      </div>
+
+      <!-- EMAIL AUTOMATION GMP -->
+      <div class="section-title" style="margin-top:24px">✉️ Email Automation · GMP</div>
+      <div class="section-sub">15 prospectos cargados con contactos verificados</div>
+      <div class="email-section">
+        <div class="email-panel">
+          <h3>🎯 Generar propuesta</h3>
+          <div class="field"><label>Empresa / prospecto</label>
+            <select id="gmpProspect" onchange="loadProspect('gmp', this.value)">
+              <option value="">— Selecciona —</option>
+            </select>
+          </div>
+          <div class="field"><label>Tipo de propuesta</label>
+            <select id="gmpType">
+              <option value="general">Propuesta General DOOH</option>
+              <option value="bebidas">🍺 Bebidas / Ron / Cerveza</option>
+              <option value="hotel">🏨 Hotel / Resort</option>
+              <option value="telecom">📱 Telecom</option>
+              <option value="banco">🏦 Banco</option>
+              <option value="entretenimiento">🎉 Entretenimiento</option>
+              <option value="energia">⛽ Energía</option>
+            </select>
+          </div>
+          <button class="btn-gen" onclick="generateEmail('gmp')">⚡ Generar email</button>
+          <div style="margin-top:14px"><label style="display:block;font-size:11px;color:var(--mut);font-weight:600;text-transform:uppercase;margin-bottom:6px">Contactos (15)</label>
+            <div class="contacts-list" id="gmpContactList"></div>
+          </div>
+        </div>
+        <div class="email-preview" id="gmpPreview">
+          <div class="email-toolbar">
+            <span>Email generado</span>
+            <button onclick="copyEmailBody('gmp')">📋 Copiar</button>
+            <button class="gold" onclick="openGmail('gmp')">📤 Crear borrador</button>
+          </div>
+          <div class="email-meta">
+            <div class="email-meta-row"><span class="email-meta-label">Para:</span><span class="email-meta-val" id="gmpTo"></span></div>
+            <div class="email-meta-row"><span class="email-meta-label">De:</span><span class="email-meta-val">Juan Tomás Díaz · GMP Global Media Partners</span></div>
+          </div>
+          <div class="email-subject" id="gmpSubject"></div>
+          <div class="email-body" id="gmpBody"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── CARGX ───────── -->
+    <div class="tab-panel" id="panel-cargx">
+      <div class="section-title">🚛 CargX</div>
+      <div class="section-sub">Transporte y logística · Juan Tomás 60% · César Guzmán 40%</div>
+
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi-label">OPEX fijo / mes</div><div class="kpi-value" data-money="161583">—</div><div class="kpi-delta">7 categorías</div></div>
+        <div class="kpi"><div class="kpi-label">Esc. A · 28 días/mes</div><div class="kpi-value" data-money="506000">—</div><div class="kpi-delta up">Mejor caso</div></div>
+        <div class="kpi"><div class="kpi-label">Esc. B · 15 días</div><div class="kpi-value" data-money="350000">—</div><div class="kpi-delta">Punto equilibrio</div></div>
+        <div class="kpi"><div class="kpi-label">Esc. C · 8 días</div><div class="kpi-value" data-money="187000">—</div><div class="kpi-delta down">Pérdida</div></div>
+      </div>
+
+      <div class="chart-grid">
+        <div class="chart-card">
+          <h3>Escenarios de ingresos vs OPEX</h3>
+          <div class="sub">Punto de equilibrio: 15 días/mes operando</div>
+          <div class="chart-wrap"><canvas id="chartCargxEsc"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Desglose OPEX</h3>
+          <div class="sub">Costos fijos mensuales</div>
+          <div class="chart-wrap"><canvas id="chartCargxOpex2"></canvas></div>
+        </div>
+      </div>
+
+      <div class="tbl">
+        <div class="tbl-head"><h3>Clientes potenciales</h3></div>
+        <table>
+          <thead><tr><th>Cliente</th><th>Tipo de carga</th><th>Estado</th><th>Acción</th></tr></thead>
+          <tbody>
+            <tr><td>Rica</td><td>Lácteos / FMCG</td><td><span class="semaforo s-yellow">Negociación</span></td><td>Confirmar tarifa</td></tr>
+            <tr><td>Grupo Punta Cana</td><td>Logística hotelera</td><td><span class="semaforo s-blue">Contacto inicial</span></td><td>Reunión Frank Rainieri</td></tr>
+            <tr><td>Lavazza RD</td><td>Distribución café</td><td><span class="semaforo s-green">Cliente interno</span></td><td>Definir frecuencia</td></tr>
+            <tr><td>United Petroleum</td><td>Logística retail</td><td><span class="semaforo s-green">Cliente interno</span></td><td>Activo</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- EMAIL AUTOMATION CARGX -->
+      <div class="section-title" style="margin-top:24px">✉️ Email Automation · CargX</div>
+      <div class="email-section">
+        <div class="email-panel">
+          <h3>🎯 Generar propuesta</h3>
+          <div class="field"><label>Cliente</label>
+            <select id="cargxProspect" onchange="loadProspect('cargx', this.value)">
+              <option value="">— Selecciona —</option>
+            </select>
+          </div>
+          <div class="field"><label>Tipo de propuesta</label>
+            <select id="cargxType">
+              <option value="fmcg">📦 FMCG / Lácteos</option>
+              <option value="hotel">🏨 Logística hotelera</option>
+              <option value="retail">🛒 Retail</option>
+              <option value="general">Servicio general</option>
+            </select>
+          </div>
+          <button class="btn-gen" onclick="generateEmail('cargx')">⚡ Generar email</button>
+        </div>
+        <div class="email-preview" id="cargxPreview">
+          <div class="email-toolbar"><span>Email</span>
+            <button onclick="copyEmailBody('cargx')">📋 Copiar</button>
+            <button class="gold" onclick="openGmail('cargx')">📤 Borrador</button>
+          </div>
+          <div class="email-meta">
+            <div class="email-meta-row"><span class="email-meta-label">Para:</span><span class="email-meta-val" id="cargxTo"></span></div>
+            <div class="email-meta-row"><span class="email-meta-label">De:</span><span class="email-meta-val">CargX · Juan Tomás Díaz</span></div>
+          </div>
+          <div class="email-subject" id="cargxSubject"></div>
+          <div class="email-body" id="cargxBody"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── LAVAZZA ───────── -->
+    <div class="tab-panel" id="panel-lavazza">
+      <div class="section-title">☕ Lavazza RD</div>
+      <div class="section-sub">Café premium HORECA · Thomas Bacci 45% · Gabriela Vargas 45% · Juan Tomás 10%</div>
+
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi-label">Clientes potenciales</div><div class="kpi-value">28</div><div class="kpi-delta">10 hoteles + 18 restaurantes</div></div>
+        <div class="kpi"><div class="kpi-label">Influencers identificados</div><div class="kpi-value">10</div><div class="kpi-delta">Lista promoción</div></div>
+        <div class="kpi"><div class="kpi-label">Lista regalo VIP</div><div class="kpi-value">9</div><div class="kpi-delta">Familia Rainieri + key</div></div>
+        <div class="kpi"><div class="kpi-label">Hoteles top RD</div><div class="kpi-value">10</div><div class="kpi-delta">Westin, W, Tortuga, Zemi…</div></div>
+      </div>
+
+      <div class="chart-grid">
+        <div class="chart-card">
+          <h3>Cap Table Lavazza RD</h3>
+          <div class="sub">Estructura accionaria</div>
+          <div class="chart-wrap"><canvas id="chartLavCap"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Pipeline de clientes por canal</h3>
+          <div class="sub">Hoteles vs restaurantes vs oficina</div>
+          <div class="chart-wrap"><canvas id="chartLavChannel"></canvas></div>
+        </div>
+      </div>
+
+      <div class="tbl">
+        <div class="tbl-head"><h3>Top 10 hoteles prospecto</h3></div>
+        <table>
+          <thead><tr><th>Hotel</th><th>Contacto</th><th>Cargo</th><th>Teléfono</th></tr></thead>
+          <tbody>
+            <tr><td>Zemi Beach House</td><td>Fred Oscar Imbert</td><td>CEO</td><td>829-471-2851</td></tr>
+            <tr><td>Four Points Punta Cana</td><td>George Sotelo</td><td>GPC Hospitalidad</td><td>829-760-7709</td></tr>
+            <tr><td>Tortuga Bay</td><td>George Sotelo</td><td>GPC Hospitalidad</td><td>829-760-7709</td></tr>
+            <tr><td>W Punta Cana</td><td>Omar Rivera</td><td>Gerente</td><td>787-368-4719</td></tr>
+            <tr><td>Westin Punta Cana</td><td>George Sotelo</td><td>GPC Hospitalidad</td><td>829-760-7709</td></tr>
+            <tr><td>Hotel Jaragua SD</td><td>Aura González Camilo</td><td>Gerente</td><td>829-204-6587</td></tr>
+            <tr><td>Meliá Punta Bergantín</td><td>Andrés Marranzini</td><td>CEO</td><td>809-284-7691</td></tr>
+            <tr><td>Dreams Cap Cana</td><td>—</td><td>Pendiente</td><td>—</td></tr>
+            <tr><td>St. Regis Cap Cana</td><td>—</td><td>Pendiente</td><td>—</td></tr>
+            <tr><td>JW Marriott SD</td><td>—</td><td>Pendiente</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- EMAIL AUTOMATION LAVAZZA -->
+      <div class="section-title" style="margin-top:24px">✉️ Email Automation · Lavazza</div>
+      <div class="email-section">
+        <div class="email-panel">
+          <h3>🎯 Generar propuesta</h3>
+          <div class="field"><label>Cliente</label>
+            <select id="lavProspect" onchange="loadProspect('lav', this.value)">
+              <option value="">— Selecciona —</option>
+            </select>
+          </div>
+          <div class="field"><label>Tipo de propuesta</label>
+            <select id="lavType">
+              <option value="hotel">🏨 Hotel premium</option>
+              <option value="restaurante">🍽️ Restaurante</option>
+              <option value="oficina">🏢 Oficina corporativa</option>
+              <option value="vip">🎁 VIP / Friends & Family</option>
+            </select>
+          </div>
+          <button class="btn-gen" onclick="generateEmail('lav')">⚡ Generar email</button>
+          <div style="margin-top:14px"><label style="display:block;font-size:11px;color:var(--mut);font-weight:600;text-transform:uppercase;margin-bottom:6px">Contactos (25+)</label>
+            <div class="contacts-list" id="lavContactList"></div>
+          </div>
+        </div>
+        <div class="email-preview" id="lavPreview">
+          <div class="email-toolbar"><span>Email</span>
+            <button onclick="copyEmailBody('lav')">📋 Copiar</button>
+            <button class="gold" onclick="openGmail('lav')">📤 Borrador</button>
+          </div>
+          <div class="email-meta">
+            <div class="email-meta-row"><span class="email-meta-label">Para:</span><span class="email-meta-val" id="lavTo"></span></div>
+            <div class="email-meta-row"><span class="email-meta-label">De:</span><span class="email-meta-val">Lavazza RD · Juan Tomás Díaz</span></div>
+          </div>
+          <div class="email-subject" id="lavSubject"></div>
+          <div class="email-body" id="lavBody"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ───────── HOLDING (solo JT/Verónica) ───────── -->
+    <div class="tab-panel" id="panel-holding">
+      <div class="section-title">🏛️ JV Holdings · Estructura</div>
+      <div class="section-sub">Vista de propietario · Solo JT y Verónica</div>
+
+      <div class="cards-grid">
+        <div class="card"><div class="card-head"><div class="card-icon" style="background:rgba(201,168,76,.2)">🏛️</div><div><h3>JV Holdings</h3><p>Centro de control</p></div></div><span class="semaforo s-yellow">Estructura</span></div>
+        <div class="card"><div class="card-head"><div class="card-icon" style="background:rgba(59,130,246,.2)">🏗️</div><div><h3>VALOR</h3><p>Asset company</p></div></div><span class="semaforo s-yellow">En estructuración</span></div>
+        <div class="card"><div class="card-head"><div class="card-icon" style="background:rgba(168,85,247,.2)">📊</div><div><h3>AXIONE</h3><p>Investment platform</p></div></div><span class="semaforo s-yellow">En proceso</span></div>
+        <div class="card"><div class="card-head"><div class="card-icon" style="background:rgba(20,184,166,.2)">📦</div><div><h3>UNIN (lockers/courier)</h3><p>InPost / Pacheco</p></div></div><span class="semaforo s-blue">Planificación</span></div>
+        <div class="card"><div class="card-head"><div class="card-icon" style="background:rgba(239,68,68,.2)">✈️</div><div><h3>Aerolínea de carga</h3><p>Arajet / W2M</p></div></div><span class="semaforo s-blue">Conceptual</span></div>
+        <div class="card"><div class="card-head"><div class="card-icon" style="background:rgba(245,158,11,.2)">🚚</div><div><h3>Ashok Leyland RD</h3><p>Fábrica de camiones</p></div></div><span class="semaforo s-yellow">Avanzado</span></div>
+      </div>
+
+      <div class="chart-grid">
+        <div class="chart-card">
+          <h3>Participaciones por empresa</h3>
+          <div class="sub">% de propiedad de JT</div>
+          <div class="chart-wrap"><canvas id="chartHoldingShare"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Estado de avance</h3>
+          <div class="sub">Activo · En desarrollo · Conceptual</div>
+          <div class="chart-wrap"><canvas id="chartHoldingState"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ───────── MODAL ───────── -->
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-head"><h3 id="modalTitle">—</h3><button class="modal-close" onclick="closeModal()">×</button></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// ════════════════ STATE ════════════════
+const FX = 62.0; // DOP per USD
+let currency = 'DOP';
+let user = null;
+
+// Cada EMPRESA tiene su propia contraseña + acceso a sus tabs
+const COMPANIES = {
+  holding: {pwd:'JV-2200',      label:'JV Holdings · Owner',      tabs:['overview','ust','gmp','cargx','lavazza','holding']},
+  ust:     {pwd:'UST-tech26',   label:'United Smart Tech',        tabs:['ust']},
+  gmp:     {pwd:'GMP-screen26', label:'GMP Global Media Partners',tabs:['gmp']},
+  cargx:   {pwd:'CARGX-truck26',label:'CargX',                    tabs:['cargx']},
+  lavazza: {pwd:'LAV-cafe26',   label:'Lavazza RD',               tabs:['lavazza']},
+};
+
+const TAB_LABELS = {
+  overview:'📊 Overview',
+  ust:'📱 United Smart Tech',
+  gmp:'📺 GMP',
+  cargx:'🚛 CargX',
+  lavazza:'☕ Lavazza',
+  holding:'🏛️ Holding'
+};
+
+// ════════════════ LOGIN ════════════════
+function doLogin(){
+  const c = document.getElementById('loginCompany').value;
+  const p = document.getElementById('loginPin').value;
+  if(!c){alert('Selecciona una empresa');return}
+  const co = COMPANIES[c];
+  if(p!==co.pwd){alert('Contraseña incorrecta para '+co.label);return}
+  user = c;
+  const r = {name:co.label, tabs:co.tabs, role:co.label};
+  document.getElementById('userPill').innerHTML = '🏢 '+co.label;
+  document.getElementById('topbarSub').textContent = co.label;
+  buildTabs(co.tabs);
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('app').classList.add('visible');
+  // Auto-pick tab from URL hash if present and allowed
+  const h = location.hash.replace('#','');
+  const startTab = (h && co.tabs.includes(h)) ? h : co.tabs[0];
+  goTab(startTab);
+  initCharts();
+  populateProspects();
+  renderGmpPipeline();
+  document.getElementById('todayDate').textContent = new Date().toLocaleDateString('es-DO',{day:'numeric',month:'long',year:'numeric'});
+  applyCurrency();
+}
+
+function logout(){location.reload()}
+
+function buildTabs(tabs){
+  const bar = document.getElementById('tabsBar');
+  bar.innerHTML='';
+  tabs.forEach(t=>{
+    const b = document.createElement('button');
+    b.className='tab';
+    b.textContent = TAB_LABELS[t];
+    b.dataset.tab = t;
+    b.onclick = ()=>goTab(t);
+    bar.appendChild(b);
+  });
+}
+
+function goTab(t){
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active', x.dataset.tab===t));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  const panel = document.getElementById('panel-'+t);
+  if(panel) panel.classList.add('active');
+  location.hash = t;
+}
+
+// ════════════════ CURRENCY ════════════════
+function setCurrency(c){
+  currency = c;
+  document.querySelectorAll('.curr-toggle button').forEach(b=>b.classList.toggle('active', b.dataset.cur===c));
+  applyCurrency();
+}
+function fmt(n){
+  if(currency==='USD'){
+    const v = n/FX;
+    return 'US$'+v.toLocaleString('en-US',{maximumFractionDigits:0});
+  }
+  return 'RD$'+n.toLocaleString('en-US',{maximumFractionDigits:0});
+}
+function fmtUsd(n){
+  if(currency==='DOP') return 'RD$'+(n*FX).toLocaleString('en-US',{maximumFractionDigits:0});
+  return 'US$'+n.toLocaleString('en-US');
+}
+function applyCurrency(){
+  document.querySelectorAll('[data-money]').forEach(el=>{
+    el.textContent = fmt(parseFloat(el.dataset.money));
+  });
+  document.querySelectorAll('[data-money-usd]').forEach(el=>{
+    el.textContent = fmtUsd(parseFloat(el.dataset.moneyUsd));
+  });
+  // Re-render charts that show money
+  if(window._charts){ updateAllCharts(); }
+}
+
+// ════════════════ SHARE LINK ════════════════
+function copyShareLink(){
+  const co = COMPANIES[user];
+  const tab = co.tabs[0];
+  const link = location.origin + location.pathname + '#'+tab;
+  navigator.clipboard.writeText(link).then(()=>{
+    const b = document.getElementById('copyBtn');
+    const t = b.textContent;
+    b.textContent='✓ Copiado · pégalo en WhatsApp';
+    setTimeout(()=>b.textContent=t, 2400);
+  });
+}
+
+// ════════════════ MODAL ════════════════
+const MODALS = {
+  rev:{title:'Ingresos MTD detallados', body:[
+    ['United Smart Tech',859350],['GMP (estimado proyección 1 anunciante)',37200],
+    ['CargX (escenario B 15d)',350000],['Lavazza (proyección hoteles activos)',828300]]},
+  opex:{title:'OPEX consolidado', body:[
+    ['UST OPEX',1326291],['CargX OPEX fijo',161583],['GMP gastos operativos (estimado)',0],['Lavazza fee operativo',0]]},
+  pipe:{title:'Pipeline potencial total', body:[
+    ['GMP · 10 anunciantes',1840000],['Lavazza · 28 cuentas HORECA',2660000],['UST · expansión locaciones',1500000],['CargX · clientes empresariales',235000]]},
+  cash:{title:'Cash neto proyectado', body:[
+    ['Ingresos consolidados',2074850],['(−) OPEX consolidado',-1487874],['= Cash neto del mes',586976]]},
+};
+function openModal(k){
+  const m = MODALS[k]; if(!m) return;
+  document.getElementById('modalTitle').textContent = m.title;
+  const body = document.getElementById('modalBody');
+  body.innerHTML = m.body.map(([l,v])=>{
+    const cls = v<0?'modal-stat-v" style="color:#FCA5A5':'modal-stat-v';
+    return '<div class="modal-stat"><span class="modal-stat-l">'+l+'</span><span class="'+cls+'">'+fmt(v)+'</span></div>';
+  }).join('');
+  document.getElementById('modalBg').classList.add('visible');
+}
+function closeModal(){document.getElementById('modalBg').classList.remove('visible')}
+
+// ════════════════ CHARTS ════════════════
+const C = {
+  axis:'#9AA8C4', grid:'rgba(255,255,255,.05)', gold:'#C9A84C', gold2:'#E0BE5F',
+  blue:'#3B82F6', green:'#22C55E', red:'#EF4444', orange:'#F59E0B', purple:'#A855F7', teal:'#14B8A6'
+};
+Chart.defaults.color = C.axis;
+Chart.defaults.borderColor = C.grid;
+Chart.defaults.font.family = "'Inter',sans-serif";
+
+window._charts = {};
+
+function makeChart(id, cfg){
+  const el = document.getElementById(id);
+  if(!el) return null;
+  if(window._charts[id]) window._charts[id].destroy();
+  window._charts[id] = new Chart(el, cfg);
+  return window._charts[id];
+}
+
+function moneyTick(v){
+  if(currency==='USD') return '$'+(v/FX/1000).toFixed(0)+'k';
+  return 'RD$'+(v/1000).toFixed(0)+'k';
+}
+function moneyVal(v){return currency==='USD' ? v/FX : v}
+
+function initCharts(){
+  // Overview · P&L
+  makeChart('chartPL',{
+    type:'bar',
+    data:{
+      labels:['UST','GMP (proy)','CargX (B)','Lavazza (proy)'],
+      datasets:[
+        {label:'Ingresos', data:[moneyVal(859350),moneyVal(37200),moneyVal(350000),moneyVal(828300)], backgroundColor:C.gold},
+        {label:'OPEX',     data:[moneyVal(1326291),moneyVal(0),moneyVal(161583),moneyVal(0)],         backgroundColor:'#EF4444'}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:C.axis}}},
+      scales:{y:{ticks:{callback:moneyTick}}}
+    }
+  });
+
+  // Overview · Pipeline donut
+  makeChart('chartPipe',{
+    type:'doughnut',
+    data:{labels:['GMP','Lavazza','UST exp','CargX'],
+      datasets:[{data:[1840000,2660000,1500000,235000].map(moneyVal),
+        backgroundColor:[C.orange,'#8B4513',C.blue,C.green],borderColor:'#142447',borderWidth:3}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'right',labels:{color:C.axis,padding:14}}}}
+  });
+
+  // Trend UST
+  makeChart('chartTrend',{
+    type:'line',
+    data:{labels:['Dic 25','Ene 26','Feb 26','Mar 26'],
+      datasets:[{label:'Ingresos UST',data:[612000,720000,795000,859350].map(moneyVal),
+        borderColor:C.gold,backgroundColor:'rgba(201,168,76,.15)',fill:true,tension:.35,pointRadius:5}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:C.axis}}},
+      scales:{y:{ticks:{callback:moneyTick}}}}
+  });
+
+  // CargX OPEX donut
+  makeChart('chartCargxOpex',{
+    type:'doughnut',
+    data:{labels:['Chofer','Gasolina','Financiamiento','Seguro','Mantenimiento','ITBI','Otros'],
+      datasets:[{data:[35000,63000,30000,14000,10000,4500,5083].map(moneyVal),
+        backgroundColor:[C.gold,C.orange,C.red,C.blue,C.green,C.purple,C.teal],
+        borderColor:'#142447',borderWidth:3}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'right',labels:{color:C.axis,padding:10,font:{size:11}}}}}
+  });
+
+  // UST categorías
+  makeChart('chartUstCat',{
+    type:'doughnut',
+    data:{labels:['Vapes & Pouches','Accesorios móviles','Financiamiento JM'],
+      datasets:[{data:[450000,280000,129350].map(moneyVal),
+        backgroundColor:[C.blue,C.gold,C.green],borderColor:'#142447',borderWidth:3}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'right',labels:{color:C.axis}}}}
+  });
+  makeChart('chartUstLoc',{
+    type:'bar',
+    data:{labels:['CCS Farmacias','United Petroleum','United Store CCS','United Store FMS','Otros'],
+      datasets:[{label:'Ingresos',data:[285000,220000,180000,135000,39350].map(moneyVal),backgroundColor:C.gold}]},
+    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{display:false}},scales:{x:{ticks:{callback:moneyTick}}}}
+  });
+
+  // GMP industria
+  makeChart('chartGmpInd',{
+    type:'doughnut',
+    data:{labels:['Bebidas','Hotel','Telecom','Banco','Entretenimiento','Energía','Retail'],
+      datasets:[{data:[2,4,2,1,2,2,1],
+        backgroundColor:[C.red,C.blue,C.purple,C.green,C.orange,C.gold,C.teal],borderColor:'#142447',borderWidth:3}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'right',labels:{color:C.axis,font:{size:11}}}}}
+  });
+  makeChart('chartGmpTarifa',{
+    type:'bar',
+    data:{labels:['Foto 8s','GIF 10s','Video 12s'],
+      datasets:[
+        {label:'1 mes',  data:[400,500,600].map(v=>currency==='USD'?v:v*FX), backgroundColor:C.gold},
+        {label:'3 meses (-5%)', data:[380,475,570].map(v=>currency==='USD'?v:v*FX), backgroundColor:C.orange},
+        {label:'6 meses (-15%)', data:[340,425,510].map(v=>currency==='USD'?v:v*FX), backgroundColor:C.green},
+      ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:C.axis}}},
+      scales:{y:{ticks:{callback:v=>currency==='USD'?'$'+v:'RD$'+(v/1000).toFixed(0)+'k'}}}}
+  });
+
+  // CargX escenarios
+  makeChart('chartCargxEsc',{
+    type:'bar',
+    data:{labels:['Escenario C (8d)','Escenario B (15d)','Escenario A (28d)'],
+      datasets:[
+        {label:'Ingresos',data:[187000,350000,506000].map(moneyVal),backgroundColor:C.gold},
+        {label:'OPEX',data:[161583,161583,161583].map(moneyVal),backgroundColor:C.red}
+      ]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:C.axis}}},scales:{y:{ticks:{callback:moneyTick}}}}
+  });
+  makeChart('chartCargxOpex2',{
+    type:'pie',
+    data:{labels:['Chofer','Gasolina','Financ.','Seguro','Manten.','ITBI','Admin'],
+      datasets:[{data:[35000,63000,30000,14000,10000,4500,5083].map(moneyVal),
+        backgroundColor:[C.gold,C.orange,C.red,C.blue,C.green,C.purple,C.teal]}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:C.axis,font:{size:11}}}}}
+  });
+
+  // Lavazza cap table
+  makeChart('chartLavCap',{
+    type:'doughnut',
+    data:{labels:['Thomas Bacci 45%','Gabriela Vargas 45%','Juan Tomás Díaz 10%'],
+      datasets:[{data:[45,45,10],backgroundColor:[C.gold,'#8B4513',C.blue],borderColor:'#142447',borderWidth:3}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'right',labels:{color:C.axis,padding:14}}}}
+  });
+  makeChart('chartLavChannel',{
+    type:'bar',
+    data:{labels:['Hoteles 5★','Restaurantes','Oficinas','VIP/Regalo'],
+      datasets:[{label:'Cuentas',data:[10,18,7,9],backgroundColor:[C.gold,C.orange,C.blue,C.green]}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}
+  });
+
+  // Holding
+  makeChart('chartHoldingShare',{
+    type:'bar',
+    data:{labels:['UST','GMP','CargX','Lavazza','VALOR','AXIONE'],
+      datasets:[{label:'% JT',data:[70,90,60,10,100,100],backgroundColor:C.gold}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{max:100}}}
+  });
+  makeChart('chartHoldingState',{
+    type:'doughnut',
+    data:{labels:['🟢 Activo','🟡 En desarrollo','🔵 Conceptual'],
+      datasets:[{data:[3,7,3],backgroundColor:[C.green,C.orange,C.blue],borderColor:'#142447',borderWidth:3}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{color:C.axis}}}}
+  });
+}
+
+function updateAllCharts(){ initCharts(); }
+
+// ════════════════ PROSPECTS DATA ════════════════
+const PROSPECTS = {
+  gmp:[
+    {id:1, company:"Cervecería Nacional (AB InBev)", contact:"Mildred Santana", email:"Institucional.CND@ab-inbev.com", phone:"809-562-5000", status:"hot", industry:"bebidas", potential:240000},
+    {id:2, company:"El Dorado Water Park", contact:"Dpto. Comercial", email:"comercial@eldoradowaterpark.com", phone:"809-959-1777", status:"hot", industry:"entretenimiento", potential:180000},
+    {id:3, company:"Hard Rock Hotel & Casino PC", contact:"Jonathan E. Francois", email:"marketing@hardrockcafe.com.do", phone:"1-888-774-0040", status:"warm", industry:"hotel", potential:200000},
+    {id:4, company:"Coco Bongo", contact:"Aurelia / Marketing", email:"aurelia@cocobongo.com.do", phone:"809-466-1111", status:"hot", industry:"entretenimiento", potential:160000},
+    {id:5, company:"Casa Brugal", contact:"Dpto. Marketing", email:"contacto@brugal.com.do", phone:"809-566-5651", status:"cold", industry:"bebidas", potential:220000},
+    {id:6, company:"Claro Dominicana", contact:"Jenny Abreu", email:"—", phone:"809-220-1111", status:"warm", industry:"telecom", potential:280000},
+    {id:7, company:"Dolphin Discovery PC", contact:"Paola Dominici", email:"—", phone:"809-903-8522", status:"warm", industry:"entretenimiento", potential:120000},
+    {id:8, company:"Puntacana Resort & Club", contact:"Dpto. Marketing", email:"info@puntacana.com", phone:"809-959-2222", status:"hot", industry:"hotel", potential:240000},
+    {id:9, company:"Nestlé Dominicana", contact:"Trade Marketing", email:"servicios.consumidor@do.nestle.com", phone:"809-508-5100", status:"cold", industry:"retail", potential:160000},
+    {id:10, company:"Banco Popular Dominicano", contact:"Publicidad", email:"vozdelcliente@bpd.com.do", phone:"809-544-5555", status:"cold", industry:"banco", potential:200000},
+    {id:11, company:"TotalEnergies RD", contact:"Marketing RD", email:"—", phone:"—", status:"warm", industry:"energia", potential:140000},
+    {id:12, company:"Tropigas", contact:"Marketing RD", email:"—", phone:"—", status:"warm", industry:"energia", potential:120000},
+    {id:13, company:"Altice Dominicana", contact:"Marketing", email:"atencion@altice.net.do", phone:"809-200-1111", status:"cold", industry:"telecom", potential:200000},
+    {id:14, company:"Barceló Hotels RD", contact:"Marketing RD", email:"info.do@barcelo.com", phone:"809-686-5797", status:"cold", industry:"hotel", potential:180000},
+    {id:15, company:"W2M / World2Meet", contact:"Rosangel Brenes", email:"r***@2m.travel", phone:"—", status:"warm", industry:"hotel", potential:130000},
+  ],
+  ust:[
+    {id:1, company:"CCS Farmacias", contact:"Compras Centralizadas", email:"compras@ccs.com.do", phone:"809-549-7777", status:"hot"},
+    {id:2, company:"United Petroleum", contact:"Juan Tomás Díaz Sr.", email:"jtdiaz@unitedpetroleum.com.do", phone:"—", status:"hot"},
+    {id:3, company:"Texaco RD", contact:"Compras", email:"—", phone:"—", status:"warm"},
+    {id:4, company:"Shell RD", contact:"Compras", email:"—", phone:"—", status:"cold"},
+    {id:5, company:"Sunix Petroleum", contact:"Compras", email:"—", phone:"—", status:"cold"},
+    {id:6, company:"Farmacia Carol", contact:"Compras", email:"—", phone:"809-541-9151", status:"cold"},
+    {id:7, company:"Farmacias GBC", contact:"Compras", email:"—", phone:"—", status:"cold"},
+  ],
+  cargx:[
+    {id:1, company:"Rica", contact:"Compras / Logística", email:"info@rica.do", phone:"809-565-7676", status:"warm"},
+    {id:2, company:"Grupo Punta Cana", contact:"Frank Rainieri", email:"info@puntacana.com", phone:"809-959-2222", status:"hot"},
+    {id:3, company:"Lavazza RD (interno)", contact:"Thomas Bacci / Gabriela", email:"—", phone:"—", status:"hot"},
+    {id:4, company:"United Petroleum (interno)", contact:"JT Sr.", email:"—", phone:"—", status:"hot"},
+    {id:5, company:"Mercasid", contact:"Logística", email:"info@mercasid.com.do", phone:"—", status:"cold"},
+  ],
+  lav:[
+    {id:1,  company:"Zemi Beach House", contact:"Fred Oscar Imbert", email:"—", phone:"829-471-2851", status:"hot"},
+    {id:2,  company:"Four Points Punta Cana", contact:"George Sotelo", email:"—", phone:"829-760-7709", status:"hot"},
+    {id:3,  company:"Tortuga Bay", contact:"George Sotelo", email:"—", phone:"829-760-7709", status:"hot"},
+    {id:4,  company:"W Punta Cana", contact:"Omar Rivera", email:"—", phone:"787-368-4719", status:"hot"},
+    {id:5,  company:"Westin Punta Cana", contact:"George Sotelo", email:"—", phone:"829-760-7709", status:"hot"},
+    {id:6,  company:"Hotel Jaragua SD", contact:"Aura González Camilo", email:"—", phone:"829-204-6587", status:"warm"},
+    {id:7,  company:"Meliá Punta Bergantín", contact:"Andrés Marranzini", email:"—", phone:"809-284-7691", status:"warm"},
+    {id:8,  company:"Dreams Cap Cana", contact:"—", email:"—", phone:"—", status:"cold"},
+    {id:9,  company:"St. Regis Cap Cana", contact:"—", email:"—", phone:"—", status:"cold"},
+    {id:10, company:"JW Marriott SD", contact:"—", email:"—", phone:"—", status:"cold"},
+    {id:11, company:"Playa Blanca", contact:"José Luis Abreu", email:"—", phone:"829-346-0708", status:"warm"},
+    {id:12, company:"SBG Restaurants (x5)", contact:"Leo Levy", email:"—", phone:"829-548-0427", status:"hot"},
+    {id:13, company:"La Cava", contact:"Giovanni Rainieri", email:"—", phone:"829-471-2850", status:"hot"},
+    {id:14, company:"Mama Luisa", contact:"Paola Rainieri", email:"—", phone:"—", status:"warm"},
+    {id:15, company:"La Cassina", contact:"Leo Levy", email:"—", phone:"829-548-0427", status:"hot"},
+    {id:16, company:"Casa Luca", contact:"Leo Levy", email:"—", phone:"829-548-0427", status:"hot"},
+    {id:17, company:"Bottega Fratelli", contact:"Paola Rainieri", email:"—", phone:"—", status:"warm"},
+    {id:18, company:"Forno Bravo", contact:"María Amelia Báez", email:"—", phone:"829-342-7523", status:"warm"},
+    {id:19, company:"Trattoria Pizzarelli", contact:"Bonarelli", email:"—", phone:"—", status:"warm"},
+    {id:20, company:"Unagi", contact:"Giovanni Rainieri", email:"—", phone:"—", status:"warm"},
+    {id:21, company:"Shibuya (x2)", contact:"Leo Levy", email:"—", phone:"829-548-0427", status:"warm"},
+    {id:22, company:"Mitre", contact:"Bonarelli", email:"—", phone:"—", status:"warm"},
+    {id:23, company:"Bacareto", contact:"Juan Tomás Díaz", email:"—", phone:"—", status:"hot"},
+    {id:24, company:"Trattoria Angelino", contact:"Paola Rainieri", email:"—", phone:"—", status:"warm"},
+    {id:25, company:"Familia Rainieri (VIP)", contact:"Frank Rainieri", email:"—", phone:"—", status:"hot"},
+  ]
+};
+
+function populateProspects(){
+  ['gmp','ust','cargx','lav'].forEach(k=>{
+    const sel = document.getElementById(k+'Prospect');
+    const list = document.getElementById(k+'ContactList');
+    if(!sel) return;
+    PROSPECTS[k].forEach(p=>{
+      const opt = document.createElement('option');
+      opt.value=p.id;
+      const icon = {hot:'🔥',warm:'🟡',cold:'❄️'}[p.status]||'';
+      opt.textContent = icon+' '+p.company;
+      sel.appendChild(opt);
+    });
+    if(list){
+      list.innerHTML = PROSPECTS[k].map(p=>
+        '<div class="ci" onclick="document.getElementById(\''+k+'Prospect\').value='+p.id+';loadProspect(\''+k+'\','+p.id+')"><div class="dot '+p.status+'"></div><div class="name">'+p.company+'</div><div class="meta">'+(p.contact||'')+'</div></div>'
+      ).join('');
+    }
+  });
+}
+
+function renderGmpPipeline(){
+  const tbl = document.getElementById('gmpPipelineTbl');
+  if(!tbl) return;
+  tbl.innerHTML = PROSPECTS.gmp.map(p=>{
+    const sem = {hot:'s-red',warm:'s-yellow',cold:'s-blue'}[p.status];
+    const lbl = {hot:'🔥 Hot',warm:'🟡 Warm',cold:'❄️ Cold'}[p.status];
+    return '<tr><td><strong>'+p.company+'</strong><br><span style="color:var(--mut);font-size:11px">'+p.contact+'</span></td><td>'+p.industry+'</td><td><span class="semaforo '+sem+'">'+lbl+'</span></td><td class="num" data-money="'+p.potential+'">—</td></tr>';
+  }).join('');
+  applyCurrency();
+}
+
+let currentProspect = {};
+function loadProspect(brand, id){
+  const p = PROSPECTS[brand].find(x=>x.id==id);
+  if(!p) return;
+  currentProspect[brand] = p;
+}
+
+// ════════════════ EMAIL TEMPLATES ════════════════
+const TEMPLATES = {
+  gmp:(p,type)=>{
+    const greet = p.contact && !p.contact.includes('Dpto') && !p.contact.includes('Marketing')
+      ? p.contact.split(' ')[0]+',' : 'Estimado equipo de '+p.company+',';
+    const pitches = {
+      bebidas:'Sus marcas merecen estar en el punto exacto donde el consumidor decide. Nuestras pantallas en United Petroleum Punta Cana capturan miles de conductores cada día — el momento previo a la compra, sin saturación publicitaria.',
+      hotel:'El turismo en Punta Cana es el mercado más competido del Caribe. Los viajeros deciden mientras están en movimiento — y nuestras pantallas están exactamente ahí.',
+      telecom:'Las campañas telecom necesitan visibilidad constante y segmentación. GMP ofrece presencia digital permanente en puntos de alto tráfico, con reportes auditables.',
+      banco:'Los servicios financieros ganan cuando la marca está presente en el momento correcto. Nuestras pantallas alcanzan adultos económicamente activos durante su rutina diaria.',
+      entretenimiento:'La zona turística tiene millones de visitantes buscando qué hacer. GMP pone su propuesta frente a ellos en el momento exacto.',
+      energia:'Las estaciones de servicio son un ecosistema publicitario subutilizado. GMP nació para capitalizar ese momento — con pantallas ya instaladas.',
+      general:'GMP es una red de pantallas DOOH instaladas en puntos de alto tráfico en Punta Cana. Su marca puede aparecer diariamente frente a miles de consumidores.'
+    };
+    return greet+`
+
+Me comunico de parte de GMP – Global Media Partners.
+
+`+(pitches[type]||pitches.general)+`
+
+LO QUE OFRECEMOS
+📺 Red de pantallas HD en United Petroleum Punta Cana
+⏱  Contenido cada 60 segundos · 1,440 reproducciones/día
+🎯 Segmentación por horario, día o semana
+📊 Reporte mensual auditable
+
+PAQUETES (USD/pantalla/mes)
+• PNG/Foto (8 seg):    desde $400
+• GIF animado (10 seg): desde $500
+• Video (12 seg):       desde $600
+
+Descuentos: 5% por 3 meses · 15% por 6 meses
+
+Me gustaría agendar 15 minutos esta semana para mostrarle el producto. ¿Tiene disponibilidad miércoles o jueves?
+
+Quedo a su disposición,
+
+Juan Tomás Díaz Rainieri
+Director · GMP Global Media Partners
+📧 juant2200@gmail.com`;
+  },
+  ust:(p,type)=>{
+    const pitches={
+      distribucion:'United Smart Tech distribuye los productos de mayor rotación en gasolineras y farmacias del país: vapes premium, nicotine pouches, cargadores y accesorios móviles. Trabajamos directamente con marcas líderes y manejamos consignación, márgenes y reposición semanal.',
+      financiamiento:'Nuestro programa de financiamiento por nómina permite a sus empleados adquirir celulares, laptops y electrodomésticos pagando mediante descuentos automáticos. Cero riesgo para la empresa, beneficio directo al colaborador.',
+      alianza:'United Smart Tech busca alianzas estratégicas con cadenas que quieran ampliar su mix de productos tecnológicos sin asumir inventario. Modelo probado en CCS Farmacias y United Petroleum.'
+    };
+    return 'Estimado equipo de '+p.company+`,
+
+`+pitches[type]+`
+
+¿Podemos coordinar una reunión breve esta semana para presentarle la propuesta a la medida?
+
+Saludos,
+
+Juan Tomás Díaz Rainieri
+United Smart Tech · Director General
+📧 juant2200@gmail.com`;
+  },
+  cargx:(p,type)=>{
+    return 'Estimado equipo de '+p.company+`,
+
+CargX es la nueva empresa de transporte y logística del grupo JV Holdings. Operamos camiones propios con choferes contratados, GPS en tiempo real y disponibilidad inmediata para rutas en todo el país.
+
+Le ofrecemos:
+🚛 Capacidad disponible (28 días/mes)
+📦 Tarifas competitivas vs flota propia
+📍 Rastreo GPS en tiempo real
+📊 Reportes mensuales de operación
+
+Tarifa de referencia: RD$18,000/día completo · Descuentos por volumen.
+
+Me gustaría coordinar una visita para presentarle los términos. ¿Cuándo le convendría?
+
+Saludos,
+
+Juan Tomás Díaz Rainieri
+CargX · 60% propietario
+📧 juant2200@gmail.com`;
+  },
+  lav:(p,type)=>{
+    const pitches={
+      hotel:'Lavazza es café italiano premium con más de 125 años de heritage. Trabajamos con los hoteles 5★ del Caribe en formato máquina full-service: instalación, mantenimiento, cápsulas y staff training incluidos.',
+      restaurante:'Lavazza es el café que define la experiencia italiana de su restaurante. Ofrecemos máquinas profesionales, capacitación de baristas y reposición semanal. Modelo probado en SBG, Forno Bravo y Bottega.',
+      oficina:'Eleve la experiencia café de su oficina con Lavazza. Máquinas automáticas, cápsulas premium, mantenimiento incluido. Ideal para reuniones ejecutivas y áreas de hospitalidad.',
+      vip:'Friends & Family Lavazza: por la compra de una máquina te incluimos descuento especial, cápsulas de regalo, instalación y asesoría personalizada. Perfecto para casa, villa, oficina o negocio.'
+    };
+    return 'Estimado '+(p.contact || 'equipo')+`,
+
+`+pitches[type]+`
+
+Como sabes, ahora somos parte del equipo de Lavazza en República Dominicana — la marca italiana #1 del mundo, presente en 90+ países.
+
+Me encantaría agendar una visita para mostrarte el producto en persona y dejarte degustando un espresso real.
+
+¿Tienes disponibilidad esta semana?
+
+Un abrazo,
+
+Juan Tomás Díaz Rainieri
+Lavazza RD · Socio
+📧 juant2200@gmail.com`;
+  }
+};
+
+function generateEmail(brand){
+  const p = currentProspect[brand];
+  if(!p){alert('Selecciona un prospecto primero');return}
+  const type = document.getElementById(brand+'Type').value;
+  const body = TEMPLATES[brand](p,type);
+  const subjects = {
+    gmp:'Propuesta DOOH – '+p.company+' × GMP Punta Cana',
+    ust:'Propuesta de distribución – '+p.company+' × United Smart Tech',
+    cargx:'Propuesta logística – '+p.company+' × CargX',
+    lav:'Lavazza RD para '+p.company+' ☕'
+  };
+  document.getElementById(brand+'To').textContent = p.email && p.email!=='—' ? p.email : '(falta email — usar teléfono '+p.phone+')';
+  document.getElementById(brand+'Subject').textContent = subjects[brand];
+  document.getElementById(brand+'Body').textContent = body;
+  document.getElementById(brand+'Preview').classList.add('visible');
+}
+
+function copyEmailBody(brand){
+  const t = document.getElementById(brand+'Body').textContent;
+  navigator.clipboard.writeText(t);
+  alert('Email copiado al portapapeles ✓');
+}
+function openGmail(brand){
+  const p = currentProspect[brand];
+  if(!p) return;
+  const subj = document.getElementById(brand+'Subject').textContent;
+  const body = document.getElementById(brand+'Body').textContent;
+  const to = (p.email && p.email!=='—') ? p.email : '';
+  const url = 'https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(to)+'&su='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+  window.open(url, '_blank');
+}
+
+// Allow Enter to login
+document.getElementById('loginPin').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+</script>
+</body>
+</html>
