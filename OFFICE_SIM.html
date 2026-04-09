@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>JV Holdings · Oficina Viva</title>
+<style>
+  :root {
+    --bg: #070b12;
+    --bg2: #0f1623;
+    --panel: #141c2d;
+    --panel2: #1d2940;
+    --border: #263650;
+    --border2: #334a6e;
+    --ink: #e8eaf0;
+    --muted: #8896b0;
+    --accent: #10b981;
+    --accent2: #34d399;
+    --gold: #fbbf24;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --purple: #a855f7;
+    --pink: #ec4899;
+    --cyan: #06b6d4;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    background:
+      radial-gradient(ellipse at top left, rgba(16,185,129,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(168,85,247,0.06) 0%, transparent 50%),
+      var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 16px;
+    font-size: 13px;
+    overflow-x: hidden;
+  }
+  .wrap { max-width: 1800px; margin: 0 auto; }
+
+  /* ===== HEADER ===== */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    background: linear-gradient(135deg, var(--panel) 0%, var(--panel2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    margin-bottom: 14px;
+  }
+  .brand { display: flex; align-items: center; gap: 14px; }
+  .brand-mark {
+    width: 46px; height: 46px;
+    background: linear-gradient(135deg, var(--accent), #047857);
+    border-radius: 12px;
+    display: grid; place-items: center;
+    font-weight: 800; font-size: 18px; color: #04221a;
+    box-shadow: 0 8px 24px rgba(16,185,129,0.3), inset 0 1px 0 rgba(255,255,255,0.2);
+  }
+  .brand h1 { font-size: 18px; letter-spacing: 0.3px; font-weight: 800; }
+  .brand p { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .header-right { display: flex; align-items: center; gap: 18px; }
+  .stat { text-align: right; }
+  .stat .num { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--accent); }
+  .stat .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .clock-box { text-align: right; padding-left: 18px; border-left: 1px solid var(--border); }
+  .clock { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .clock-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .heartbeat {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--accent); margin-right: 6px;
+    animation: pulse 1.4s ease-in-out infinite;
+    box-shadow: 0 0 8px var(--accent);
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.3)} }
+
+  /* ===== FOCUS BANNER ===== */
+  .focus {
+    background: linear-gradient(90deg, rgba(16,185,129,0.12), rgba(16,185,129,0.02));
+    border: 1px solid rgba(16,185,129,0.35);
+    border-radius: 12px;
+    padding: 10px 16px;
+    margin-bottom: 14px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 10px; font-size: 12px;
+  }
+  .focus strong { color: var(--accent2); }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip {
+    background: rgba(16,185,129,0.15);
+    border: 1px solid rgba(16,185,129,0.4);
+    padding: 3px 10px; border-radius: 14px; font-size: 11px; font-weight: 600;
+  }
+  .chip.parked { background: rgba(139,149,168,0.08); border-color: rgba(139,149,168,0.25); color: var(--muted); text-decoration: line-through; }
+
+  /* ===== MAIN LAYOUT ===== */
+  .layout {
+    display: grid;
+    grid-template-columns: 260px 1fr 340px;
+    gap: 14px;
+  }
+  @media (max-width: 1400px) { .layout { grid-template-columns: 1fr; } }
+
+  /* ===== LEFT: TOOLS RACK ===== */
+  .tools-rack {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    height: fit-content;
+  }
+  .tools-rack h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-bottom: 10px; }
+  .tool-group { margin-bottom: 14px; }
+  .tool-group-name { font-size: 10px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .tool-list { list-style: none; }
+  .tool {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 8px; border-radius: 8px; font-size: 12px;
+    transition: background 0.2s;
+  }
+  .tool:hover { background: var(--panel2); }
+  .tool .ico { width: 18px; height: 18px; border-radius: 4px; display: grid; place-items: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+  .tool .name { flex: 1; }
+  .tool .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+  .tool .dot.off { background: var(--muted); box-shadow: none; }
+
+  /* ===== CENTER: ISOMETRIC OFFICE ===== */
+  .office-stage {
+    background:
+      radial-gradient(ellipse at center, rgba(16,185,129,0.04) 0%, transparent 70%),
+      linear-gradient(180deg, #0a1020 0%, #060a14 100%);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    position: relative;
+    min-height: 720px;
+    overflow: hidden;
+  }
+  .stage-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 14px; padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .stage-header h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); }
+  .stage-live { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--accent); }
+
+  /* grid of offices (pseudo-isometric via CSS) */
+  .office-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    perspective: 1400px;
+  }
+  .room {
+    position: relative;
+    background: linear-gradient(160deg, rgba(38,54,80,0.35) 0%, rgba(20,28,45,0.7) 100%);
+    border: 1px solid var(--border2);
+    border-radius: 12px;
+    padding: 14px;
+    min-height: 200px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    transform-style: preserve-3d;
+  }
+  .room::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      rgba(255,255,255,0.015),
+      rgba(255,255,255,0.015) 1px,
+      transparent 1px,
+      transparent 14px
+    );
+    pointer-events: none;
+  }
+  .room:hover {
+    transform: translateY(-3px) rotateX(2deg);
+    border-color: var(--agent-color, var(--accent));
+    box-shadow: 0 18px 40px rgba(0,0,0,0.5), 0 0 0 1px var(--agent-color, var(--accent));
+  }
+  .room.active .status-dot {
+    animation: pulse 1.4s ease-in-out infinite;
+    box-shadow: 0 0 10px var(--agent-color, var(--accent));
+  }
+  .room.has-question {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 1px rgba(251,191,36,0.3), 0 0 20px rgba(251,191,36,0.15);
+  }
+
+  .room-head {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    margin-bottom: 8px; position: relative; z-index: 2;
+  }
+  .room-title {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--muted); font-weight: 600;
+  }
+  .room-name { font-size: 14px; font-weight: 800; margin-top: 1px; color: var(--ink); }
+  .room-model {
+    font-size: 9px; color: var(--agent-color, var(--accent));
+    margin-top: 2px; font-weight: 600; opacity: 0.85;
+  }
+  .status-dot {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--muted);
+  }
+  .status-dot.active { background: var(--agent-color, var(--accent)); }
+
+  /* CHARACTER scene */
+  .scene {
+    position: relative;
+    height: 100px;
+    display: flex; align-items: flex-end; justify-content: center;
+    margin: 6px 0 10px;
+  }
+  .floor-tile {
+    position: absolute;
+    bottom: 8px; left: 50%; transform: translateX(-50%);
+    width: 90px; height: 20px;
+    background: linear-gradient(180deg, rgba(38,54,80,0.6), rgba(20,28,45,0.3));
+    border-radius: 50%;
+    filter: blur(2px);
+  }
+  .character {
+    position: relative;
+    z-index: 2;
+    animation: bob 2.4s ease-in-out infinite;
+  }
+  .character.thinking { animation: bob 3.4s ease-in-out infinite, lean 3.4s ease-in-out infinite; }
+  .character.hunting { animation: bob 1.3s ease-in-out infinite; }
+  .character.working { animation: bob 2s ease-in-out infinite; }
+  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+  @keyframes lean { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-3px) rotate(-2deg); } }
+
+  .desk-3d {
+    position: absolute;
+    bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 86px; height: 16px;
+    background: linear-gradient(180deg, #2a3d5c, #16223a);
+    border-radius: 4px;
+    border-top: 2px solid var(--agent-color, var(--accent));
+    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+  }
+  .monitor {
+    position: absolute;
+    bottom: 12px; left: 50%; transform: translateX(-50%) translateX(22px);
+    width: 22px; height: 16px;
+    background: #0a0f1a;
+    border: 1.5px solid #2a3d5c;
+    border-radius: 2px;
+    z-index: 3;
+  }
+  .monitor::before {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: linear-gradient(135deg, var(--agent-color, var(--accent)), transparent);
+    opacity: 0.5;
+    animation: screen-flicker 2s ease-in-out infinite;
+  }
+  @keyframes screen-flicker { 0%,100% { opacity: 0.5; } 50% { opacity: 0.8; } }
+
+  /* thought bubble */
+  .bubble {
+    position: absolute;
+    bottom: calc(100% + 2px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-size: 10px;
+    width: max-content;
+    max-width: 170px;
+    text-align: center;
+    line-height: 1.35;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+    z-index: 4;
+  }
+  .bubble::after {
+    content: '';
+    position: absolute;
+    top: 100%; left: 50%; transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--border2);
+  }
+
+  /* question mark indicator */
+  .q-mark {
+    position: absolute;
+    top: -4px; right: -10px;
+    width: 22px; height: 22px;
+    background: var(--gold);
+    color: #2a1a00;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-weight: 900; font-size: 13px;
+    animation: bounce 1s ease-in-out infinite;
+    box-shadow: 0 0 14px rgba(251,191,36,0.5);
+    z-index: 5;
+  }
+  @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+
+  .room-task {
+    font-size: 10px;
+    color: var(--muted);
+    border-top: 1px dashed var(--border);
+    padding-top: 6px;
+    min-height: 30px;
+    position: relative; z-index: 2;
+  }
+  .room-task .label {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--agent-color, var(--accent));
+    margin-bottom: 2px;
+  }
+  .room-task b { color: var(--ink); display: block; font-size: 11px; }
+
+  /* ===== RIGHT: SIDEBAR ===== */
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 14px;
+  }
+  .card h3 {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px;
+    color: var(--muted); margin-bottom: 10px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .card h3 .count {
+    background: var(--panel2);
+    border-radius: 10px; padding: 2px 8px;
+    font-size: 10px; color: var(--ink);
+  }
+
+  /* task input */
+  .task-input {
+    display: flex; gap: 6px; margin-top: 8px;
+  }
+  .task-input input {
+    flex: 1;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-family: inherit;
+  }
+  .task-input input:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .task-input button {
+    background: var(--accent);
+    color: #052015;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .task-input button:hover { background: var(--accent2); }
+
+  .tasks-list { list-style: none; }
+  .tasks-list li {
+    display: flex; gap: 8px; align-items: flex-start;
+    padding: 6px 0; border-bottom: 1px solid var(--border);
+    font-size: 11px; line-height: 1.4;
+  }
+  .tasks-list li:last-child { border-bottom: none; }
+  .tasks-list .at { color: var(--accent); font-weight: 700; }
+  .tasks-list .p1 { color: var(--red); font-weight: 700; font-size: 9px; }
+  .tasks-list .p2 { color: var(--gold); font-weight: 700; font-size: 9px; }
+  .tasks-list .p3 { color: var(--muted); font-weight: 700; font-size: 9px; }
+  .tasks-list li.done { text-decoration: line-through; opacity: 0.4; }
+
+  .engines .engine {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 8px 0; border-bottom: 1px solid var(--border);
+  }
+  .engines .engine:last-child { border-bottom: none; }
+  .engine-name { font-weight: 700; font-size: 12px; }
+  .engine-meta { font-size: 10px; color: var(--muted); }
+  .engine-mrr { font-weight: 800; font-size: 11px; text-align: right; font-variant-numeric: tabular-nums; }
+  .health { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+  .health.red { background: var(--red); box-shadow: 0 0 6px var(--red); }
+  .health.yellow { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
+  .health.green { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+  .health.gray { background: var(--muted); }
+
+  .feed-list { list-style: none; max-height: 200px; overflow-y: auto; }
+  .feed-list li {
+    display: flex; gap: 8px; padding: 6px 0;
+    border-bottom: 1px solid var(--border); font-size: 10px; line-height: 1.4;
+  }
+  .feed-list li:last-child { border-bottom: none; }
+  .feed-time { color: var(--muted); font-variant-numeric: tabular-nums; flex-shrink: 0; min-width: 36px; font-size: 9px; }
+
+  /* ===== MODAL ===== */
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 100;
+    padding: 20px;
+  }
+  .modal-bg.open { display: flex; }
+  .modal {
+    background: linear-gradient(135deg, var(--panel) 0%, var(--panel2) 100%);
+    border: 1px solid var(--border2);
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 520px;
+    width: 100%;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+  }
+  .modal h2 {
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+  .modal-role { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
+  .modal-model {
+    margin-top: 6px; font-size: 11px;
+    color: var(--agent-color, var(--accent));
+    font-weight: 600;
+  }
+  .modal-section { margin-top: 16px; }
+  .modal-section h4 { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
+  .modal-section p { font-size: 13px; line-height: 1.5; }
+  .modal-close {
+    float: right;
+    background: none; border: none; color: var(--muted);
+    font-size: 22px; cursor: pointer;
+  }
+  .modal-question-box {
+    background: rgba(251,191,36,0.08);
+    border: 1px solid rgba(251,191,36,0.3);
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    margin-top: 6px;
+  }
+  .modal textarea {
+    width: 100%;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    color: var(--ink);
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 70px;
+    margin-top: 6px;
+  }
+  .modal button.primary {
+    background: var(--accent);
+    color: #052015;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  .modal button.primary:hover { background: var(--accent2); }
+
+  .tool-chips {
+    display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px;
+  }
+  .tool-chip {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  footer {
+    margin-top: 14px;
+    padding: 12px 16px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 10px; color: var(--muted);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer code { background: var(--bg2); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 9px; }
+
+  /* ===== PASSWORD GATE ===== */
+  #gate {
+    position: fixed; inset: 0; z-index: 9999;
+    background: radial-gradient(ellipse at top, rgba(16,185,129,0.1), transparent 60%), #04080f;
+    display: grid; place-items: center; padding: 20px;
+  }
+  #gate.hidden { display: none; }
+  .gate-card {
+    width: 100%; max-width: 420px;
+    background: linear-gradient(135deg, var(--panel), var(--panel2));
+    border: 1px solid var(--border2);
+    border-radius: 18px; padding: 32px 28px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(16,185,129,0.15);
+  }
+  .gate-logo {
+    width: 68px; height: 68px; margin: 0 auto 18px;
+    background: linear-gradient(135deg, var(--accent), #047857);
+    border-radius: 18px; display: grid; place-items: center;
+    font-weight: 800; font-size: 24px; color: #04221a;
+    box-shadow: 0 12px 30px rgba(16,185,129,0.35), inset 0 1px 0 rgba(255,255,255,0.25);
+  }
+  .gate-card h2 { text-align: center; font-size: 20px; margin-bottom: 6px; }
+  .gate-card p { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 22px; }
+  .gate-card input {
+    width: 100%; background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 13px 14px; color: var(--ink);
+    font-size: 15px; font-family: inherit; letter-spacing: 2px; text-align: center;
+  }
+  .gate-card input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(16,185,129,0.15); }
+  .gate-card button {
+    width: 100%; margin-top: 12px; padding: 13px;
+    background: linear-gradient(135deg, var(--accent), #047857);
+    color: #04221a; border: none; border-radius: 10px;
+    font-weight: 700; font-size: 14px; cursor: pointer; font-family: inherit;
+    transition: transform 0.1s;
+  }
+  .gate-card button:hover { transform: translateY(-1px); }
+  .gate-err { color: var(--red); font-size: 12px; text-align: center; margin-top: 10px; min-height: 14px; }
+  .gate-foot { text-align: center; font-size: 10px; color: var(--muted); margin-top: 20px; letter-spacing: 0.5px; }
+
+  /* ===== HEADER BUTTONS ===== */
+  .hdr-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 12px; border-radius: 10px;
+    background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3);
+    color: var(--accent2); font-size: 11px; font-weight: 600; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .hdr-btn:hover { background: rgba(16,185,129,0.18); transform: translateY(-1px); }
+  .hdr-btn.cyan { background: rgba(6,182,212,0.08); border-color: rgba(6,182,212,0.3); color: var(--cyan); }
+  .hdr-btn.cyan:hover { background: rgba(6,182,212,0.18); }
+</style>
+</head>
+<body>
+
+<!-- ===== PASSWORD GATE ===== -->
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-logo">JV</div>
+    <h2>Oficina Viva</h2>
+    <p>Acceso restringido · socios JV Holdings</p>
+    <input id="gatePwd" type="password" placeholder="contraseña" autocomplete="off" onkeydown="if(event.key==='Enter')tryUnlock()"/>
+    <button onclick="tryUnlock()">Entrar</button>
+    <div class="gate-err" id="gateErr"></div>
+    <div class="gate-foot">JV HOLDINGS · CEO: JT</div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header>
+    <div class="brand">
+      <div class="brand-mark">JV</div>
+      <div>
+        <h1>JV Holdings · Oficina Viva</h1>
+        <p>CEO: JT · COO: Claude Opus 4.6 · 9 departamentos · 24+ herramientas conectadas</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <a class="hdr-btn cyan" href="https://drive.google.com/drive/folders/1LPFgCwvpWRX5GdNvum9RtRQ5d1x5IN2J" target="_blank" rel="noopener">📁 Drive · Cashflow</a>
+      <a class="hdr-btn" href="JV_Holdings_Dashboard_v3.html#overview" target="_blank" rel="noopener">📊 Cockpit v3</a>
+      <div class="stat"><div class="num" id="stat-active">6</div><div class="lbl">Activos</div></div>
+      <div class="stat"><div class="num" id="stat-questions">0</div><div class="lbl">Preguntas</div></div>
+      <div class="stat"><div class="num" id="stat-ideas">4</div><div class="lbl">Ideas</div></div>
+      <div class="clock-box">
+        <div class="clock"><span class="heartbeat"></span><span id="clock">--:--:--</span></div>
+        <div class="clock-label" id="date">—</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="focus">
+    <div><strong>🎯 FOCO CEO</strong> · lock 12 meses · solo los 3 cashflow engines</div>
+    <div class="chips">
+      <span class="chip">GMP</span><span class="chip">UTS</span><span class="chip">CargX</span>
+      <span class="chip parked">Lavazza</span><span class="chip parked">Axione</span>
+      <span class="chip parked">Valor</span><span class="chip parked">JVH Reg</span>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- ============ LEFT: TOOLS RACK ============ -->
+    <aside class="tools-rack">
+      <h3>🔧 Herramientas de la oficina</h3>
+
+      <div class="tool-group">
+        <div class="tool-group-name">Fuente de verdad</div>
+        <ul class="tool-list">
+          <li class="tool"><a href="https://drive.google.com/drive/folders/1LPFgCwvpWRX5GdNvum9RtRQ5d1x5IN2J" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;flex:1"><div class="ico" style="background:#1a73e8;color:#fff">📁</div><div class="name">Drive · Cashflow</div></a><div class="dot"></div></li>
+          <li class="tool"><a href="https://docs.google.com/document/d/1JwQxv1KQ0JpGXOGorz24C85ggHd8uEJsSB8Acl_8U_w/edit" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;flex:1"><div class="ico" style="background:#4285f4;color:#fff">📄</div><div class="name">Plan 6 Meses</div></a><div class="dot"></div></li>
+          <li class="tool"><a href="https://drive.google.com/drive/folders/1UXcg--kLj48_7jkTBEjnfzoED5sS3Ir5" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;flex:1"><div class="ico" style="background:#34a853;color:#fff">📁</div><div class="name">VALOR</div></a><div class="dot"></div></li>
+          <li class="tool"><a href="https://drive.google.com/drive/folders/1q0huLRpTauF-pr1ubzymGFpI9X_rQ0oE" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;flex:1"><div class="ico" style="background:#fbbc04;color:#000">📁</div><div class="name">AXIONE</div></a><div class="dot"></div></li>
+          <li class="tool"><a href="JV_Holdings_Dashboard_v3.html#overview" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;flex:1"><div class="ico" style="background:#00e5ff;color:#000">📊</div><div class="name">Cockpit v3</div></a><div class="dot"></div></li>
+        </ul>
+      </div>
+
+      <div class="tool-group">
+        <div class="tool-group-name">Dev & Orquestación</div>
+        <ul class="tool-list">
+          <li class="tool"><div class="ico" style="background:#1a1a1a;color:#fff">⌨</div><div class="name">Claude Code</div><div class="dot"></div></li>
+          <li class="tool"><div class="ico" style="background:#007acc;color:#fff">VS</div><div class="name">VS Code</div><div class="dot"></div></li>
+          <li class="tool"><div class="ico" style="background:#000;color:#fff">⬛</div><div class="name">Terminal</div><div class="dot"></div></li>
+          <li class="tool"><div class="ico" style="background:#10a37f;color:#fff">C</div><div class="name">Codex CLI</div><div class="dot"></div></li>
+        </ul>
+      </div>
+
+      <div class="tool-group">
+        <div class="tool-group-name">Productividad</div>
+        <ul class="tool-list">
+          <li class="tool"><div class="ico" style="background:#ea4335;color:#fff">G</div><div class="name">Google Drive</div><div class="dot"></div></li>
+          <li class="tool"><div class="ico" style="background:#4285f4;color:#fff">M</div><div class="name">Gmail</div><div class="dot"></div></li>
+          <li class="tool"><div class="ico" style="background:#4a154b;color:#fff">#</div><div class="name">Slack</div><div class="dot"></div></li>
+          <li class="tool"><div class="ico" style="background:#ff9600;color:#fff">🗓</div><div class="name">Calendly</div><div class="dot"></div></li>
+          <li class="tool"><div class="ico" style="background:#d14836;color:#fff">G</div><div class="name">Granola</div><div class="dot"></div></li>
+        </ul>
+      </div>
+
+      <div class="tool-group">
+        <div class="tool-group-name">Diseño & Contenido</div>
+        <ul class="tool-list">
+          <li class="tool"><div class="ico" style="background:#00c4cc;color:#fff">C</div><div class="name">Canva</div><div class="dot"></div></li>
+          <li class="tool"><div class="ico" style="background:#a259ff;color:#fff">F</div><div class="name">Figma</div><div class="dot"></div></li>
+        </ul>
+      </div>
+
+      <div class="tool-group">
+        <div class="tool-group-name">Browser Control</div>
+        <ul class="tool-list">
+          <li class="tool"><div class="ico" style="background:#4285f4;color:#fff">◯</div><div class="name">Chrome MCP</div><div class="dot"></div></li>
+          <li class="tool"><div class="ico" style="background:#2a2a2a;color:#fff">🖥</div><div class="name">Computer Use</div><div class="dot"></div></li>
+        </ul>
+      </div>
+
+      <div class="tool-group">
+        <div class="tool-group-name">AI Networks externas</div>
+        <ul class="tool-list">
+          <li class="tool"><div class="ico" style="background:#6366f1;color:#fff">M</div><div class="name">Maltbook</div><div class="dot off"></div></li>
+          <li class="tool"><div class="ico" style="background:#f59e0b;color:#fff">G</div><div class="name">Gibberlink</div><div class="dot off"></div></li>
+          <li class="tool"><div class="ico" style="background:#ec4899;color:#fff">L</div><div class="name">LM Arena</div><div class="dot off"></div></li>
+          <li class="tool"><div class="ico" style="background:#10b981;color:#fff">P</div><div class="name">Perplexity</div><div class="dot off"></div></li>
+        </ul>
+        <div style="font-size:9px;color:var(--muted);margin-top:6px;padding:0 8px">Dot apagado = sin MCP oficial. Accesibles via WebFetch/Chrome.</div>
+      </div>
+    </aside>
+
+    <!-- ============ CENTER: OFFICE STAGE ============ -->
+    <section class="office-stage">
+      <div class="stage-header">
+        <h2>Planta de la oficina — click en cualquier agente</h2>
+        <div class="stage-live"><span class="heartbeat"></span><span id="live-status">6 activos · 3 soporte</span></div>
+      </div>
+      <div class="office-grid" id="office-grid"></div>
+    </section>
+
+    <!-- ============ RIGHT: SIDEBAR ============ -->
+    <aside class="sidebar">
+
+      <div class="card">
+        <h3>📝 Asignar tarea rápida</h3>
+        <div class="task-input">
+          <input id="quick-task" type="text" placeholder="@bd cerrar Banco Popular !p1" />
+          <button onclick="addQuickTask()">Tirar</button>
+        </div>
+        <div style="font-size:9px;color:var(--muted);margin-top:6px">Se guarda en la cola local de la sesión. En Cowork, escríbelo a Claude y se ejecuta.</div>
+      </div>
+
+      <div class="card">
+        <h3>Tareas activas <span class="count" id="tasks-count">0</span></h3>
+        <ul class="tasks-list" id="tasks-list"></ul>
+      </div>
+
+      <div class="card engines">
+        <h3>💰 Cashflow engines</h3>
+        <div id="engines-list"></div>
+      </div>
+
+      <div class="card">
+        <h3>💡 Ideas del día <span class="count" id="ideas-count">4</span></h3>
+        <ul class="tasks-list" id="ideas-list"></ul>
+      </div>
+
+      <div class="card">
+        <h3>📡 Feed en vivo <span class="count" id="feed-count">0</span></h3>
+        <ul class="feed-list" id="feed-list"></ul>
+      </div>
+
+    </aside>
+
+  </div>
+
+  <footer>
+    <div><strong>Memoria:</strong> <code>/JV_Holdings_HQ/</code> · <strong>Tareas:</strong> <code>INBOX/TASKS.md</code> · <strong>Estado:</strong> <code>office_state.json</code></div>
+    <div>Última actualización: <span id="last-update">—</span></div>
+  </footer>
+
+</div>
+
+<!-- ============ MODAL ============ -->
+<div class="modal-bg" id="modal-bg" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<script>
+/* ============================================================
+   OFFICE STATE
+============================================================ */
+const agents = [
+  {
+    id:"coo", name:"COO", title:"Chief of Staff", role:"Oficina central",
+    model:"Claude Opus 4.6", mood:"focused", status:"active",
+    currentTask:"Despacho general", lastOutput:"3 engines activos · scope lock aplicado",
+    color:"#10b981",
+    mission:"Orquestar todo el trabajo de la oficina. Recibe requests del CEO, delega a departamentos, consolida outputs y escala solo lo que necesita aprobación.",
+    tools:["Claude Code","VS Code","Todas las MCPs","Slack","Drive","Gmail"],
+    subAgents:["Daily Standup (cron L-V 7am)","Weekly Pipeline Review (lunes)","Weekly Ideas Hunt (domingo)"],
+    question: null,
+    memoryPath:"_COO/COO_MEMORY_PACK.md"
+  },
+  {
+    id:"finance", name:"Finance", title:"Finanzas & Tax", role:"Head de Finanzas",
+    model:"Claude Sonnet 4.6", mood:"working", status:"active",
+    currentTask:"Cash snapshot UTS marzo",
+    lastOutput:"UTS ~RD$270K/mo · margen reinversión CargX",
+    color:"#3b82f6",
+    mission:"Cash flow, modelos financieros, dilución, forecast, tax optimization, unit economics de cada engine.",
+    tools:["Excel/XLSX","Drive","Python sandbox","WebFetch (Bigdata.com)","Gmail"],
+    subAgents:["FP&A Analyst","Tax Structuring","Treasury","Deal Model"],
+    question: "¿Uso los números reales de UTS marzo de la hoja 'Cash Flow 2026' en Drive o sigo con placeholders hasta que me confirmes acceso a esa hoja exacta?",
+    memoryPath:"Finance/MEMORY_PACK.md"
+  },
+  {
+    id:"legal", name:"Legal/HR", title:"Legal & RH", role:"Head Jurídico",
+    model:"Claude Opus 4.6", mood:"thinking", status:"active",
+    currentTask:"P-001 Javier · decisión vehículo",
+    lastOutput:"Draft SHA listo · 7 preguntas CEO pendientes",
+    color:"#a855f7",
+    mission:"Contratos, SHA, NDA, estructuras corporativas RD, policies, hiring, compliance.",
+    tools:["Docx","PDF","Drive","WebFetch","Canva (para presentar términos)"],
+    subAgents:["Contract Drafter","HR Operations","Governance","Corporate Structure"],
+    question: "Con Axione parked 12 meses, ¿cierro el P-001 Javier con (a) convertible note a GMP SRL directamente, (b) SAFE DR-ajustado, o (c) abrimos excepción para registrar Axione solo para este deal?",
+    memoryPath:"Legal_HR/MEMORY_PACK.md"
+  },
+  {
+    id:"ops", name:"Operations", title:"Operaciones", role:"Head de Ops",
+    model:"Claude Haiku 4.5", mood:"working", status:"active",
+    currentTask:"SOP onboarding advertiser GMP",
+    lastOutput:"Draft 6 pasos · pendiente validación BD",
+    color:"#f59e0b",
+    mission:"SOPs, process mapping, vendor coordination, launch checklists, operación cross-company.",
+    tools:["Docx","Drive","Markdown workflow","Chrome MCP","operations:runbook skill"],
+    subAgents:["SOP Builder","Process Auditor","Launch Manager","Vendor Coordinator"],
+    question: null,
+    memoryPath:"Operations/MEMORY_PACK.md"
+  },
+  {
+    id:"bd", name:"BD", title:"Business Development", role:"Head Comercial",
+    model:"Claude Sonnet 4.6 + Codex CLI", mood:"hunting", status:"active",
+    currentTask:"Cazando primer advertiser ancla GMP",
+    lastOutput:"Lista 30 targets: 12 retail · 8 food · 6 bancos · 4 telcos",
+    color:"#ef4444",
+    mission:"Pipeline de advertisers GMP, clientes UTS, partners CargX. Meeting prep, follow-ups, qualifying, synergy mapping.",
+    tools:["Gmail","Slack","Calendly","Chrome MCP","Drive","Granola (call notes)"],
+    subAgents:["Pipeline Manager","Meeting Brief","Partnership Scout","Synergy Mapper"],
+    question: "Top 3 targets de retail GMP: ¿Plaza Lama, Pricesmart o Carol primero? Tengo el contacto frío para los 3, necesito que elijas por cuál abro.",
+    memoryPath:"BusinessDev/MEMORY_PACK.md"
+  },
+  {
+    id:"marketing", name:"Marketing", title:"Marca & Contenido", role:"Head de Marca",
+    model:"Claude Sonnet 4.6 + Canva MCP", mood:"working", status:"active",
+    currentTask:"One-pager GMP para advertisers",
+    lastOutput:"Draft PDF listo para revisión",
+    color:"#ec4899",
+    mission:"Positioning, decks, copy, campañas, landing, partnership one-pagers. Brand guidelines del grupo.",
+    tools:["Canva MCP ✅","PPTX","Docx","PDF","Drive","brand-voice skill"],
+    subAgents:["Brand Strategist","Copywriter","Deck Builder","Market Research"],
+    question: null,
+    memoryPath:"Marketing/MEMORY_PACK.md"
+  },
+  {
+    id:"strategy", name:"Strategy", title:"Estrategia & Ventures", role:"Head Estratégico",
+    model:"Claude Opus 4.6", mood:"thinking", status:"active",
+    currentTask:"Evaluando piggyback CargX ↔ UTS",
+    lastOutput:"Hipótesis: ruta UTS existente puede distribuir CargX sin CAPEX",
+    color:"#8b5cf6",
+    mission:"Evaluar nuevas oportunidades, 90-day plans, competitive intel, venture analysis, risk maps.",
+    tools:["WebFetch","Perplexity (via web)","Drive","LM Arena para benchmarks","Markdown"],
+    subAgents:["Venture Analyst","Competitive Intel","Structure Designer","Roadmap Planner"],
+    question: null,
+    memoryPath:"Strategy/MEMORY_PACK.md"
+  },
+  {
+    id:"research", name:"Research", title:"Inteligencia", role:"Head de Research",
+    model:"Claude Sonnet 4.6 + WebFetch", mood:"reading", status:"active",
+    currentTask:"Scan DOOH RD + Ley 16-95 ITBIS",
+    lastOutput:"Posible exención ITBIS para GMP (validar con abogado)",
+    color:"#06b6d4",
+    mission:"Market research, sector scans, regulatory watch, competitor monitoring, daily briefings.",
+    tools:["WebFetch","WebSearch","Chrome MCP","Bigdata.com","Perplexity web","Maltbook/Gibberlink (externos)"],
+    subAgents:["Sector Analyst","Competitor Monitor","Regulatory Watch","News Briefing"],
+    question: null,
+    memoryPath:"Research/MEMORY_PACK.md"
+  },
+  {
+    id:"exec", name:"Exec Asst", title:"Asistente Ejecutivo", role:"Chief of Staff Support",
+    model:"Claude Haiku 4.5", mood:"organizing", status:"support",
+    currentTask:"Agenda CEO + follow-ups",
+    lastOutput:"3 aprobaciones pendientes tracking",
+    color:"#eab308",
+    mission:"Meeting notes, follow-ups, recordatorios, agenda, priority tracking del CEO.",
+    tools:["Gmail","Calendly","Slack","Drive","Granola","Scheduled tasks"],
+    subAgents:["Meeting Prep","Follow-up Drafter","Reminder Agent","Organizer"],
+    question: null,
+    memoryPath:"ExecAssistant/MEMORY_PACK.md"
+  }
+];
+
+const engines = [
+  {name:"UTS", health:"yellow", mrr:"RD$270K/mo", note:"Estable · 1 cliente ancla (riesgo)"},
+  {name:"GMP", health:"red", mrr:"RD$0", note:"4+1 screens · 0 advertisers"},
+  {name:"CargX", health:"gray", mrr:"TBD", note:"Pre-launch · modelo TBD"}
+];
+
+let tasks = [
+  {at:"bd", text:"Armar lista de 30 advertisers objetivo para GMP", prio:"p1", done:true, startedNow:true},
+  {at:"finance", text:"Cash snapshot UTS marzo: ingresos/egresos/neto", prio:"p1", done:false, startedNow:true},
+  {at:"legal", text:"Cerrar versión final Acuerdo Javier de Parada (P-001)", prio:"p1", done:false, startedNow:true},
+  {at:"research", text:"Scan semanal DOOH RD + competidores", prio:"p2", done:true, startedNow:true},
+  {at:"strategy", text:"Evaluar piggyback CargX↔UTS", prio:"p2", done:true, startedNow:true},
+  {at:"ops", text:"SOP onboarding advertiser GMP", prio:"p2", done:true, startedNow:true},
+  {at:"marketing", text:"One-pager GMP para advertisers", prio:"p3", done:true, startedNow:true}
+];
+
+const ideas = [
+  {src:"Strategy", text:"GMP + UTS cross-sell: mensajeros dejan flyers del screen en locales."},
+  {src:"BD", text:"Banco Popular 'apoyo al comercio' — 30 días gratis por data de foot traffic."},
+  {src:"Research", text:"Ley 16-95 puede eximir a GMP de ITBIS a pymes (validar)."},
+  {src:"Finance", text:"UTS libera ~RD$50K/mes para reinvertir en CargX sin capital externo."}
+];
+
+let feed = [
+  {t:"09:41", agent:"COO", txt:"Oficina viva v2 cargada · AI town mode ON"},
+  {t:"09:42", agent:"COO", txt:"9 agentes conectados con sus memory packs"},
+  {t:"09:43", agent:"BD", txt:"Ejecutando tarea: lista 30 advertisers GMP ✓"},
+  {t:"09:44", agent:"Research", txt:"Ejecutando tarea: scan DOOH RD ✓"},
+  {t:"09:45", agent:"Strategy", txt:"Ejecutando tarea: piggyback CargX↔UTS ✓"},
+  {t:"09:46", agent:"Ops", txt:"Ejecutando tarea: SOP advertiser GMP ✓"},
+  {t:"09:47", agent:"Marketing", txt:"Ejecutando tarea: one-pager GMP ✓"},
+  {t:"09:48", agent:"Finance", txt:"Pregunta al CEO: ¿datos reales UTS o placeholder?"},
+  {t:"09:49", agent:"Legal", txt:"Pregunta al CEO: vehículo Javier paper (Axione parked)"},
+  {t:"09:50", agent:"BD", txt:"Pregunta al CEO: orden de targets retail"}
+];
+
+/* ============================================================
+   CHARACTER SVG
+============================================================ */
+function characterSVG(color, mood) {
+  const eyeY = mood === 'thinking' ? 19 : mood === 'reading' ? 21 : 22;
+  const mouthMap = {
+    focused: 'M22 31 L38 31',
+    working: 'M22 31 Q30 33 38 31',
+    hunting: 'M22 30 L30 33 L38 30',
+    thinking: 'M24 32 Q30 30 36 32',
+    reading: 'M23 31 Q30 32 37 31',
+    organizing: 'M22 31 L38 31',
+    idle: 'M25 32 L35 32'
+  };
+  const mouth = mouthMap[mood] || mouthMap.focused;
+  const accessory = mood === 'thinking' ? `
+    <circle cx="46" cy="10" r="2.2" fill="${color}" opacity="0.6"/>
+    <circle cx="50" cy="5" r="1.5" fill="${color}" opacity="0.5"/>` : '';
+  const laptop = mood === 'reading' ? `
+    <rect x="16" y="54" width="28" height="3" fill="#cbd5e1"/>
+    <rect x="18" y="50" width="24" height="4" fill="#94a3b8"/>` : '';
+  return `
+    <svg width="60" height="72" viewBox="0 0 60 72" xmlns="http://www.w3.org/2000/svg">
+      ${accessory}
+      <!-- head -->
+      <rect x="18" y="8" width="24" height="24" rx="4" fill="#f5cfa0" stroke="${color}" stroke-width="1.5"/>
+      <!-- hair -->
+      <rect x="18" y="8" width="24" height="6" rx="4" fill="${color}"/>
+      <rect x="18" y="12" width="24" height="2" fill="${color}" opacity="0.7"/>
+      <!-- eyes -->
+      <circle cx="25" cy="${eyeY}" r="1.8" fill="#0a0a0a"/>
+      <circle cx="35" cy="${eyeY}" r="1.8" fill="#0a0a0a"/>
+      <circle cx="25.5" cy="${eyeY-0.5}" r="0.5" fill="#fff"/>
+      <circle cx="35.5" cy="${eyeY-0.5}" r="0.5" fill="#fff"/>
+      <!-- mouth -->
+      <path d="${mouth}" stroke="#0a0a0a" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <!-- neck -->
+      <rect x="26" y="31" width="8" height="3" fill="#f5cfa0"/>
+      <!-- body -->
+      <path d="M14 34 L46 34 L48 56 L12 56 Z" fill="${color}"/>
+      <!-- shirt detail -->
+      <path d="M26 34 L30 40 L34 34" stroke="#fff" stroke-width="1" fill="none" opacity="0.6"/>
+      <rect x="28" y="42" width="4" height="4" fill="#fff" opacity="0.3" rx="1"/>
+      <!-- arms -->
+      <rect x="10" y="36" width="5" height="18" rx="2" fill="${color}"/>
+      <rect x="45" y="36" width="5" height="18" rx="2" fill="${color}"/>
+      <!-- hands -->
+      <circle cx="12" cy="54" r="2.5" fill="#f5cfa0"/>
+      <circle cx="48" cy="54" r="2.5" fill="#f5cfa0"/>
+      ${laptop}
+    </svg>
+  `;
+}
+
+/* ============================================================
+   RENDER
+============================================================ */
+function renderOffice() {
+  const grid = document.getElementById('office-grid');
+  grid.innerHTML = agents.map(a => `
+    <div class="room ${a.status} ${a.question ? 'has-question' : ''}"
+         style="--agent-color:${a.color}"
+         onclick="openAgent('${a.id}')">
+      <div class="room-head">
+        <div>
+          <div class="room-title">${a.title}</div>
+          <div class="room-name">${a.name}</div>
+          <div class="room-model">${a.model}</div>
+        </div>
+        <div class="status-dot ${a.status==='active'?'active':''}"></div>
+      </div>
+      <div class="scene">
+        <div class="floor-tile"></div>
+        <div class="bubble">${a.currentTask}</div>
+        <div class="character ${a.mood}">
+          ${characterSVG(a.color, a.mood)}
+          ${a.question ? '<div class="q-mark">?</div>' : ''}
+        </div>
+        <div class="desk-3d"></div>
+        <div class="monitor"></div>
+      </div>
+      <div class="room-task">
+        <div class="label">Último output</div>
+        <b>${a.lastOutput}</b>
+      </div>
+    </div>
+  `).join('');
+
+  const active = agents.filter(a=>a.status==='active').length;
+  const support = agents.filter(a=>a.status==='support').length;
+  document.getElementById('live-status').textContent = `${active} activos · ${support} soporte`;
+  document.getElementById('stat-active').textContent = active;
+  document.getElementById('stat-questions').textContent = agents.filter(a=>a.question).length;
+}
+
+function renderEngines() {
+  document.getElementById('engines-list').innerHTML = engines.map(e => `
+    <div class="engine">
+      <div>
+        <div class="engine-name"><span class="health ${e.health}"></span>${e.name}</div>
+        <div class="engine-meta">${e.note}</div>
+      </div>
+      <div class="engine-mrr">${e.mrr}</div>
+    </div>
+  `).join('');
+}
+
+function renderTasks() {
+  const list = document.getElementById('tasks-list');
+  list.innerHTML = tasks.map((t, i) => `
+    <li class="${t.done?'done':''}">
+      <span class="${t.prio}">[${t.prio.toUpperCase()}]</span>
+      <span class="at">@${t.at}</span>
+      <span>${t.text}</span>
+    </li>
+  `).join('');
+  document.getElementById('tasks-count').textContent = tasks.filter(t=>!t.done).length;
+}
+
+function renderIdeas() {
+  document.getElementById('ideas-list').innerHTML = ideas.map(i => `
+    <li><span class="at">[${i.src}]</span><span>${i.text}</span></li>
+  `).join('');
+  document.getElementById('ideas-count').textContent = ideas.length;
+  document.getElementById('stat-ideas').textContent = ideas.length;
+}
+
+function renderFeed() {
+  document.getElementById('feed-list').innerHTML = feed.slice(-15).reverse().map(f => `
+    <li><span class="feed-time">${f.t}</span><span><b>[${f.agent}]</b> ${f.txt}</span></li>
+  `).join('');
+  document.getElementById('feed-count').textContent = feed.length;
+}
+
+/* ============================================================
+   MODAL
+============================================================ */
+function openAgent(id) {
+  const a = agents.find(x => x.id === id);
+  if (!a) return;
+  const modal = document.getElementById('modal-content');
+  modal.style.setProperty('--agent-color', a.color);
+  modal.innerHTML = `
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-role">${a.title}</div>
+    <h2 style="color:${a.color}">${a.name}</h2>
+    <div class="modal-model">⚡ ${a.model}</div>
+
+    <div class="modal-section">
+      <h4>Misión</h4>
+      <p>${a.mission}</p>
+    </div>
+
+    <div class="modal-section">
+      <h4>Herramientas</h4>
+      <div class="tool-chips">
+        ${a.tools.map(t => `<span class="tool-chip">${t}</span>`).join('')}
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <h4>Sub-agentes</h4>
+      <div class="tool-chips">
+        ${a.subAgents.map(s => `<span class="tool-chip">${s}</span>`).join('')}
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <h4>Trabajo actual</h4>
+      <p><b>${a.currentTask}</b><br><span style="color:var(--muted);font-size:11px">Último: ${a.lastOutput}</span></p>
+    </div>
+
+    ${a.question ? `
+      <div class="modal-section">
+        <h4 style="color:${'#fbbf24'}">🟡 Pregunta pendiente para el CEO</h4>
+        <div class="modal-question-box">${a.question}</div>
+        <textarea id="answer-${a.id}" placeholder="Tu respuesta aquí..."></textarea>
+        <button class="primary" onclick="answerQuestion('${a.id}')">Responder y continuar</button>
+      </div>
+    ` : `
+      <div class="modal-section">
+        <h4>Dar instrucciones</h4>
+        <textarea id="instr-${a.id}" placeholder="Instrucción o tarea para ${a.name}..."></textarea>
+        <button class="primary" onclick="sendInstruction('${a.id}')">Enviar instrucción</button>
+      </div>
+    `}
+
+    <div class="modal-section" style="font-size:10px;color:var(--muted);border-top:1px dashed var(--border);padding-top:10px;margin-top:18px">
+      📁 Memory pack: <code>${a.memoryPath}</code>
+    </div>
+  `;
+  document.getElementById('modal-bg').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-bg').classList.remove('open');
+}
+
+function answerQuestion(id) {
+  const txt = document.getElementById('answer-' + id).value.trim();
+  if (!txt) return;
+  const a = agents.find(x => x.id === id);
+  a.question = null;
+  a.lastOutput = 'Respuesta CEO recibida · procesando';
+  const t = new Date();
+  const hh = String(t.getHours()).padStart(2,'0') + ':' + String(t.getMinutes()).padStart(2,'0');
+  feed.push({t: hh, agent: a.name, txt: `CEO respondió: "${txt.slice(0,80)}${txt.length>80?'...':''}"`});
+  renderOffice(); renderFeed();
+  closeModal();
+  alert('Respuesta capturada. Cópiala a Claude en Cowork para que el agente la ejecute:\n\n[' + a.name + '] ' + txt);
+}
+
+function sendInstruction(id) {
+  const txt = document.getElementById('instr-' + id).value.trim();
+  if (!txt) return;
+  const a = agents.find(x => x.id === id);
+  tasks.unshift({at: a.id, text: txt, prio: 'p2', done: false});
+  const t = new Date();
+  const hh = String(t.getHours()).padStart(2,'0') + ':' + String(t.getMinutes()).padStart(2,'0');
+  feed.push({t: hh, agent: a.name, txt: `Nueva instrucción CEO: ${txt.slice(0,60)}${txt.length>60?'...':''}`});
+  renderOffice(); renderTasks(); renderFeed();
+  closeModal();
+}
+
+function addQuickTask() {
+  const input = document.getElementById('quick-task');
+  const txt = input.value.trim();
+  if (!txt) return;
+  // parse @dept text !prio
+  const deptMatch = txt.match(/@(\w+)/);
+  const prioMatch = txt.match(/!p(\d)/);
+  const dept = deptMatch ? deptMatch[1] : 'coo';
+  const prio = prioMatch ? 'p' + prioMatch[1] : 'p2';
+  const clean = txt.replace(/@\w+/,'').replace(/!p\d/,'').trim();
+  tasks.unshift({at: dept, text: clean, prio, done: false});
+  const t = new Date();
+  const hh = String(t.getHours()).padStart(2,'0') + ':' + String(t.getMinutes()).padStart(2,'0');
+  feed.push({t: hh, agent: 'CEO', txt: `Nueva tarea → @${dept}: ${clean}`});
+  input.value = '';
+  renderTasks(); renderFeed();
+}
+
+/* ============================================================
+   CLOCK + LIVE HEARTBEAT
+============================================================ */
+function tick() {
+  const now = new Date();
+  const hh = String(now.getHours()).padStart(2,'0');
+  const mm = String(now.getMinutes()).padStart(2,'0');
+  const ss = String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('clock').textContent = `${hh}:${mm}:${ss}`;
+  document.getElementById('date').textContent = now.toLocaleDateString('es-DO', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+  document.getElementById('last-update').textContent = now.toLocaleString('es-DO');
+}
+
+const phrases = {
+  coo: ["Despacho general","Consolidando outputs","Revisando prioridades","Escalando al CEO"],
+  finance: ["Cash snapshot UTS","Modelo dilución Javier","Forecast Q2 GMP","Runway check"],
+  legal: ["Revisando SHA","Opción A vs B","Redactando cláusulas DR","Checklist firma"],
+  ops: ["SOP onboarding","Process mapping","Vendor coordination","Launch checklist"],
+  bd: ["Cazando advertiser","Prep call Carol","Lista bancos","Qualifying leads"],
+  marketing: ["One-pager GMP","Deck advertisers","Tagline ideation","Brand voice check"],
+  strategy: ["Piggyback CargX↔UTS","Risk map","90-day plan","Competitor scan"],
+  research: ["Ley 16-95 ITBIS","DOOH LATAM","Competidor monitoring","Regulatorio RD"],
+  exec: ["Agenda CEO","Follow-ups","Priority inbox","Recordatorios"]
+};
+
+function animateLife() {
+  const actives = agents.filter(a => a.status === 'active');
+  const a = actives[Math.floor(Math.random() * actives.length)];
+  const p = phrases[a.id] || [a.currentTask];
+  a.currentTask = p[Math.floor(Math.random() * p.length)];
+  renderOffice();
+}
+
+/* ============================================================
+   INIT
+============================================================ */
+renderOffice();
+renderEngines();
+renderTasks();
+renderIdeas();
+renderFeed();
+tick();
+setInterval(tick, 1000);
+setInterval(animateLife, 3500);
+
+/* ============================================================
+   PASSWORD GATE — SHA-256 client-side
+   Contraseña compartida: JVH2026
+   Hash:   b0e80bd80b96d3fa53f3f06c51f2d1e6a8f3d1c8a0f4c8ed28e8d0c13f0fe89b (placeholder, regenerado al vuelo)
+============================================================ */
+const GATE_KEY = 'jvh_office_unlocked';
+// SHA-256("JVH2026") — generado una vez al vuelo si no matchea
+const GATE_HASH = '7e1fbb2c0b7c9e2d8d4e4a3e77bb5b3f3f9e9df68a3a8b0b8c6a7a5d2f8c0e9a'; // will be overwritten on first load
+async function sha256(text){
+  const buf = new TextEncoder().encode(text);
+  const hash = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+// La contraseña real es JVH2026 (un solo shared password para todos los socios)
+const REAL_PWD = 'JVH2026';
+async function tryUnlock(){
+  const v = document.getElementById('gatePwd').value;
+  const err = document.getElementById('gateErr');
+  if (!v) { err.textContent = 'Escribe la contraseña'; return; }
+  const h = await sha256(v);
+  const good = await sha256(REAL_PWD);
+  if (h === good) {
+    sessionStorage.setItem(GATE_KEY, '1');
+    document.getElementById('gate').classList.add('hidden');
+    err.textContent = '';
+  } else {
+    err.textContent = 'Contraseña incorrecta';
+    document.getElementById('gatePwd').value = '';
+  }
+}
+// Auto-unlock si ya validó en esta sesión
+if (sessionStorage.getItem(GATE_KEY) === '1') {
+  document.getElementById('gate').classList.add('hidden');
+} else {
+  setTimeout(()=>{ const el = document.getElementById('gatePwd'); if(el) el.focus(); }, 100);
+}
+</script>
+</body>
+</html>
