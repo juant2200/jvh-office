@@ -2,17 +2,18 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>JV Holdings · Oficina Viva</title>
+<title>JV Holdings · Oficina Viva v3</title>
 <style>
   :root {
-    --bg: #070b12;
-    --bg2: #0f1623;
-    --panel: #141c2d;
-    --panel2: #1d2940;
-    --border: #263650;
-    --border2: #334a6e;
+    --bg: #050811;
+    --bg2: #0b1220;
+    --panel: #0f1729;
+    --panel2: #18223a;
+    --border: #223252;
+    --border2: #31466c;
     --ink: #e8eaf0;
     --muted: #8896b0;
+    --dim: #5b6a84;
     --accent: #10b981;
     --accent2: #34d399;
     --gold: #fbbf24;
@@ -21,22 +22,26 @@
     --purple: #a855f7;
     --pink: #ec4899;
     --cyan: #06b6d4;
+    --orange: #f59e0b;
+    --yellow: #eab308;
+    --floor: #1a2540;
+    --wall: #0a0f1a;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100%; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
     background:
-      radial-gradient(ellipse at top left, rgba(16,185,129,0.08) 0%, transparent 50%),
-      radial-gradient(ellipse at bottom right, rgba(168,85,247,0.06) 0%, transparent 50%),
+      radial-gradient(ellipse at top left, rgba(16,185,129,0.07) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, rgba(168,85,247,0.05) 0%, transparent 50%),
       var(--bg);
     color: var(--ink);
     min-height: 100vh;
-    padding: 16px;
+    padding: 14px;
     font-size: 13px;
     overflow-x: hidden;
   }
-  .wrap { max-width: 1800px; margin: 0 auto; }
+  .wrap { max-width: 1920px; margin: 0 auto; }
 
   /* ===== HEADER ===== */
   header {
@@ -47,7 +52,8 @@
     background: linear-gradient(135deg, var(--panel) 0%, var(--panel2) 100%);
     border: 1px solid var(--border);
     border-radius: 14px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
+    position: relative;
   }
   .brand { display: flex; align-items: center; gap: 14px; }
   .brand-mark {
@@ -60,9 +66,11 @@
   }
   .brand h1 { font-size: 18px; letter-spacing: 0.3px; font-weight: 800; }
   .brand p { font-size: 11px; color: var(--muted); margin-top: 2px; }
-  .header-right { display: flex; align-items: center; gap: 18px; }
+  .header-right { display: flex; align-items: center; gap: 20px; }
   .stat { text-align: right; }
-  .stat .num { font-size: 20px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--accent); }
+  .stat .num { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--accent); }
+  .stat.warn .num { color: var(--gold); }
+  .stat.danger .num { color: var(--red); }
   .stat .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
   .clock-box { text-align: right; padding-left: 18px; border-left: 1px solid var(--border); }
   .clock { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
@@ -73,7 +81,15 @@
     animation: pulse 1.4s ease-in-out infinite;
     box-shadow: 0 0 8px var(--accent);
   }
-  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(1.3)} }
+  .heartbeat.stale { background: var(--red); box-shadow: 0 0 8px var(--red); }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.45;transform:scale(1.35)} }
+  .alarm-bar {
+    position: absolute; inset: 0; pointer-events: none; border-radius: 14px;
+    box-shadow: inset 0 0 0 2px var(--red); opacity: 0;
+    animation: alarm 2s ease-in-out infinite;
+  }
+  .alarm-bar.on { opacity: 1; }
+  @keyframes alarm { 0%,100%{opacity:0.2} 50%{opacity:0.9} }
 
   /* ===== FOCUS BANNER ===== */
   .focus {
@@ -81,7 +97,7 @@
     border: 1px solid rgba(16,185,129,0.35);
     border-radius: 12px;
     padding: 10px 16px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     display: flex; justify-content: space-between; align-items: center;
     flex-wrap: wrap; gap: 10px; font-size: 12px;
   }
@@ -92,1118 +108,2061 @@
     border: 1px solid rgba(16,185,129,0.4);
     padding: 3px 10px; border-radius: 14px; font-size: 11px; font-weight: 600;
   }
-  .chip.parked { background: rgba(139,149,168,0.08); border-color: rgba(139,149,168,0.25); color: var(--muted); text-decoration: line-through; }
+  .chip.parked { background: rgba(139,149,168,0.08); border-color: rgba(139,149,168,0.25); color: var(--dim); text-decoration: line-through; }
 
-  /* ===== MAIN LAYOUT ===== */
+  /* ===== LAYOUT ===== */
   .layout {
     display: grid;
-    grid-template-columns: 260px 1fr 340px;
-    gap: 14px;
-  }
-  @media (max-width: 1400px) { .layout { grid-template-columns: 1fr; } }
-
-  /* ===== LEFT: TOOLS RACK ===== */
-  .tools-rack {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 14px;
-    height: fit-content;
-  }
-  .tools-rack h3 { font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px; color: var(--muted); margin-bottom: 10px; }
-  .tool-group { margin-bottom: 14px; }
-  .tool-group-name { font-size: 10px; color: var(--muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .tool-list { list-style: none; }
-  .tool {
-    display: flex; align-items: center; gap: 8px;
-    padding: 6px 8px; border-radius: 8px; font-size: 12px;
-    transition: background 0.2s;
-  }
-  .tool:hover { background: var(--panel2); }
-  .tool .ico { width: 18px; height: 18px; border-radius: 4px; display: grid; place-items: center; font-size: 11px; font-weight: 700; flex-shrink: 0; }
-  .tool .name { flex: 1; }
-  .tool .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px var(--accent); }
-  .tool .dot.off { background: var(--muted); box-shadow: none; }
-
-  /* ===== CENTER: ISOMETRIC OFFICE ===== */
-  .office-stage {
-    background:
-      radial-gradient(ellipse at center, rgba(16,185,129,0.04) 0%, transparent 70%),
-      linear-gradient(180deg, #0a1020 0%, #060a14 100%);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 20px;
-    position: relative;
-    min-height: 720px;
-    overflow: hidden;
-  }
-  .stage-header {
-    display: flex; justify-content: space-between; align-items: center;
-    margin-bottom: 14px; padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
-  }
-  .stage-header h2 { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--muted); }
-  .stage-live { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--accent); }
-
-  /* grid of offices (pseudo-isometric via CSS) */
-  .office-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    perspective: 1400px;
-  }
-  .room {
-    position: relative;
-    background: linear-gradient(160deg, rgba(38,54,80,0.35) 0%, rgba(20,28,45,0.7) 100%);
-    border: 1px solid var(--border2);
-    border-radius: 12px;
-    padding: 14px;
-    min-height: 200px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    overflow: hidden;
-    transform-style: preserve-3d;
-  }
-  .room::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: repeating-linear-gradient(
-      45deg,
-      rgba(255,255,255,0.015),
-      rgba(255,255,255,0.015) 1px,
-      transparent 1px,
-      transparent 14px
-    );
-    pointer-events: none;
-  }
-  .room:hover {
-    transform: translateY(-3px) rotateX(2deg);
-    border-color: var(--agent-color, var(--accent));
-    box-shadow: 0 18px 40px rgba(0,0,0,0.5), 0 0 0 1px var(--agent-color, var(--accent));
-  }
-  .room.active .status-dot {
-    animation: pulse 1.4s ease-in-out infinite;
-    box-shadow: 0 0 10px var(--agent-color, var(--accent));
-  }
-  .room.has-question {
-    border-color: var(--gold);
-    box-shadow: 0 0 0 1px rgba(251,191,36,0.3), 0 0 20px rgba(251,191,36,0.15);
-  }
-
-  .room-head {
-    display: flex; justify-content: space-between; align-items: flex-start;
-    margin-bottom: 8px; position: relative; z-index: 2;
-  }
-  .room-title {
-    font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
-    color: var(--muted); font-weight: 600;
-  }
-  .room-name { font-size: 14px; font-weight: 800; margin-top: 1px; color: var(--ink); }
-  .room-model {
-    font-size: 9px; color: var(--agent-color, var(--accent));
-    margin-top: 2px; font-weight: 600; opacity: 0.85;
-  }
-  .status-dot {
-    width: 9px; height: 9px; border-radius: 50%;
-    background: var(--muted);
-  }
-  .status-dot.active { background: var(--agent-color, var(--accent)); }
-
-  /* CHARACTER scene */
-  .scene {
-    position: relative;
-    height: 100px;
-    display: flex; align-items: flex-end; justify-content: center;
-    margin: 6px 0 10px;
-  }
-  .floor-tile {
-    position: absolute;
-    bottom: 8px; left: 50%; transform: translateX(-50%);
-    width: 90px; height: 20px;
-    background: linear-gradient(180deg, rgba(38,54,80,0.6), rgba(20,28,45,0.3));
-    border-radius: 50%;
-    filter: blur(2px);
-  }
-  .character {
-    position: relative;
-    z-index: 2;
-    animation: bob 2.4s ease-in-out infinite;
-  }
-  .character.thinking { animation: bob 3.4s ease-in-out infinite, lean 3.4s ease-in-out infinite; }
-  .character.hunting { animation: bob 1.3s ease-in-out infinite; }
-  .character.working { animation: bob 2s ease-in-out infinite; }
-  @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-  @keyframes lean { 0%,100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-3px) rotate(-2deg); } }
-
-  .desk-3d {
-    position: absolute;
-    bottom: 0; left: 50%; transform: translateX(-50%);
-    width: 86px; height: 16px;
-    background: linear-gradient(180deg, #2a3d5c, #16223a);
-    border-radius: 4px;
-    border-top: 2px solid var(--agent-color, var(--accent));
-    box-shadow: 0 4px 8px rgba(0,0,0,0.4);
-  }
-  .monitor {
-    position: absolute;
-    bottom: 12px; left: 50%; transform: translateX(-50%) translateX(22px);
-    width: 22px; height: 16px;
-    background: #0a0f1a;
-    border: 1.5px solid #2a3d5c;
-    border-radius: 2px;
-    z-index: 3;
-  }
-  .monitor::before {
-    content: '';
-    position: absolute;
-    inset: 2px;
-    background: linear-gradient(135deg, var(--agent-color, var(--accent)), transparent);
-    opacity: 0.5;
-    animation: screen-flicker 2s ease-in-out infinite;
-  }
-  @keyframes screen-flicker { 0%,100% { opacity: 0.5; } 50% { opacity: 0.8; } }
-
-  /* thought bubble */
-  .bubble {
-    position: absolute;
-    bottom: calc(100% + 2px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--bg2);
-    border: 1px solid var(--border2);
-    padding: 6px 10px;
-    border-radius: 10px;
-    font-size: 10px;
-    width: max-content;
-    max-width: 170px;
-    text-align: center;
-    line-height: 1.35;
-    box-shadow: 0 6px 14px rgba(0,0,0,0.4);
-    z-index: 4;
-  }
-  .bubble::after {
-    content: '';
-    position: absolute;
-    top: 100%; left: 50%; transform: translateX(-50%);
-    border: 5px solid transparent;
-    border-top-color: var(--border2);
-  }
-
-  /* question mark indicator */
-  .q-mark {
-    position: absolute;
-    top: -4px; right: -10px;
-    width: 22px; height: 22px;
-    background: var(--gold);
-    color: #2a1a00;
-    border-radius: 50%;
-    display: grid; place-items: center;
-    font-weight: 900; font-size: 13px;
-    animation: bounce 1s ease-in-out infinite;
-    box-shadow: 0 0 14px rgba(251,191,36,0.5);
-    z-index: 5;
-  }
-  @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-
-  .room-task {
-    font-size: 10px;
-    color: var(--muted);
-    border-top: 1px dashed var(--border);
-    padding-top: 6px;
-    min-height: 30px;
-    position: relative; z-index: 2;
-  }
-  .room-task .label {
-    font-size: 9px;
-    text-transform: uppercase;
-    letter-spacing: 0.8px;
-    color: var(--agent-color, var(--accent));
-    margin-bottom: 2px;
-  }
-  .room-task b { color: var(--ink); display: block; font-size: 11px; }
-
-  /* ===== RIGHT: SIDEBAR ===== */
-  .sidebar {
-    display: flex;
-    flex-direction: column;
+    grid-template-columns: 300px 1fr 340px;
     gap: 12px;
   }
+  .sidebar {
+    display: flex; flex-direction: column; gap: 12px;
+    max-height: calc(100vh - 160px); overflow-y: auto; padding-right: 2px;
+  }
+  .sidebar::-webkit-scrollbar { width: 6px; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
   .card {
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 12px;
+    background: linear-gradient(135deg, var(--panel) 0%, var(--panel2) 100%);
+    border: 1px solid var(--border); border-radius: 12px;
     padding: 12px 14px;
   }
   .card h3 {
     font-size: 11px; text-transform: uppercase; letter-spacing: 1.2px;
-    color: var(--muted); margin-bottom: 10px;
+    color: var(--muted); margin-bottom: 10px; font-weight: 700;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .count {
+    background: var(--border); padding: 2px 8px; border-radius: 10px;
+    font-size: 10px; color: var(--ink); font-weight: 700;
+  }
+  .count.hot { background: var(--red); color: #fff; }
+
+  /* ===== FLOOR PLAN (center) ===== */
+  .office-stage {
+    background: linear-gradient(135deg, var(--panel) 0%, var(--panel2) 100%);
+    border: 1px solid var(--border); border-radius: 14px;
+    padding: 14px;
+    display: flex; flex-direction: column; gap: 10px;
+    min-height: calc(100vh - 160px);
+  }
+  .stage-header {
     display: flex; justify-content: space-between; align-items: center;
   }
-  .card h3 .count {
-    background: var(--panel2);
-    border-radius: 10px; padding: 2px 8px;
-    font-size: 10px; color: var(--ink);
+  .stage-header h2 {
+    font-size: 13px; font-weight: 700; letter-spacing: 0.3px;
+    color: var(--ink);
+  }
+  .stage-header h2 span { color: var(--muted); font-weight: 500; font-size: 11px; margin-left: 8px; }
+  .stage-live { font-size: 11px; color: var(--muted); }
+
+  .floor {
+    position: relative;
+    width: 100%; aspect-ratio: 1000 / 640;
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 32px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 32px),
+      radial-gradient(ellipse at center, rgba(16,185,129,0.05) 0%, transparent 70%),
+      var(--floor);
+    border: 2px solid var(--border2);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: inset 0 0 60px rgba(0,0,0,0.5), 0 20px 40px rgba(0,0,0,0.4);
+  }
+  .zone {
+    position: absolute;
+    border: 1.5px dashed rgba(255,255,255,0.12);
+    border-radius: 8px;
+    background: rgba(255,255,255,0.015);
+    pointer-events: none;
+  }
+  .zone-label {
+    position: absolute; top: 4px; left: 8px;
+    font-size: 9px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 1.1px; color: var(--zone-color, var(--muted));
+    opacity: 0.7;
+  }
+  .desk-obj {
+    position: absolute;
+    width: 60px; height: 26px;
+    border-radius: 4px;
+    background: linear-gradient(180deg, #3a4a6a 0%, #1f2a42 100%);
+    border: 1px solid #556884;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.4);
+    pointer-events: none;
+  }
+  .desk-obj::before {
+    content: ""; position: absolute;
+    top: 3px; left: 6px; right: 6px; height: 10px;
+    background: #0a0f1a; border-radius: 2px;
+    border: 1px solid #2a3a54;
+  }
+  .desk-obj::after {
+    content: ""; position: absolute;
+    top: 5px; left: 10px; width: 8px; height: 6px;
+    background: var(--screen-color, var(--accent));
+    opacity: 0.7; border-radius: 1px;
+    animation: flicker 2.5s ease-in-out infinite;
+  }
+  @keyframes flicker { 0%,100%{opacity:0.6} 50%{opacity:1} }
+
+  .table-obj {
+    position: absolute;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #3a4a6a 0%, #1f2a42 100%);
+    border: 1px solid #556884;
+    pointer-events: none;
+  }
+  .plant {
+    position: absolute; width: 18px; height: 22px;
+    pointer-events: none;
   }
 
-  /* task input */
+  /* ===== CHARACTERS ===== */
+  .character {
+    position: absolute;
+    width: 44px; height: 56px;
+    transform: translate(-50%, -80%);
+    cursor: pointer;
+    transition: left 3s ease-in-out, top 3s ease-in-out;
+    z-index: 10;
+  }
+  .character:hover { z-index: 100; }
+  .character .sprite {
+    animation: bob 2.4s ease-in-out infinite;
+    transform-origin: center bottom;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.6));
+  }
+  @keyframes bob {
+    0%,100% { transform: translateY(0) }
+    50% { transform: translateY(-2px) }
+  }
+  .character.thinking .sprite { animation: bob 3.2s ease-in-out infinite, lean 3.2s ease-in-out infinite; }
+  .character.hunting .sprite { animation: bob 1.4s ease-in-out infinite; }
+  .character.working .sprite { animation: bob 2s ease-in-out infinite; }
+  .character.idle .sprite { animation: bob 4s ease-in-out infinite; opacity: 0.7; }
+  @keyframes lean {
+    0%,100% { transform: rotate(0deg) }
+    50% { transform: rotate(-2deg) }
+  }
+
+  .char-name {
+    position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+    font-size: 10px; font-weight: 800; color: var(--ink);
+    white-space: nowrap;
+    background: rgba(0,0,0,0.6);
+    padding: 1px 6px; border-radius: 8px;
+    border: 1px solid var(--char-color, var(--accent));
+    box-shadow: 0 0 10px rgba(0,0,0,0.4);
+  }
+  .bubble {
+    position: absolute;
+    bottom: 72px; left: 50%; transform: translateX(-50%);
+    background: var(--panel2);
+    border: 1.5px solid var(--char-color, var(--accent));
+    padding: 6px 10px;
+    border-radius: 10px;
+    font-size: 10px;
+    color: var(--ink);
+    white-space: nowrap;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+    pointer-events: none;
+    opacity: 0;
+    animation: bubble-fade 9s ease-in-out infinite;
+  }
+  .bubble::after {
+    content: "";
+    position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%) rotate(45deg);
+    width: 8px; height: 8px;
+    background: var(--panel2);
+    border-right: 1.5px solid var(--char-color, var(--accent));
+    border-bottom: 1.5px solid var(--char-color, var(--accent));
+  }
+  @keyframes bubble-fade {
+    0%,5% { opacity: 0; transform: translateX(-50%) translateY(4px) }
+    10%,65% { opacity: 1; transform: translateX(-50%) translateY(0) }
+    75%,100% { opacity: 0; transform: translateX(-50%) translateY(-4px) }
+  }
+  .question-mark {
+    position: absolute; top: -28px; right: -8px;
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--red);
+    color: #fff; font-weight: 900; font-size: 14px;
+    display: grid; place-items: center;
+    border: 2px solid #fff;
+    box-shadow: 0 0 0 3px rgba(239,68,68,0.3), 0 4px 12px rgba(239,68,68,0.6);
+    animation: shake 1.4s ease-in-out infinite;
+    z-index: 5;
+  }
+  @keyframes shake {
+    0%,100% { transform: rotate(0deg) scale(1) }
+    25% { transform: rotate(-8deg) scale(1.08) }
+    75% { transform: rotate(8deg) scale(1.08) }
+  }
+
+  /* ===== APPROVALS ===== */
+  .approval {
+    padding: 10px 12px;
+    border-radius: 9px;
+    background: var(--panel2);
+    border-left: 3px solid var(--owner-color, var(--muted));
+    margin-bottom: 8px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .approval:hover { background: var(--border); transform: translateX(2px); }
+  .approval.p1 { border-left-color: var(--red); background: rgba(239,68,68,0.08); }
+  .approval .ap-head {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 4px;
+  }
+  .approval .ap-id {
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 10px; color: var(--muted); font-weight: 700;
+  }
+  .approval .ap-prio {
+    font-size: 9px; padding: 1px 6px; border-radius: 6px;
+    background: var(--border); text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .approval.p1 .ap-prio { background: var(--red); color: #fff; }
+  .approval .ap-title { font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+  .approval .ap-blocker { font-size: 10px; color: var(--muted); font-style: italic; }
+
+  /* ===== ENGINES ===== */
+  .engine-row {
+    padding: 10px; border-radius: 9px;
+    background: var(--panel2);
+    margin-bottom: 8px;
+    display: grid; grid-template-columns: auto 1fr auto; gap: 10px;
+    align-items: center;
+  }
+  .engine-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    box-shadow: 0 0 8px currentColor;
+  }
+  .engine-dot.green  { background: var(--accent); color: var(--accent); }
+  .engine-dot.yellow { background: var(--gold); color: var(--gold); }
+  .engine-dot.red    { background: var(--red); color: var(--red); animation: pulse 1.5s ease-in-out infinite; }
+  .engine-dot.gray   { background: var(--dim); color: var(--dim); }
+  .engine-name { font-weight: 800; font-size: 12px; }
+  .engine-mrr { font-weight: 700; color: var(--accent2); font-variant-numeric: tabular-nums; font-size: 11px; }
+  .engine-note { font-size: 10px; color: var(--muted); grid-column: 1 / -1; margin-top: 2px; }
+
+  /* ===== TASKS / IDEAS / FEED ===== */
+  .tasks-list, .feed-list {
+    list-style: none;
+    max-height: 260px;
+    overflow-y: auto;
+  }
+  .tasks-list::-webkit-scrollbar, .feed-list::-webkit-scrollbar { width: 5px; }
+  .tasks-list::-webkit-scrollbar-thumb, .feed-list::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+  .tasks-list li {
+    padding: 8px 10px; border-radius: 7px;
+    background: var(--panel2); margin-bottom: 6px;
+    font-size: 11px;
+    border-left: 2px solid var(--accent);
+  }
+  .tasks-list li.done { opacity: 0.55; text-decoration: line-through; border-left-color: var(--dim); }
+  .tasks-list li .who {
+    font-size: 9px; font-weight: 800; text-transform: uppercase;
+    color: var(--accent2); letter-spacing: 0.5px;
+  }
+  .feed-list li {
+    display: flex; gap: 8px;
+    padding: 6px 0;
+    font-size: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .feed-list li:last-child { border-bottom: 0; }
+  .feed-time {
+    color: var(--muted); font-variant-numeric: tabular-nums;
+    min-width: 40px; font-weight: 700;
+  }
+  .feed-list li b { color: var(--accent2); }
+
   .task-input {
-    display: flex; gap: 6px; margin-top: 8px;
+    display: flex; gap: 6px;
   }
   .task-input input {
     flex: 1;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    color: var(--ink);
-    padding: 8px 10px;
-    border-radius: 8px;
-    font-size: 11px;
-    font-family: inherit;
+    background: var(--bg); border: 1px solid var(--border2);
+    color: var(--ink); padding: 9px 11px; border-radius: 8px;
+    font-size: 12px; font-family: inherit;
   }
-  .task-input input:focus {
-    outline: none;
-    border-color: var(--accent);
-  }
+  .task-input input:focus { outline: none; border-color: var(--accent); }
   .task-input button {
-    background: var(--accent);
-    color: #052015;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 11px;
-    cursor: pointer;
+    background: var(--accent); color: #04221a;
+    border: 0; padding: 0 14px; border-radius: 8px;
+    font-weight: 800; font-size: 11px; cursor: pointer;
+    text-transform: uppercase; letter-spacing: 0.5px;
   }
   .task-input button:hover { background: var(--accent2); }
-
-  .tasks-list { list-style: none; }
-  .tasks-list li {
-    display: flex; gap: 8px; align-items: flex-start;
-    padding: 6px 0; border-bottom: 1px solid var(--border);
-    font-size: 11px; line-height: 1.4;
-  }
-  .tasks-list li:last-child { border-bottom: none; }
-  .tasks-list .at { color: var(--accent); font-weight: 700; }
-  .tasks-list .p1 { color: var(--red); font-weight: 700; font-size: 9px; }
-  .tasks-list .p2 { color: var(--gold); font-weight: 700; font-size: 9px; }
-  .tasks-list .p3 { color: var(--muted); font-weight: 700; font-size: 9px; }
-  .tasks-list li.done { text-decoration: line-through; opacity: 0.4; }
-
-  .engines .engine {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 8px 0; border-bottom: 1px solid var(--border);
-  }
-  .engines .engine:last-child { border-bottom: none; }
-  .engine-name { font-weight: 700; font-size: 12px; }
-  .engine-meta { font-size: 10px; color: var(--muted); }
-  .engine-mrr { font-weight: 800; font-size: 11px; text-align: right; font-variant-numeric: tabular-nums; }
-  .health { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
-  .health.red { background: var(--red); box-shadow: 0 0 6px var(--red); }
-  .health.yellow { background: var(--gold); box-shadow: 0 0 6px var(--gold); }
-  .health.green { background: var(--accent); box-shadow: 0 0 6px var(--accent); }
-  .health.gray { background: var(--muted); }
-
-  .feed-list { list-style: none; max-height: 200px; overflow-y: auto; }
-  .feed-list li {
-    display: flex; gap: 8px; padding: 6px 0;
-    border-bottom: 1px solid var(--border); font-size: 10px; line-height: 1.4;
-  }
-  .feed-list li:last-child { border-bottom: none; }
-  .feed-time { color: var(--muted); font-variant-numeric: tabular-nums; flex-shrink: 0; min-width: 36px; font-size: 9px; }
 
   /* ===== MODAL ===== */
   .modal-bg {
     position: fixed; inset: 0;
-    background: rgba(0,0,0,0.75);
-    backdrop-filter: blur(8px);
-    display: none;
-    align-items: center; justify-content: center;
-    z-index: 100;
-    padding: 20px;
+    background: rgba(2,5,12,0.85);
+    backdrop-filter: blur(6px);
+    display: none; place-items: center;
+    z-index: 1000;
   }
-  .modal-bg.open { display: flex; }
+  .modal-bg.on { display: grid; }
   .modal {
     background: linear-gradient(135deg, var(--panel) 0%, var(--panel2) 100%);
-    border: 1px solid var(--border2);
+    border: 1.5px solid var(--agent-color, var(--accent));
     border-radius: 16px;
-    padding: 24px;
-    max-width: 520px;
+    padding: 22px 24px;
+    width: min(640px, 92vw);
+    max-height: 88vh;
+    overflow-y: auto;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px var(--agent-color, var(--accent));
+  }
+  .modal h3 { font-size: 18px; margin-bottom: 2px; color: var(--agent-color, var(--accent)); }
+  .modal .subtitle { font-size: 11px; color: var(--muted); margin-bottom: 14px; }
+  .modal h4 { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin: 14px 0 6px 0; font-weight: 700; }
+  .modal p { font-size: 12px; line-height: 1.55; color: var(--ink); }
+  .modal .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .modal .tag {
+    background: var(--border); color: var(--ink);
+    padding: 3px 9px; border-radius: 6px; font-size: 10px; font-weight: 600;
+  }
+  .modal .q-box {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.4);
+    padding: 11px 13px; border-radius: 9px; margin: 10px 0;
+    font-size: 11px; line-height: 1.5;
+  }
+  .modal .q-box b { color: var(--red); }
+  .modal .ans-box {
+    display: flex; gap: 6px; margin-top: 6px;
+  }
+  .modal .ans-box input {
+    flex: 1; background: var(--bg); border: 1px solid var(--border2);
+    color: var(--ink); padding: 8px 10px; border-radius: 7px;
+    font-size: 11px; font-family: inherit;
+  }
+  .modal .ans-box button {
+    background: var(--red); color: #fff; border: 0;
+    padding: 0 12px; border-radius: 7px; font-weight: 700; font-size: 10px;
+    cursor: pointer; text-transform: uppercase;
+  }
+  .modal .chat-box {
+    background: var(--bg);
+    border: 1px solid var(--border2);
+    border-radius: 9px;
+    padding: 10px;
+    margin-top: 6px;
+  }
+  .modal .chat-box input {
     width: 100%;
-    box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+    background: transparent;
+    border: 0;
+    color: var(--ink);
+    font-size: 12px;
+    padding: 4px;
+    font-family: inherit;
   }
-  .modal h2 {
-    font-size: 20px;
-    margin-bottom: 4px;
+  .modal .chat-box input:focus { outline: none; }
+  .modal .chat-box button {
+    background: var(--agent-color, var(--accent));
+    color: #04221a;
+    border: 0;
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-weight: 800;
+    font-size: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 6px;
   }
-  .modal-role { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; }
-  .modal-model {
-    margin-top: 6px; font-size: 11px;
-    color: var(--agent-color, var(--accent));
-    font-weight: 600;
-  }
-  .modal-section { margin-top: 16px; }
-  .modal-section h4 { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
-  .modal-section p { font-size: 13px; line-height: 1.5; }
-  .modal-close {
+  .modal .close-btn {
     float: right;
-    background: none; border: none; color: var(--muted);
-    font-size: 22px; cursor: pointer;
+    background: var(--border); color: var(--ink);
+    border: 0; width: 28px; height: 28px; border-radius: 6px;
+    cursor: pointer; font-size: 14px; font-weight: 700;
   }
-  .modal-question-box {
-    background: rgba(251,191,36,0.08);
-    border: 1px solid rgba(251,191,36,0.3);
+  .modal .close-btn:hover { background: var(--red); color: #fff; }
+
+  .copy-block {
+    background: var(--bg);
+    border: 1px dashed var(--border2);
     padding: 10px 12px;
     border-radius: 8px;
-    font-size: 12px;
-    line-height: 1.5;
-    margin-top: 6px;
+    font-family: ui-monospace, Menlo, monospace;
+    font-size: 11px;
+    color: var(--accent2);
+    white-space: pre-wrap;
+    word-break: break-word;
+    margin: 8px 0;
   }
-  .modal textarea {
-    width: 100%;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    color: var(--ink);
-    padding: 10px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-family: inherit;
-    resize: vertical;
-    min-height: 70px;
-    margin-top: 6px;
+  .copy-btn {
+    background: var(--accent); color: #04221a;
+    border: 0; padding: 6px 12px; border-radius: 6px;
+    font-weight: 800; font-size: 10px;
+    cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
   }
-  .modal button.primary {
-    background: var(--accent);
-    color: #052015;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 8px;
-    font-weight: 700;
-    font-size: 12px;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-  .modal button.primary:hover { background: var(--accent2); }
 
-  .tool-chips {
-    display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px;
+  /* ===== OPPORTUNITIES ===== */
+  .opp {
+    padding: 9px 11px;
+    background: var(--panel2);
+    border-left: 3px solid var(--gold);
+    border-radius: 7px;
+    margin-bottom: 7px;
+    font-size: 11px;
   }
-  .tool-chip {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    padding: 3px 8px;
-    border-radius: 10px;
-    font-size: 10px;
-    color: var(--muted);
-  }
+  .opp.hot { border-left-color: var(--red); background: rgba(239,68,68,0.08); }
+  .opp .opp-title { font-weight: 700; color: var(--ink); }
+  .opp .opp-meta { font-size: 9px; color: var(--muted); margin-top: 2px; }
+  .opp .opp-value { color: var(--accent2); font-weight: 700; }
 
   footer {
-    margin-top: 14px;
-    padding: 12px 16px;
+    margin-top: 14px; padding: 10px 16px;
     background: var(--panel);
     border: 1px solid var(--border);
-    border-radius: 12px;
+    border-radius: 10px;
     font-size: 10px; color: var(--muted);
-    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+    display: flex; justify-content: space-between;
   }
-  footer a { color: var(--accent); text-decoration: none; }
-  footer code { background: var(--bg2); padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 9px; }
+  footer code { color: var(--accent2); }
 
-  /* ===== PASSWORD GATE ===== */
-  #gate {
-    position: fixed; inset: 0; z-index: 9999;
-    background: radial-gradient(ellipse at top, rgba(16,185,129,0.1), transparent 60%), #04080f;
-    display: grid; place-items: center; padding: 20px;
+  @media (max-width: 1400px) {
+    .layout { grid-template-columns: 260px 1fr 300px; }
   }
-  #gate.hidden { display: none; }
-  .gate-card {
-    width: 100%; max-width: 420px;
-    background: linear-gradient(135deg, var(--panel), var(--panel2));
-    border: 1px solid var(--border2);
-    border-radius: 18px; padding: 32px 28px;
-    box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(16,185,129,0.15);
+  @media (max-width: 1100px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { max-height: none; }
   }
-  .gate-logo {
-    width: 68px; height: 68px; margin: 0 auto 18px;
-    background: linear-gradient(135deg, var(--accent), #047857);
-    border-radius: 18px; display: grid; place-items: center;
-    font-weight: 800; font-size: 24px; color: #04221a;
-    box-shadow: 0 12px 30px rgba(16,185,129,0.35), inset 0 1px 0 rgba(255,255,255,0.25);
-  }
-  .gate-card h2 { text-align: center; font-size: 20px; margin-bottom: 6px; }
-  .gate-card p { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 22px; }
-  .gate-card input {
-    width: 100%; background: var(--bg2); border: 1px solid var(--border);
-    border-radius: 10px; padding: 13px 14px; color: var(--ink);
-    font-size: 15px; font-family: inherit; letter-spacing: 2px; text-align: center;
-  }
-  .gate-card input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(16,185,129,0.15); }
-  .gate-card button {
-    width: 100%; margin-top: 12px; padding: 13px;
-    background: linear-gradient(135deg, var(--accent), #047857);
-    color: #04221a; border: none; border-radius: 10px;
-    font-weight: 700; font-size: 14px; cursor: pointer; font-family: inherit;
-    transition: transform 0.1s;
-  }
-  .gate-card button:hover { transform: translateY(-1px); }
-  .gate-err { color: var(--red); font-size: 12px; text-align: center; margin-top: 10px; min-height: 14px; }
-  .gate-foot { text-align: center; font-size: 10px; color: var(--muted); margin-top: 20px; letter-spacing: 0.5px; }
 
-  /* ===== HEADER BUTTONS ===== */
-  .hdr-btn {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 8px 12px; border-radius: 10px;
-    background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.3);
-    color: var(--accent2); font-size: 11px; font-weight: 600; text-decoration: none;
-    transition: all 0.2s;
+  /* ===== DAY/NIGHT OVERLAY ===== */
+  .floor-inner {
+    position: absolute; inset: 0;
+    transition: filter 3s ease;
+    transform-origin: center;
+    transition: transform 1.2s cubic-bezier(.22,1,.36,1), filter 3s ease;
   }
-  .hdr-btn:hover { background: rgba(16,185,129,0.18); transform: translateY(-1px); }
-  .hdr-btn.cyan { background: rgba(6,182,212,0.08); border-color: rgba(6,182,212,0.3); color: var(--cyan); }
-  .hdr-btn.cyan:hover { background: rgba(6,182,212,0.18); }
+  .floor-phase-morning  { filter: hue-rotate(-8deg) brightness(0.95) saturate(1.05); }
+  .floor-phase-work     { filter: none; }
+  .floor-phase-lunch    { filter: brightness(1.04) saturate(1.08); }
+  .floor-phase-afternoon{ filter: hue-rotate(10deg) brightness(0.94) saturate(1.05); }
+  .floor-phase-evening  { filter: hue-rotate(18deg) brightness(0.78) saturate(0.9); }
+  .floor-phase-night    { filter: hue-rotate(25deg) brightness(0.45) saturate(0.7); }
+  .light-overlay {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at 50% 40%, transparent 0%, transparent 55%, rgba(0,0,0,0.45) 100%);
+    opacity: 0;
+    transition: opacity 3s ease;
+    z-index: 2;
+  }
+  .floor-phase-evening ~ .light-overlay,
+  .floor-phase-night ~ .light-overlay { opacity: 1; }
+  .phase-badge {
+    position: absolute; top: 10px; right: 12px;
+    background: rgba(0,0,0,0.55); backdrop-filter: blur(6px);
+    padding: 4px 10px; border-radius: 10px;
+    font-size: 9px; text-transform: uppercase; letter-spacing: 1.2px;
+    color: var(--ink); border: 1px solid var(--border2);
+    z-index: 50;
+  }
+  .phase-badge .dot { display:inline-block; width:6px; height:6px; border-radius:50%; background: var(--accent); margin-right:5px; box-shadow: 0 0 8px currentColor; }
+
+  /* ===== ACTIVE WORK (pulse halo + workdots above head) ===== */
+  .character.working-now .sprite {
+    animation: bob-fast 0.9s ease-in-out infinite, typing-shake 0.35s ease-in-out infinite;
+  }
+  @keyframes bob-fast {
+    0%,100% { transform: translateY(0) }
+    50% { transform: translateY(-1.5px) }
+  }
+  @keyframes typing-shake {
+    0%,100% { transform: translateX(0) }
+    50% { transform: translateX(0.6px) }
+  }
+  .work-halo {
+    position: absolute;
+    left: 50%; top: 50%;
+    transform: translate(-50%, -50%);
+    width: 62px; height: 62px;
+    border-radius: 50%;
+    box-shadow: 0 0 0 0 rgba(52,211,153,0.55);
+    animation: halo 1.6s ease-out infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+  @keyframes halo {
+    0%   { box-shadow: 0 0 0 0 var(--char-color, #34d399); opacity: 0.8; }
+    70%  { box-shadow: 0 0 0 20px transparent; opacity: 0; }
+    100% { box-shadow: 0 0 0 0 transparent; opacity: 0; }
+  }
+  .workdots {
+    position: absolute; top: -32px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; gap: 3px;
+    padding: 3px 6px; border-radius: 10px;
+    background: rgba(0,0,0,0.65);
+    border: 1px solid var(--char-color, var(--accent));
+    z-index: 40;
+  }
+  .workdots span {
+    width: 4px; height: 4px; border-radius: 50%;
+    background: var(--char-color, var(--accent));
+    animation: workdot 1.2s ease-in-out infinite;
+  }
+  .workdots span:nth-child(2) { animation-delay: 0.15s; }
+  .workdots span:nth-child(3) { animation-delay: 0.3s; }
+  @keyframes workdot {
+    0%,100% { opacity: 0.3; transform: translateY(0) }
+    50% { opacity: 1; transform: translateY(-2px) }
+  }
+
+  /* ===== DIALOGUE BU%BLES (agent-to-agent) ===== */
+  .dialogue-layer { position: absolute; inset: 0; pointer-events: none; z-index: 60; }
+  .d-bubble {
+    position: absolute;
+    transform: translate(-50%, -100%);
+    background: rgba(20,30,52,0.96);
+    border: 1.5px solid var(--d-color, var(--accent));
+    padding: 7px 12px;
+    border-radius: 12px;
+    font-size: 10px;
+    color: var(--ink);
+    max-width: 240px;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05);
+    animation: d-in 0.35s ease-out, d-out 0.5s ease-in forwards;
+    animation-delay: 0s, var(--out-delay, 7s);
+  }
+  .d-bubble::after {
+    content: "";
+    position: absolute; bottom: -5px; left: 20%;
+    width: 8px; height: 8px;
+    background: rgba(20,30,52,0.96);
+    transform: rotate(45deg);
+    border-right: 1.5px solid var(--d-color, var(--accent));
+    border-bottom: 1.5px solid var(--d-color, var(--accent));
+  }
+  .d-bubble .d-from { font-weight: 900; color: var(--d-color, var(--accent)); font-size: 9px; text-transform: uppercase; letter-spacing: 0.5px; display: block; margin-bottom: 2px; }
+  @keyframes d-in  { from { opacity: 0; transform: translate(-50%, -90%) scale(0.8) } to { opacity: 1; transform: translate(-50%, -100%) scale(1) } }
+  @keyframes d-out { to { opacity: 0; transform: translate(-50%, -110%) scale(0.95) } }
+
+  /* ===== AGENT DETAIL DRAWER (right slide-in) ===== */
+  .drawer {
+    position: fixed;
+    top: 0; right: 0;
+    width: min(460px, 92vw);
+    height: 100vh;
+    background: linear-gradient(180deg, var(--panel) 0%, var(--panel2) 100%);
+    border-left: 2px solid var(--agent-color, var(--accent));
+    box-shadow: -20px 0 60px rgba(0,0,0,0.7);
+    padding: 22px 24px 90px 24px;
+    overflow-y: auto;
+    z-index: 800;
+    transform: translateX(110%);
+    transition: transform 0.45s cubic-bezier(.22,1,.36,1);
+  }
+  .drawer.open { transform: translateX(0); }
+  .drawer::-webkit-scrollbar { width: 6px; }
+  .drawer::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+  .drawer .dr-head {
+    display: flex; align-items: center; gap: 14px;
+    padding-bottom: 14px; margin-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  .drawer .dr-avatar {
+    width: 64px; height: 64px; border-radius: 14px;
+    display: grid; place-items: center;
+    background: var(--agent-color); color: #04221a;
+    font-weight: 900; font-size: 22px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2);
+    flex-shrink: 0;
+  }
+  .drawer .dr-title h3 { font-size: 17px; color: var(--agent-color); margin-bottom: 2px; }
+  .drawer .dr-title p { font-size: 11px; color: var(--muted); }
+  .drawer .dr-close {
+    position: absolute; top: 14px; right: 14px;
+    width: 30px; height: 30px; border-radius: 8px;
+    border: 0; background: var(--border); color: var(--ink);
+    cursor: pointer; font-size: 15px; font-weight: 700;
+  }
+  .drawer .dr-close:hover { background: var(--red); color: #fff; }
+  .drawer h4 {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 1px;
+    color: var(--muted); margin: 16px 0 6px 0; font-weight: 800;
+  }
+  .drawer p { font-size: 12px; line-height: 1.55; color: var(--ink); }
+  .drawer .dr-task {
+    padding: 10px 12px; border-radius: 9px;
+    background: rgba(16,185,129,0.08);
+    border: 1px solid rgba(16,185,129,0.3);
+    color: var(--accent2); font-size: 12px; font-weight: 600;
+  }
+  .drawer .dr-output {
+    padding: 10px 12px; border-radius: 9px;
+    background: var(--bg); border: 1px solid var(--border2);
+    color: var(--muted); font-size: 11px;
+  }
+  .drawer .dr-q {
+    background: rgba(239,68,68,0.1);
+    border: 1px solid rgba(239,68,68,0.4);
+    padding: 11px 13px; border-radius: 10px;
+    font-size: 11px; line-height: 1.5;
+  }
+  .drawer .dr-q b { color: var(--red); }
+  .drawer .dr-wl {
+    background: var(--bg); border: 1px solid var(--border2);
+    border-radius: 8px; padding: 10px 12px;
+    max-height: 220px; overflow-y: auto;
+  }
+  .drawer .dr-wl .dr-wl-item {
+    padding: 5px 0; font-size: 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--ink);
+  }
+  .drawer .dr-wl .dr-wl-item:last-child { border-bottom: 0; }
+  .drawer .dr-wl .dr-wl-item .t { color: var(--muted); font-variant-numeric: tabular-nums; margin-right: 6px; font-weight: 700; }
+  .drawer .dr-actions {
+    display: flex; gap: 6px; margin-top: 8px;
+  }
+  .drawer .dr-actions input {
+    flex: 1; background: var(--bg); border: 1px solid var(--border2);
+    color: var(--ink); padding: 9px 11px; border-radius: 8px;
+    font-size: 12px; font-family: inherit;
+  }
+  .drawer .dr-actions input:focus { outline: none; border-color: var(--agent-color); }
+  .drawer .dr-actions button {
+    background: var(--agent-color, var(--accent)); color: #04221a;
+    border: 0; padding: 0 14px; border-radius: 8px;
+    font-weight: 800; font-size: 11px; cursor: pointer;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .drawer .dr-follow {
+    position: absolute; top: 14px; right: 52px;
+    padding: 6px 12px; background: var(--border); color: var(--ink);
+    border: 0; border-radius: 8px; font-size: 10px; cursor: pointer;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .drawer .dr-follow.on { background: var(--agent-color); color: #04221a; }
+  .drawer .dr-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .drawer .dr-tag {
+    background: var(--border); padding: 3px 9px;
+    border-radius: 6px; font-size: 10px; font-weight: 600;
+  }
+
+  /* ===== CAMERA FOLLOW ===== */
+  .floor.following .floor-inner {
+    transform: scale(1.8) translate(var(--cam-x, 0%), var(--cam-y, 0%));
+  }
+  .follow-hint {
+    position: absolute; bottom: 10px; left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.7); color: var(--accent2);
+    padding: 5px 12px; border-radius: 10px;
+    font-size: 10px; font-weight: 700;
+    border: 1px solid var(--accent);
+    z-index: 80;
+    display: none;
+  }
+  .floor.following .follow-hint { display: block; }
+
+  /* ===== COFFEE CUP ACTIVITY ===== */
+  .character.coffee .sprite { animation: sip 3s ease-in-out infinite; }
+  @keyframes sip {
+    0%,60%,100% { transform: translateY(0) }
+    30% { transform: translateY(-1px) rotate(-1deg) }
+  }
+
+  /* ===== WALKING ANIMATION (during transitions) ===== */
+  .character.walking .sprite {
+    animation: step 0.5s ease-in-out infinite;
+  }
+  @keyframes step {
+    0%,100% { transform: translateY(0) rotate(0deg) }
+    50% { transform: translateY(-3px) rotate(1deg) }
+  }
+
+  /* ===== CEO INBOX (Tier B) ===== */
+  .ceo-inbox-card .inbox-sec { margin-bottom: 9px; }
+  .ceo-inbox-card .inbox-sec-label {
+    font-size: 9px; text-transform: uppercase; letter-spacing: 0.7px;
+    color: var(--muted); margin-bottom: 4px; font-weight: 600;
+  }
+  .inbox-row {
+    display:flex; align-items:flex-start; gap:7px;
+    padding: 6px 7px; border-radius: 6px;
+    background: rgba(255,255,255,0.025); margin-bottom:4px;
+    font-size: 11px; cursor: pointer; transition: background 0.15s;
+  }
+  .inbox-row:hover { background: rgba(255,255,255,0.06); }
+  .inbox-row .dot {
+    width:7px; height:7px; border-radius:50%; margin-top:4px; flex-shrink:0;
+  }
+  .inbox-row .txt { flex:1; line-height:1.35; }
+  .inbox-row .agent-name { font-weight:700; color:var(--ink); }
+  .inbox-empty {
+    color: var(--muted); font-size:10px; text-align:center;
+    padding:7px; font-style:italic;
+  }
+
+  /* ===== DRIVE + GMAIL LISTS ===== */
+  #drive-list .snap-row, #mail-list .snap-row {
+    padding: 5px 7px; border-radius: 5px;
+    background: rgba(255,255,255,0.02); margin-bottom: 4px;
+    font-size: 10px; line-height: 1.35;
+    border-left: 2px solid var(--accent2);
+  }
+  #drive-list .snap-title, #mail-list .snap-title {
+    font-weight: 600; color: var(--ink);
+    white-space: nowrap; overflow:hidden; text-overflow:ellipsis;
+    display:block;
+  }
+  #drive-list .snap-title { color: #3b82f6; }
+  #drive-list .snap-title:hover { text-decoration: underline; cursor:pointer; }
+  #mail-list .snap-row { border-left-color: #ef4444; }
+  #mail-list .snap-from {
+    color: var(--muted); font-size: 9px;
+  }
+  .snap-meta { color: var(--muted); font-size: 9px; margin-top: 2px; }
+  .snap-engine {
+    display:inline-block; padding:1px 4px; border-radius:3px;
+    background:rgba(255,255,255,0.08); margin-right:3px; font-size:8px;
+  }
+  .snap-empty {
+    color:var(--muted); font-size:10px; text-align:center;
+    padding:8px; font-style:italic;
+  }
+
+  /* ===== THINKING LOOP TOAST (Tier B) ===== */
+  .thinking-toast {
+    position: fixed; bottom: 24px; left: 50%;
+    transform: translateX(-50%) translateY(120%);
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    color: #fff; padding: 11px 18px; border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(139,92,246,0.45);
+    display: flex; align-items: center; gap: 12px;
+    z-index: 900; opacity: 0; pointer-events: none;
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.3s;
+    max-width: 400px;
+  }
+  .thinking-toast.on {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+  .thinking-toast .brain {
+    font-size: 22px;
+    animation: brainPulse 1.4s ease-in-out infinite;
+  }
+  @keyframes brainPulse {
+    0%,100% { transform: scale(1); filter: brightness(1) }
+    50% { transform: scale(1.15); filter: brightness(1.3) }
+  }
+  .thinking-toast .tt-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .thinking-toast .tt-agents {
+    font-size: 10px; opacity: 0.9; margin-top: 2px;
+  }
+
+  /* ===== MEMORY / PLAN / REFLECTION BLOCKS in drawer ===== */
+  .dr-memory {
+    max-height: 180px; overflow-y: auto;
+    background: rgba(0,0,0,0.25); border-radius: 6px;
+    padding: 6px 9px;
+  }
+  .dr-memory .mem-row {
+    padding: 4px 0; border-bottom: 1px dashed rgba(255,255,255,0.06);
+    font-size: 10px;
+  }
+  .dr-memory .mem-row:last-child { border-bottom: 0; }
+  .dr-memory .mem-kind {
+    display: inline-block; padding: 1px 5px; border-radius: 3px;
+    background: rgba(139,92,246,0.2); color: #c4b5fd;
+    font-size: 8px; margin-right: 5px; text-transform: uppercase;
+  }
+  .dr-memory .mem-ts { color: var(--muted); font-size: 8px; }
+  .dr-plan {
+    background: rgba(16,185,129,0.08); border-left: 2px solid var(--accent2);
+    padding: 7px 10px; border-radius: 5px;
+  }
+  .dr-plan ol { margin: 4px 0 0 16px; padding: 0; font-size: 11px; }
+  .dr-plan li { margin-bottom: 3px; }
+  .dr-plan .plan-date { font-size: 9px; color: var(--muted); }
+  .dr-reflection {
+    background: rgba(168,85,247,0.08); border-left: 2px solid #a855f7;
+    padding: 7px 10px; border-radius: 5px; font-size: 11px;
+    font-style: italic; color: #d8b4fe;
+    margin-bottom: 5px;
+  }
+  .dr-reflection .refl-ts { font-size: 9px; color: var(--muted); font-style: normal; }
 </style>
 </head>
 <body>
-
-<!-- ===== PASSWORD GATE ===== -->
-<div id="gate">
-  <div class="gate-card">
-    <div class="gate-logo">JV</div>
-    <h2>Oficina Viva</h2>
-    <p>Acceso restringido · socios JV Holdings</p>
-    <input id="gatePwd" type="password" placeholder="contraseña" autocomplete="off" onkeydown="if(event.key==='Enter')tryUnlock()"/>
-    <button onclick="tryUnlock()">Entrar</button>
-    <div class="gate-err" id="gateErr"></div>
-    <div class="gate-foot">JV HOLDINGS · CEO: JT</div>
-  </div>
-</div>
-
 <div class="wrap">
 
+  <!-- ============ HEADER ============ -->
   <header>
     <div class="brand">
       <div class="brand-mark">JV</div>
       <div>
-        <h1>JV Holdings · Oficina Viva</h1>
-        <p>CEO: JT · COO: Claude Opus 4.6 · 9 departamentos · 24+ herramientas conectadas</p>
+        <h1>JV HOLDINGS · Oficina Viva <span style="font-size:10px;color:var(--muted);font-weight:600">v3</span></h1>
+        <p>Planta única · estado real · sincronizado con <code style="color:var(--accent2)">office_state.json</code></p>
       </div>
     </div>
     <div class="header-right">
-      <a class="hdr-btn cyan" href="https://drive.google.com/drive/folders/1LPFgCwvpWRX5GdNvum9RtRQ5d1x5IN2J" target="_blank" rel="noopener">📁 Drive · Cashflow</a>
-      <a class="hdr-btn" href="JV_Holdings_Dashboard_v3.html#overview" target="_blank" rel="noopener">📊 Cockpit v3</a>
-      <div class="stat"><div class="num" id="stat-active">6</div><div class="lbl">Activos</div></div>
-      <div class="stat"><div class="num" id="stat-questions">0</div><div class="lbl">Preguntas</div></div>
-      <div class="stat"><div class="num" id="stat-ideas">4</div><div class="lbl">Ideas</div></div>
+      <div class="stat"><div class="num" id="stat-active">—</div><div class="lbl">Agentes activos</div></div>
+      <div class="stat warn"><div class="num" id="stat-questions">—</div><div class="lbl">Preguntas CEO</div></div>
+      <div class="stat danger"><div class="num" id="stat-approvals">—</div><div class="lbl">Aprobaciones</div></div>
+      <div class="stat"><div class="num" id="stat-opps">—</div><div class="lbl">Oportunidades</div></div>
       <div class="clock-box">
-        <div class="clock"><span class="heartbeat"></span><span id="clock">--:--:--</span></div>
-        <div class="clock-label" id="date">—</div>
+        <div class="clock"><span class="heartbeat" id="heartbeat"></span><span id="clock">--:--</span></div>
+        <div class="clock-label" id="clock-label">JVH HQ · cargando</div>
       </div>
+      <a href="https://juant2200.github.io/jvh-office/JV_Holdings_Dashboard_v3.html#overview" target="_blank"
+         style="display:inline-flex;align-items:center;gap:8px;padding:10px 18px;background:linear-gradient(135deg,#C9A84C,#E0BE5F);color:#0F1E3D;border-radius:10px;font-weight:700;font-size:12px;text-decoration:none;letter-spacing:.03em;box-shadow:0 4px 14px rgba(201,168,76,.35);transition:all .2s;white-space:nowrap"
+         onmouseover="this.style.filter='brightness(1.15)';this.style.transform='translateY(-1px)'"
+         onmouseout="this.style.filter='none';this.style.transform='none'"
+         title="Abrir Cockpit Financiero">
+        📊 Cockpit
+      </a>
     </div>
+    <div class="alarm-bar" id="alarm"></div>
   </header>
 
-  <div class="focus">
-    <div><strong>🎯 FOCO CEO</strong> · lock 12 meses · solo los 3 cashflow engines</div>
-    <div class="chips">
-      <span class="chip">GMP</span><span class="chip">UTS</span><span class="chip">CargX</span>
-      <span class="chip parked">Lavazza</span><span class="chip parked">Axione</span>
-      <span class="chip parked">Valor</span><span class="chip parked">JVH Reg</span>
-    </div>
+  <!-- ============ QUICK NAV ============ -->
+  <div id="nav-strip" style="background:var(--bg);border-bottom:1px solid var(--border);padding:6px 24px;display:flex;gap:16px;align-items:center;font-size:13px;flex-wrap:wrap;">
+    <strong style="color:var(--muted);margin-right:4px;">Nav:</strong>
+    <a href="/OFFICE_SIM.html" style="color:var(--accent2);text-decoration:none;">Oficina</a>
+    <a href="https://juant2200.github.io/jvh-office/JV_Holdings_Dashboard_v3.html#overview" target="_blank" style="color:var(--accent);text-decoration:none;">Dashboard v3</a>
+    <a href="https://drive.google.com/drive/folders/1VcRpR19M-l6WC1GN5k-N3ECGrdQA8MKj?usp=drive_link" target="_blank" style="color:#34a853;text-decoration:none;">Drive JVH</a>
+    <a href="https://mail.google.com" target="_blank" style="color:#ea4335;text-decoration:none;">Gmail</a>
+    <a href="https://calendar.google.com" target="_blank" style="color:#4285f4;text-decoration:none;">Calendar</a>
   </div>
 
+  <!-- ============ TOOLS STRIP ============ -->
+  <div id="tools-strip" style="background:var(--card);border-bottom:1px solid var(--border);padding:6px 24px;display:flex;gap:8px;align-items:center;font-size:12px;flex-wrap:wrap;min-height:28px;">
+    <strong style="color:var(--muted);margin-right:4px;">Tools:</strong>
+    <span style="color:var(--muted)">cargando…</span>
+  </div>
+
+  <!-- ============ FOCUS BANNER ============ -->
+  <div class="focus">
+    <div>
+      🔒 <strong>Scope lock 12 meses</strong> · solo cashflow engines ·
+      <span style="color:var(--muted)">congelado 2026-04-09, expira ~2027-04-09</span>
+    </div>
+    <div class="chips" id="focus-chips"></div>
+  </div>
+
+  <!-- ============ LAYOUT ============ -->
   <div class="layout">
 
-    <!-- ============ LEFT: TOOLS RACK ============ -->
-    <aside class="tools-rack">
-      <h3>🔧 Herramientas de la oficina</h3>
-
-      <div class="tool-group">
-        <div class="tool-group-name">Fuente de verdad</div>
-        <ul class="tool-list">
-          <li class="tool"><a href="https://drive.google.com/drive/folders/1LPFgCwvpWRX5GdNvum9RtRQ5d1x5IN2J" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;flex:1"><div class="ico" style="background:#1a73e8;color:#fff">📁</div><div class="name">Drive · Cashflow</div></a><div class="dot"></div></li>
-          <li class="tool"><a href="https://docs.google.com/document/d/1JwQxv1KQ0JpGXOGorz24C85ggHd8uEJsSB8Acl_8U_w/edit" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;flex:1"><div class="ico" style="background:#4285f4;color:#fff">📄</div><div class="name">Plan 6 Meses</div></a><div class="dot"></div></li>
-          <li class="tool"><a href="https://drive.google.com/drive/folders/1UXcg--kLj48_7jkTBEjnfzoED5sS3Ir5" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;flex:1"><div class="ico" style="background:#34a853;color:#fff">📁</div><div class="name">VALOR</div></a><div class="dot"></div></li>
-          <li class="tool"><a href="https://drive.google.com/drive/folders/1q0huLRpTauF-pr1ubzymGFpI9X_rQ0oE" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;flex:1"><div class="ico" style="background:#fbbc04;color:#000">📁</div><div class="name">AXIONE</div></a><div class="dot"></div></li>
-          <li class="tool"><a href="JV_Holdings_Dashboard_v3.html#overview" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:8px;text-decoration:none;color:inherit;flex:1"><div class="ico" style="background:#00e5ff;color:#000">📊</div><div class="name">Cockpit v3</div></a><div class="dot"></div></li>
-        </ul>
-      </div>
-
-      <div class="tool-group">
-        <div class="tool-group-name">Dev & Orquestación</div>
-        <ul class="tool-list">
-          <li class="tool"><div class="ico" style="background:#1a1a1a;color:#fff">⌨</div><div class="name">Claude Code</div><div class="dot"></div></li>
-          <li class="tool"><div class="ico" style="background:#007acc;color:#fff">VS</div><div class="name">VS Code</div><div class="dot"></div></li>
-          <li class="tool"><div class="ico" style="background:#000;color:#fff">⬛</div><div class="name">Terminal</div><div class="dot"></div></li>
-          <li class="tool"><div class="ico" style="background:#10a37f;color:#fff">C</div><div class="name">Codex CLI</div><div class="dot"></div></li>
-        </ul>
-      </div>
-
-      <div class="tool-group">
-        <div class="tool-group-name">Productividad</div>
-        <ul class="tool-list">
-          <li class="tool"><div class="ico" style="background:#ea4335;color:#fff">G</div><div class="name">Google Drive</div><div class="dot"></div></li>
-          <li class="tool"><div class="ico" style="background:#4285f4;color:#fff">M</div><div class="name">Gmail</div><div class="dot"></div></li>
-          <li class="tool"><div class="ico" style="background:#4a154b;color:#fff">#</div><div class="name">Slack</div><div class="dot"></div></li>
-          <li class="tool"><div class="ico" style="background:#ff9600;color:#fff">🗓</div><div class="name">Calendly</div><div class="dot"></div></li>
-          <li class="tool"><div class="ico" style="background:#d14836;color:#fff">G</div><div class="name">Granola</div><div class="dot"></div></li>
-        </ul>
-      </div>
-
-      <div class="tool-group">
-        <div class="tool-group-name">Diseño & Contenido</div>
-        <ul class="tool-list">
-          <li class="tool"><div class="ico" style="background:#00c4cc;color:#fff">C</div><div class="name">Canva</div><div class="dot"></div></li>
-          <li class="tool"><div class="ico" style="background:#a259ff;color:#fff">F</div><div class="name">Figma</div><div class="dot"></div></li>
-        </ul>
-      </div>
-
-      <div class="tool-group">
-        <div class="tool-group-name">Browser Control</div>
-        <ul class="tool-list">
-          <li class="tool"><div class="ico" style="background:#4285f4;color:#fff">◯</div><div class="name">Chrome MCP</div><div class="dot"></div></li>
-          <li class="tool"><div class="ico" style="background:#2a2a2a;color:#fff">🖥</div><div class="name">Computer Use</div><div class="dot"></div></li>
-        </ul>
-      </div>
-
-      <div class="tool-group">
-        <div class="tool-group-name">AI Networks externas</div>
-        <ul class="tool-list">
-          <li class="tool"><div class="ico" style="background:#6366f1;color:#fff">M</div><div class="name">Maltbook</div><div class="dot off"></div></li>
-          <li class="tool"><div class="ico" style="background:#f59e0b;color:#fff">G</div><div class="name">Gibberlink</div><div class="dot off"></div></li>
-          <li class="tool"><div class="ico" style="background:#ec4899;color:#fff">L</div><div class="name">LM Arena</div><div class="dot off"></div></li>
-          <li class="tool"><div class="ico" style="background:#10b981;color:#fff">P</div><div class="name">Perplexity</div><div class="dot off"></div></li>
-        </ul>
-        <div style="font-size:9px;color:var(--muted);margin-top:6px;padding:0 8px">Dot apagado = sin MCP oficial. Accesibles via WebFetch/Chrome.</div>
-      </div>
-    </aside>
-
-    <!-- ============ CENTER: OFFICE STAGE ============ -->
-    <section class="office-stage">
-      <div class="stage-header">
-        <h2>Planta de la oficina — click en cualquier agente</h2>
-        <div class="stage-live"><span class="heartbeat"></span><span id="live-status">6 activos · 3 soporte</span></div>
-      </div>
-      <div class="office-grid" id="office-grid"></div>
-    </section>
-
-    <!-- ============ RIGHT: SIDEBAR ============ -->
+    <!-- ============ LEFT SIDEBAR ============ -->
     <aside class="sidebar">
-
-      <div class="card">
-        <h3>📝 Asignar tarea rápida</h3>
-        <div class="task-input">
-          <input id="quick-task" type="text" placeholder="@bd cerrar Banco Popular !p1" />
-          <button onclick="addQuickTask()">Tirar</button>
-        </div>
-        <div style="font-size:9px;color:var(--muted);margin-top:6px">Se guarda en la cola local de la sesión. En Cowork, escríbelo a Claude y se ejecuta.</div>
+      <div class="card ceo-inbox-card">
+        <h3>📥 CEO Inbox <span class="count hot" id="inbox-total">0</span></h3>
+        <div id="inbox-body"></div>
       </div>
 
       <div class="card">
-        <h3>Tareas activas <span class="count" id="tasks-count">0</span></h3>
-        <ul class="tasks-list" id="tasks-list"></ul>
+        <h3>🚨 Aprobaciones CEO <span class="count hot" id="approvals-count">0</span></h3>
+        <div id="approvals-list"></div>
       </div>
 
-      <div class="card engines">
+      <div class="card">
         <h3>💰 Cashflow engines</h3>
         <div id="engines-list"></div>
       </div>
 
       <div class="card">
-        <h3>💡 Ideas del día <span class="count" id="ideas-count">4</span></h3>
+        <h3>🎯 Oportunidades <span class="count" id="opps-count">0</span></h3>
+        <div id="opps-list"></div>
+      </div>
+
+      <div class="card">
+        <h3>📁 Drive reciente <span class="count" id="drive-count">0</span> <span id="drive-time" style="font-size:9px;color:var(--muted);margin-left:auto"></span></h3>
+        <div id="drive-list"></div>
+      </div>
+
+      <div class="card">
+        <h3>📧 Gmail reciente <span class="count" id="mail-count">0</span> <span id="mail-time" style="font-size:9px;color:var(--muted);margin-left:auto"></span></h3>
+        <div id="mail-list"></div>
+      </div>
+    </aside>
+
+    <!-- ============ CENTER: FLOOR PLAN ============ -->
+    <section class="office-stage">
+      <div class="stage-header">
+        <h2>Planta de la oficina <span>click en cualquier agente para hablar con él</span></h2>
+        <div class="stage-live"><span class="heartbeat" id="heartbeat-stage"></span><span id="live-status">cargando estado…</span></div>
+      </div>
+      <div class="floor" id="floor">
+        <div class="floor-inner floor-phase-work" id="floor-inner"></div>
+        <div class="light-overlay"></div>
+        <div class="dialogue-layer" id="dialogue-layer"></div>
+        <div class="phase-badge" id="phase-badge"><span class="dot"></span><span id="phase-text">día</span></div>
+        <div class="follow-hint">🎥 Siguiendo · <a href="#" onclick="cameraStop();return false" style="color:var(--ink);text-decoration:underline">soltar cámara</a></div>
+      </div>
+    </section>
+
+    <!-- ============ RIGHT SIDEBAR ============ -->
+    <aside class="sidebar">
+      <div class="card">
+        <h3>📝 Asignar tarea</h3>
+        <div class="task-input">
+          <input id="quick-task" type="text" placeholder="@bd cerrar Plaza Lama !p1" />
+          <button onclick="addQuickTask()">Enviar</button>
+        </div>
+        <div id="task-output" style="margin-top:8px"></div>
+      </div>
+
+      <div class="card">
+        <h3>📋 Tareas activas <span class="count" id="tasks-count">0</span></h3>
+        <ul class="tasks-list" id="tasks-list"></ul>
+      </div>
+
+      <div class="card">
+        <h3>💡 Ideas <span class="count" id="ideas-count">0</span></h3>
         <ul class="tasks-list" id="ideas-list"></ul>
       </div>
 
       <div class="card">
-        <h3>📡 Feed en vivo <span class="count" id="feed-count">0</span></h3>
+        <h3>📡 Feed de la oficina <span class="count" id="feed-count">0</span></h3>
         <ul class="feed-list" id="feed-list"></ul>
       </div>
-
     </aside>
 
   </div>
 
   <footer>
-    <div><strong>Memoria:</strong> <code>/JV_Holdings_HQ/</code> · <strong>Tareas:</strong> <code>INBOX/TASKS.md</code> · <strong>Estado:</strong> <code>office_state.json</code></div>
-    <div>Última actualización: <span id="last-update">—</span></div>
+    <div><strong>Estado:</strong> <code>office_state.json</code> · <strong>Tareas:</strong> <code>INBOX/TASKS.md</code> · <strong>Worklog:</strong> <code>INBOX/WORKLOG.md</code></div>
+    <div>Última sync: <span id="last-update">—</span> · polling 15s</div>
   </footer>
 
 </div>
 
-<!-- ============ MODAL ============ -->
+<!-- ============ AGENT DRAWER ============ -->
+<div class="drawer" id="drawer">
+  <button class="dr-close" onclick="closeDrawer()">✕</button>
+  <button class="dr-follow" id="dr-follow-btn" onclick="toggleFollow()">🎥 Seguir</button>
+  <div id="drawer-body"></div>
+</div>
+
+<!-- ============ THINKING LOOP TOAST ============ -->
+<div class="thinking-toast" id="thinking-toast">
+  <span class="brain">🧠</span>
+  <div class="tt-body">
+    <div class="tt-title">Thinking loop corriendo</div>
+    <div class="tt-agents" id="tt-agents">—</div>
+  </div>
+</div>
+
+<!-- ============ MODAL (approvals only) ============ -->
 <div class="modal-bg" id="modal-bg" onclick="if(event.target===this)closeModal()">
   <div class="modal" id="modal-content"></div>
 </div>
 
 <script>
 /* ============================================================
-   OFFICE STATE
+   JV HOLDINGS · OFFICE SIM v3
+   Single source of truth: office_state.json
+   No hardcoded agent data. Fallback only if fetch fails.
 ============================================================ */
-const agents = [
-  {
-    id:"coo", name:"COO", title:"Chief of Staff", role:"Oficina central",
-    model:"Claude Opus 4.6", mood:"focused", status:"active",
-    currentTask:"Despacho general", lastOutput:"3 engines activos · scope lock aplicado",
-    color:"#10b981",
-    mission:"Orquestar todo el trabajo de la oficina. Recibe requests del CEO, delega a departamentos, consolida outputs y escala solo lo que necesita aprobación.",
-    tools:["Claude Code","VS Code","Todas las MCPs","Slack","Drive","Gmail"],
-    subAgents:["Daily Standup (cron L-V 7am)","Weekly Pipeline Review (lunes)","Weekly Ideas Hunt (domingo)"],
-    question: null,
-    memoryPath:"_COO/COO_MEMORY_PACK.md"
-  },
-  {
-    id:"finance", name:"Finance", title:"Finanzas & Tax", role:"Head de Finanzas",
-    model:"Claude Sonnet 4.6", mood:"working", status:"active",
-    currentTask:"Cash snapshot UTS marzo",
-    lastOutput:"UTS ~RD$270K/mo · margen reinversión CargX",
-    color:"#3b82f6",
-    mission:"Cash flow, modelos financieros, dilución, forecast, tax optimization, unit economics de cada engine.",
-    tools:["Excel/XLSX","Drive","Python sandbox","WebFetch (Bigdata.com)","Gmail"],
-    subAgents:["FP&A Analyst","Tax Structuring","Treasury","Deal Model"],
-    question: "¿Uso los números reales de UTS marzo de la hoja 'Cash Flow 2026' en Drive o sigo con placeholders hasta que me confirmes acceso a esa hoja exacta?",
-    memoryPath:"Finance/MEMORY_PACK.md"
-  },
-  {
-    id:"legal", name:"Legal/HR", title:"Legal & RH", role:"Head Jurídico",
-    model:"Claude Opus 4.6", mood:"thinking", status:"active",
-    currentTask:"P-001 Javier · decisión vehículo",
-    lastOutput:"Draft SHA listo · 7 preguntas CEO pendientes",
-    color:"#a855f7",
-    mission:"Contratos, SHA, NDA, estructuras corporativas RD, policies, hiring, compliance.",
-    tools:["Docx","PDF","Drive","WebFetch","Canva (para presentar términos)"],
-    subAgents:["Contract Drafter","HR Operations","Governance","Corporate Structure"],
-    question: "Con Axione parked 12 meses, ¿cierro el P-001 Javier con (a) convertible note a GMP SRL directamente, (b) SAFE DR-ajustado, o (c) abrimos excepción para registrar Axione solo para este deal?",
-    memoryPath:"Legal_HR/MEMORY_PACK.md"
-  },
-  {
-    id:"ops", name:"Operations", title:"Operaciones", role:"Head de Ops",
-    model:"Claude Haiku 4.5", mood:"working", status:"active",
-    currentTask:"SOP onboarding advertiser GMP",
-    lastOutput:"Draft 6 pasos · pendiente validación BD",
-    color:"#f59e0b",
-    mission:"SOPs, process mapping, vendor coordination, launch checklists, operación cross-company.",
-    tools:["Docx","Drive","Markdown workflow","Chrome MCP","operations:runbook skill"],
-    subAgents:["SOP Builder","Process Auditor","Launch Manager","Vendor Coordinator"],
-    question: null,
-    memoryPath:"Operations/MEMORY_PACK.md"
-  },
-  {
-    id:"bd", name:"BD", title:"Business Development", role:"Head Comercial",
-    model:"Claude Sonnet 4.6 + Codex CLI", mood:"hunting", status:"active",
-    currentTask:"Cazando primer advertiser ancla GMP",
-    lastOutput:"Lista 30 targets: 12 retail · 8 food · 6 bancos · 4 telcos",
-    color:"#ef4444",
-    mission:"Pipeline de advertisers GMP, clientes UTS, partners CargX. Meeting prep, follow-ups, qualifying, synergy mapping.",
-    tools:["Gmail","Slack","Calendly","Chrome MCP","Drive","Granola (call notes)"],
-    subAgents:["Pipeline Manager","Meeting Brief","Partnership Scout","Synergy Mapper"],
-    question: "Top 3 targets de retail GMP: ¿Plaza Lama, Pricesmart o Carol primero? Tengo el contacto frío para los 3, necesito que elijas por cuál abro.",
-    memoryPath:"BusinessDev/MEMORY_PACK.md"
-  },
-  {
-    id:"marketing", name:"Marketing", title:"Marca & Contenido", role:"Head de Marca",
-    model:"Claude Sonnet 4.6 + Canva MCP", mood:"working", status:"active",
-    currentTask:"One-pager GMP para advertisers",
-    lastOutput:"Draft PDF listo para revisión",
-    color:"#ec4899",
-    mission:"Positioning, decks, copy, campañas, landing, partnership one-pagers. Brand guidelines del grupo.",
-    tools:["Canva MCP ✅","PPTX","Docx","PDF","Drive","brand-voice skill"],
-    subAgents:["Brand Strategist","Copywriter","Deck Builder","Market Research"],
-    question: null,
-    memoryPath:"Marketing/MEMORY_PACK.md"
-  },
-  {
-    id:"strategy", name:"Strategy", title:"Estrategia & Ventures", role:"Head Estratégico",
-    model:"Claude Opus 4.6", mood:"thinking", status:"active",
-    currentTask:"Evaluando piggyback CargX ↔ UTS",
-    lastOutput:"Hipótesis: ruta UTS existente puede distribuir CargX sin CAPEX",
-    color:"#8b5cf6",
-    mission:"Evaluar nuevas oportunidades, 90-day plans, competitive intel, venture analysis, risk maps.",
-    tools:["WebFetch","Perplexity (via web)","Drive","LM Arena para benchmarks","Markdown"],
-    subAgents:["Venture Analyst","Competitive Intel","Structure Designer","Roadmap Planner"],
-    question: null,
-    memoryPath:"Strategy/MEMORY_PACK.md"
-  },
-  {
-    id:"research", name:"Research", title:"Inteligencia", role:"Head de Research",
-    model:"Claude Sonnet 4.6 + WebFetch", mood:"reading", status:"active",
-    currentTask:"Scan DOOH RD + Ley 16-95 ITBIS",
-    lastOutput:"Posible exención ITBIS para GMP (validar con abogado)",
-    color:"#06b6d4",
-    mission:"Market research, sector scans, regulatory watch, competitor monitoring, daily briefings.",
-    tools:["WebFetch","WebSearch","Chrome MCP","Bigdata.com","Perplexity web","Maltbook/Gibberlink (externos)"],
-    subAgents:["Sector Analyst","Competitor Monitor","Regulatory Watch","News Briefing"],
-    question: null,
-    memoryPath:"Research/MEMORY_PACK.md"
-  },
-  {
-    id:"exec", name:"Exec Asst", title:"Asistente Ejecutivo", role:"Chief of Staff Support",
-    model:"Claude Haiku 4.5", mood:"organizing", status:"support",
-    currentTask:"Agenda CEO + follow-ups",
-    lastOutput:"3 aprobaciones pendientes tracking",
-    color:"#eab308",
-    mission:"Meeting notes, follow-ups, recordatorios, agenda, priority tracking del CEO.",
-    tools:["Gmail","Calendly","Slack","Drive","Granola","Scheduled tasks"],
-    subAgents:["Meeting Prep","Follow-up Drafter","Reminder Agent","Organizer"],
-    question: null,
-    memoryPath:"ExecAssistant/MEMORY_PACK.md"
+
+const STATE_URL = 'office_state.json';
+const API_BASE = '';  // same origin when served via server.py
+const POLL_MS = 8000;
+const MOVE_EVERY = 18000;
+
+let STATE = null;
+let BACKEND_LIVE = false;  // set true when first successful POST happens
+let localTasks = JSON.parse(localStorage.getItem('jvh_local_tasks') || '[]');
+let lastFetchOk = null;
+
+async function api(route, body) {
+  try {
+    const res = await fetch(API_BASE + route, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body || {})
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const j = await res.json();
+    if (j.state) { STATE = j.state; renderFloor(); renderSidebars(); }
+    BACKEND_LIVE = true;
+    return j;
+  } catch (e) {
+    BACKEND_LIVE = false;
+    return null;
   }
-];
-
-const engines = [
-  {name:"UTS", health:"yellow", mrr:"RD$270K/mo", note:"Estable · 1 cliente ancla (riesgo)"},
-  {name:"GMP", health:"red", mrr:"RD$0", note:"4+1 screens · 0 advertisers"},
-  {name:"CargX", health:"gray", mrr:"TBD", note:"Pre-launch · modelo TBD"}
-];
-
-let tasks = [
-  {at:"bd", text:"Armar lista de 30 advertisers objetivo para GMP", prio:"p1", done:true, startedNow:true},
-  {at:"finance", text:"Cash snapshot UTS marzo: ingresos/egresos/neto", prio:"p1", done:false, startedNow:true},
-  {at:"legal", text:"Cerrar versión final Acuerdo Javier de Parada (P-001)", prio:"p1", done:false, startedNow:true},
-  {at:"research", text:"Scan semanal DOOH RD + competidores", prio:"p2", done:true, startedNow:true},
-  {at:"strategy", text:"Evaluar piggyback CargX↔UTS", prio:"p2", done:true, startedNow:true},
-  {at:"ops", text:"SOP onboarding advertiser GMP", prio:"p2", done:true, startedNow:true},
-  {at:"marketing", text:"One-pager GMP para advertisers", prio:"p3", done:true, startedNow:true}
-];
-
-const ideas = [
-  {src:"Strategy", text:"GMP + UTS cross-sell: mensajeros dejan flyers del screen en locales."},
-  {src:"BD", text:"Banco Popular 'apoyo al comercio' — 30 días gratis por data de foot traffic."},
-  {src:"Research", text:"Ley 16-95 puede eximir a GMP de ITBIS a pymes (validar)."},
-  {src:"Finance", text:"UTS libera ~RD$50K/mes para reinvertir en CargX sin capital externo."}
-];
-
-let feed = [
-  {t:"09:41", agent:"COO", txt:"Oficina viva v2 cargada · AI town mode ON"},
-  {t:"09:42", agent:"COO", txt:"9 agentes conectados con sus memory packs"},
-  {t:"09:43", agent:"BD", txt:"Ejecutando tarea: lista 30 advertisers GMP ✓"},
-  {t:"09:44", agent:"Research", txt:"Ejecutando tarea: scan DOOH RD ✓"},
-  {t:"09:45", agent:"Strategy", txt:"Ejecutando tarea: piggyback CargX↔UTS ✓"},
-  {t:"09:46", agent:"Ops", txt:"Ejecutando tarea: SOP advertiser GMP ✓"},
-  {t:"09:47", agent:"Marketing", txt:"Ejecutando tarea: one-pager GMP ✓"},
-  {t:"09:48", agent:"Finance", txt:"Pregunta al CEO: ¿datos reales UTS o placeholder?"},
-  {t:"09:49", agent:"Legal", txt:"Pregunta al CEO: vehículo Javier paper (Axione parked)"},
-  {t:"09:50", agent:"BD", txt:"Pregunta al CEO: orden de targets retail"}
-];
+}
 
 /* ============================================================
-   CHARACTER SVG
+   CHARACTER SVG (pixel-art style, per-agent sprite)
 ============================================================ */
-function characterSVG(color, mood) {
+function hairPath(style) {
+  const map = {
+    short:    'M18 8 L18 16 L42 16 L42 8 Q42 4 30 4 Q18 4 18 8 Z',
+    side:     'M18 8 L18 18 L24 14 L42 16 L42 8 Q42 4 30 4 Q18 4 18 8 Z',
+    bun:      'M18 8 L18 14 L42 14 L42 8 Q42 4 30 4 Q18 4 18 8 Z M26 0 Q30 -3 34 0 Q34 5 30 5 Q26 5 26 0',
+    quiff:    'M18 8 L18 14 L28 6 L42 14 L42 8 Q42 4 30 4 Q18 4 18 8 Z',
+    long:     'M16 8 L14 34 L20 30 L20 14 L40 14 L40 30 L46 34 L44 8 Q44 2 30 2 Q16 2 16 8 Z',
+    wavy:     'M18 8 L16 16 L20 13 L24 16 L28 13 L32 16 L36 13 L40 16 L44 13 L42 8 Q42 2 30 2 Q18 2 18 8 Z',
+    curly:    'M18 8 L18 16 L42 16 L42 8 Q42 2 30 2 Q18 2 18 8 Z M18 6 A2 2 0 0 1 22 6 M22 4 A2 2 0 0 1 26 4 M26 3 A2 2 0 0 1 30 3 M30 3 A2 2 0 0 1 34 3 M34 4 A2 2 0 0 1 38 4 M38 6 A2 2 0 0 1 42 6',
+    ponytail: 'M18 8 L18 14 L42 14 L42 8 Q42 4 30 4 Q18 4 18 8 Z M42 12 L48 20 L46 28 L42 20 Z',
+  };
+  return map[style] || map.short;
+}
+function accessorySVG(acc, color) {
+  if (acc === 'glasses') return `
+    <circle cx="25" cy="22" r="3" fill="none" stroke="#0a0a0a" stroke-width="1.2"/>
+    <circle cx="35" cy="22" r="3" fill="none" stroke="#0a0a0a" stroke-width="1.2"/>
+    <line x1="28" y1="22" x2="32" y2="22" stroke="#0a0a0a" stroke-width="1"/>`;
+  if (acc === 'cap') return `
+    <path d="M16 8 L44 8 L48 14 L14 14 Z" fill="${color}"/>
+    <ellipse cx="30" cy="14" rx="16" ry="2" fill="${color}" opacity="0.8"/>`;
+  if (acc === 'earrings') return `
+    <circle cx="17" cy="22" r="1.4" fill="#fbbf24"/>
+    <circle cx="43" cy="22" r="1.4" fill="#fbbf24"/>`;
+  return '';
+}
+function characterSVG(agent) {
+  const color = agent.color;
+  const mood = agent.mood || 'focused';
+  const sprite = agent.sprite || {};
+  const hairColor = sprite.hair || '#1a1a1a';
+  const skin = sprite.skin || '#f5cfa0';
+  const shirt = sprite.shirt || color;
+  const hstyle = sprite.hairStyle || 'short';
+  const acc = sprite.accessory || 'none';
   const eyeY = mood === 'thinking' ? 19 : mood === 'reading' ? 21 : 22;
   const mouthMap = {
-    focused: 'M22 31 L38 31',
-    working: 'M22 31 Q30 33 38 31',
-    hunting: 'M22 30 L30 33 L38 30',
+    focused:  'M22 31 L38 31',
+    working:  'M22 31 Q30 33 38 31',
+    hunting:  'M22 30 L30 33 L38 30',
     thinking: 'M24 32 Q30 30 36 32',
-    reading: 'M23 31 Q30 32 37 31',
+    reading:  'M23 31 Q30 32 37 31',
     organizing: 'M22 31 L38 31',
-    idle: 'M25 32 L35 32'
+    idle:     'M25 32 L35 32'
   };
   const mouth = mouthMap[mood] || mouthMap.focused;
-  const accessory = mood === 'thinking' ? `
-    <circle cx="46" cy="10" r="2.2" fill="${color}" opacity="0.6"/>
-    <circle cx="50" cy="5" r="1.5" fill="${color}" opacity="0.5"/>` : '';
-  const laptop = mood === 'reading' ? `
-    <rect x="16" y="54" width="28" height="3" fill="#cbd5e1"/>
-    <rect x="18" y="50" width="24" height="4" fill="#94a3b8"/>` : '';
+  const thoughtDots = mood === 'thinking' ? `
+    <circle cx="44" cy="6" r="2" fill="${color}" opacity="0.7"/>
+    <circle cx="48" cy="2" r="1.2" fill="${color}" opacity="0.5"/>` : '';
+  const laptop = (agent.activity === 'working' || mood === 'working' || mood === 'reading') ? `
+    <rect x="14" y="52" width="32" height="3" fill="#cbd5e1" rx="0.5"/>
+    <rect x="16" y="48" width="28" height="4" fill="#94a3b8" rx="0.5"/>
+    <rect x="18" y="49" width="24" height="2" fill="${color}" opacity="0.5">
+      <animate attributeName="opacity" values="0.3;0.9;0.3" dur="1.2s" repeatCount="indefinite"/>
+    </rect>` : '';
+  const coffee = (agent.activity === 'coffee' || mood === 'organizing') ? `
+    <rect x="45" y="38" width="6" height="7" fill="#8b4513" rx="1"/>
+    <rect x="45" y="37" width="6" height="2" fill="#fff" opacity="0.4"/>
+    <path d="M48 35 Q49 33 48 31 Q47 33 48 35" stroke="#fff" stroke-width="0.8" fill="none" opacity="0.5">
+      <animate attributeName="opacity" values="0.2;0.6;0.2" dur="1.6s" repeatCount="indefinite"/>
+    </path>` : '';
   return `
-    <svg width="60" height="72" viewBox="0 0 60 72" xmlns="http://www.w3.org/2000/svg">
-      ${accessory}
-      <!-- head -->
-      <rect x="18" y="8" width="24" height="24" rx="4" fill="#f5cfa0" stroke="${color}" stroke-width="1.5"/>
-      <!-- hair -->
-      <rect x="18" y="8" width="24" height="6" rx="4" fill="${color}"/>
-      <rect x="18" y="12" width="24" height="2" fill="${color}" opacity="0.7"/>
-      <!-- eyes -->
+    <svg class="sprite" width="44" height="56" viewBox="0 0 60 64" xmlns="http://www.w3.org/2000/svg">
+      ${thoughtDots}
+      <ellipse cx="30" cy="62" rx="14" ry="2" fill="#000" opacity="0.4"/>
+      <rect x="18" y="8" width="24" height="24" rx="4" fill="${skin}" stroke="${color}" stroke-width="1.5"/>
+      <path d="${hairPath(hstyle)}" fill="${hairColor}"/>
+      ${accessorySVG(acc, color)}
       <circle cx="25" cy="${eyeY}" r="1.8" fill="#0a0a0a"/>
       <circle cx="35" cy="${eyeY}" r="1.8" fill="#0a0a0a"/>
       <circle cx="25.5" cy="${eyeY-0.5}" r="0.5" fill="#fff"/>
       <circle cx="35.5" cy="${eyeY-0.5}" r="0.5" fill="#fff"/>
-      <!-- mouth -->
       <path d="${mouth}" stroke="#0a0a0a" stroke-width="1.6" fill="none" stroke-linecap="round"/>
-      <!-- neck -->
-      <rect x="26" y="31" width="8" height="3" fill="#f5cfa0"/>
-      <!-- body -->
-      <path d="M14 34 L46 34 L48 56 L12 56 Z" fill="${color}"/>
-      <!-- shirt detail -->
+      <rect x="26" y="31" width="8" height="3" fill="${skin}"/>
+      <path d="M14 34 L46 34 L48 54 L12 54 Z" fill="${shirt}"/>
       <path d="M26 34 L30 40 L34 34" stroke="#fff" stroke-width="1" fill="none" opacity="0.6"/>
-      <rect x="28" y="42" width="4" height="4" fill="#fff" opacity="0.3" rx="1"/>
-      <!-- arms -->
-      <rect x="10" y="36" width="5" height="18" rx="2" fill="${color}"/>
-      <rect x="45" y="36" width="5" height="18" rx="2" fill="${color}"/>
-      <!-- hands -->
-      <circle cx="12" cy="54" r="2.5" fill="#f5cfa0"/>
-      <circle cx="48" cy="54" r="2.5" fill="#f5cfa0"/>
+      <circle cx="30" cy="44" r="1" fill="#fff" opacity="0.5"/>
+      <circle cx="30" cy="48" r="1" fill="#fff" opacity="0.5"/>
+      <rect x="10" y="36" width="5" height="16" rx="2" fill="${shirt}"/>
+      <rect x="45" y="36" width="5" height="16" rx="2" fill="${shirt}"/>
+      <circle cx="12.5" cy="52" r="2.2" fill="${skin}"/>
+      <circle cx="47.5" cy="52" r="2.2" fill="${skin}"/>
       ${laptop}
-    </svg>
-  `;
+      ${coffee}
+    </svg>`;
 }
 
 /* ============================================================
-   RENDER
+   RENDER FLOOR PLAN
 ============================================================ */
-function renderOffice() {
-  const grid = document.getElementById('office-grid');
-  grid.innerHTML = agents.map(a => `
-    <div class="room ${a.status} ${a.question ? 'has-question' : ''}"
-         style="--agent-color:${a.color}"
-         onclick="openAgent('${a.id}')">
-      <div class="room-head">
-        <div>
-          <div class="room-title">${a.title}</div>
-          <div class="room-name">${a.name}</div>
-          <div class="room-model">${a.model}</div>
-        </div>
-        <div class="status-dot ${a.status==='active'?'active':''}"></div>
-      </div>
-      <div class="scene">
-        <div class="floor-tile"></div>
-        <div class="bubble">${a.currentTask}</div>
-        <div class="character ${a.mood}">
-          ${characterSVG(a.color, a.mood)}
-          ${a.question ? '<div class="q-mark">?</div>' : ''}
-        </div>
-        <div class="desk-3d"></div>
-        <div class="monitor"></div>
-      </div>
-      <div class="room-task">
-        <div class="label">Último output</div>
-        <b>${a.lastOutput}</b>
-      </div>
-    </div>
-  `).join('');
+function isActivelyWorking(agentId) {
+  const now = Date.now() / 1000;
+  return (STATE.activeWork || []).some(w => w.agent === agentId && (w.endsAt || 0) > now);
+}
+function renderFloor() {
+  const inner = document.getElementById('floor-inner');
+  if (!STATE) return;
 
-  const active = agents.filter(a=>a.status==='active').length;
-  const support = agents.filter(a=>a.status==='support').length;
-  document.getElementById('live-status').textContent = `${active} activos · ${support} soporte`;
+  const fp = STATE.floorPlan || {width:1000, height:640, zones:[]};
+  const W = fp.width, H = fp.height;
+
+  let html = '';
+  // Zones
+  fp.zones.forEach(z => {
+    html += `
+      <div class="zone" style="
+        left:${z.x / W * 100}%; top:${z.y / H * 100}%;
+        width:${z.w / W * 100}%; height:${z.h / H * 100}%;
+        --zone-color:${z.color}">
+        <div class="zone-label" style="color:${z.color}">${z.label}</div>
+      </div>`;
+  });
+
+  // Decorative desks under each agent home
+  STATE.agents.forEach(a => {
+    if (a.id === 'coo') return;
+    const hx = a.home[0], hy = a.home[1];
+    html += `<div class="desk-obj" style="
+      left:${(hx - 30) / W * 100}%;
+      top:${(hy + 10) / H * 100}%;
+      --screen-color:${a.color}"></div>`;
+  });
+
+  // Meeting room big table
+  html += `<div class="table-obj" style="left:45%;top:13%;width:22%;height:10%"></div>`;
+  // CEO desk
+  html += `<div class="table-obj" style="left:4%;top:11%;width:15%;height:11%;background:linear-gradient(180deg,#fbbf24,#b45309);border-color:#fbbf24"></div>`;
+  // Café
+  html += `<div class="table-obj" style="left:80%;top:75%;width:16%;height:14%;background:linear-gradient(180deg,#475569,#1e293b);border-color:#64748b"></div>`;
+  // Plants
+  const plants = [[4,90],[95,4],[48,94],[4,4]];
+  plants.forEach(([x,y]) => {
+    html += `<div class="plant" style="left:${x}%;top:${y}%">
+      <svg viewBox="0 0 18 22"><ellipse cx="9" cy="8" rx="8" ry="7" fill="#10b981"/><ellipse cx="6" cy="5" rx="3" ry="4" fill="#34d399"/><ellipse cx="12" cy="6" rx="3" ry="4" fill="#34d399"/><rect x="6" y="14" width="6" height="7" fill="#8b4513"/></svg>
+    </div>`;
+  });
+
+  // Characters
+  STATE.agents.forEach(a => {
+    const xPct = (a.x / W) * 100;
+    const yPct = (a.y / H) * 100;
+    const truncTask = (a.currentTask || '').length > 48 ? (a.currentTask.slice(0, 46) + '…') : (a.currentTask || '');
+    const working = isActivelyWorking(a.id);
+    const classes = [a.mood || 'focused'];
+    if (working) classes.push('working-now');
+    if (a.activity === 'coffee') classes.push('coffee');
+    html += `
+      <div class="character ${classes.join(' ')}"
+           id="char-${a.id}"
+           style="left:${xPct}%;top:${yPct}%;--char-color:${a.color}"
+           onclick="openAgentPanel('${a.id}')">
+        ${working ? '<div class="work-halo"></div>' : ''}
+        ${working ? '<div class="workdots"><span></span><span></span><span></span></div>' : ''}
+        <div class="char-name" style="border-color:${a.color}">${a.name}</div>
+        ${characterSVG(a)}
+        <div class="bubble" style="--char-color:${a.color}">${escapeHtml(truncTask)}</div>
+        ${a.question ? '<div class="question-mark">!</div>' : ''}
+      </div>`;
+  });
+
+  inner.innerHTML = html;
+
+  // Render dialogue bubbles on the overlay layer (separate so they don't interfere with char render)
+  renderDialogues();
+  // Apply day/night filter class
+  applyDayNight();
+  // Update camera if following
+  if (FOLLOW_ID) positionCamera();
+}
+
+/* ============================================================
+   DIALOGUES (agent-to-agent speech bubbles)
+============================================================ */
+function renderDialogues() {
+  const layer = document.getElementById('dialogue-layer');
+  if (!STATE) { layer.innerHTML = ''; return; }
+  const now = Date.now() / 1000;
+  const fp = STATE.floorPlan || {width: 1000, height: 640};
+  const W = fp.width, H = fp.height;
+  const active = (STATE.dialogues || []).filter(d => (d.expiresAt || 0) > now).slice(-6);
+  layer.innerHTML = active.map((d, i) => {
+    const frm = STATE.agents.find(a => a.id === d.from);
+    if (!frm) return '';
+    const x = (frm.x / W * 100);
+    const y = (frm.y / H * 100) - 10;
+    const color = frm.color;
+    const remaining = Math.max(1, (d.expiresAt - now));
+    return `
+      <div class="d-bubble" style="left:${x}%;top:${y}%;--d-color:${color};--out-delay:${Math.max(0.5, remaining - 0.5)}s">
+        <span class="d-from">${escapeHtml(frm.name)}${d.to ? ' → ' + escapeHtml((STATE.agents.find(a=>a.id===d.to)||{}).name || d.to) : ''}</span>
+        ${escapeHtml(d.text)}
+      </div>`;
+  }).join('');
+}
+
+/* ============================================================
+   DAY/NIGHT CYCLE
+============================================================ */
+function currentPhase() {
+  if (STATE && STATE.dayPhase && STATE.dayPhase !== 'auto') return STATE.dayPhase;
+  const h = new Date().getHours();
+  if (h < 6)  return 'night';
+  if (h < 9)  return 'morning';
+  if (h < 13) return 'work';
+  if (h < 14) return 'lunch';
+  if (h < 18) return 'afternoon';
+  if (h < 21) return 'evening';
+  return 'night';
+}
+function applyDayNight() {
+  const inner = document.getElementById('floor-inner');
+  if (!inner) return;
+  const phase = currentPhase();
+  inner.className = 'floor-inner floor-phase-' + phase;
+  const badge = document.getElementById('phase-text');
+  const labels = {morning:'mañana', work:'día', lunch:'almuerzo', afternoon:'tarde', evening:'atardecer', night:'noche'};
+  if (badge) badge.textContent = labels[phase] || phase;
+}
+
+/* ============================================================
+   CAMERA FOLLOW
+============================================================ */
+let FOLLOW_ID = null;
+function cameraStart(id) {
+  FOLLOW_ID = id;
+  document.getElementById('floor').classList.add('following');
+  const btn = document.getElementById('dr-follow-btn');
+  if (btn) btn.classList.add('on');
+  positionCamera();
+}
+function cameraStop() {
+  FOLLOW_ID = null;
+  document.getElementById('floor').classList.remove('following');
+  const btn = document.getElementById('dr-follow-btn');
+  if (btn) btn.classList.remove('on');
+  const inner = document.getElementById('floor-inner');
+  if (inner) { inner.style.removeProperty('--cam-x'); inner.style.removeProperty('--cam-y'); }
+}
+function positionCamera() {
+  if (!FOLLOW_ID || !STATE) return;
+  const a = STATE.agents.find(x => x.id === FOLLOW_ID);
+  if (!a) return;
+  const fp = STATE.floorPlan;
+  const W = fp.width, H = fp.height;
+  // shift so that agent is at ~center of viewport
+  const camX = (50 - (a.x / W * 100));
+  const camY = (50 - (a.y / H * 100));
+  const inner = document.getElementById('floor-inner');
+  inner.style.setProperty('--cam-x', camX + '%');
+  inner.style.setProperty('--cam-y', camY + '%');
+}
+function toggleFollow() {
+  const drawer = document.getElementById('drawer');
+  const id = drawer.dataset.agentId;
+  if (!id) return;
+  if (FOLLOW_ID === id) cameraStop();
+  else cameraStart(id);
+}
+
+/* ============================================================
+   RENDER SIDEBARS
+============================================================ */
+function renderSidebars() {
+  if (!STATE) return;
+
+  const active = STATE.agents.filter(a => a.status === 'active').length;
+  const withQ = STATE.agents.filter(a => a.question).length;
   document.getElementById('stat-active').textContent = active;
-  document.getElementById('stat-questions').textContent = agents.filter(a=>a.question).length;
-}
+  document.getElementById('stat-questions').textContent = withQ;
+  document.getElementById('stat-approvals').textContent = (STATE.approvals || []).length;
+  document.getElementById('stat-opps').textContent = (STATE.opportunities || []).length;
+  document.getElementById('live-status').textContent =
+    `${active} activos · ${STATE.agents.length - active} soporte`;
 
-function renderEngines() {
-  document.getElementById('engines-list').innerHTML = engines.map(e => `
-    <div class="engine">
-      <div>
-        <div class="engine-name"><span class="health ${e.health}"></span>${e.name}</div>
-        <div class="engine-meta">${e.note}</div>
-      </div>
+  const p1count = (STATE.approvals || []).filter(a => a.priority === 'p1').length;
+  document.getElementById('alarm').classList.toggle('on', p1count > 0);
+
+  const fc = document.getElementById('focus-chips');
+  fc.innerHTML = '';
+  (STATE.focusLock.active || []).forEach(x => {
+    fc.innerHTML += `<span class="chip">▶ ${x}</span>`;
+  });
+  (STATE.focusLock.parked || []).forEach(x => {
+    fc.innerHTML += `<span class="chip parked">⏸ ${x}</span>`;
+  });
+
+  // Approvals
+  const ap = document.getElementById('approvals-list');
+  const approvals = STATE.approvals || [];
+  document.getElementById('approvals-count').textContent = approvals.length;
+  ap.innerHTML = approvals.map(a => {
+    const agent = STATE.agents.find(x => x.id === a.owner);
+    const color = agent ? agent.color : '#64748b';
+    return `
+      <div class="approval ${a.priority}" style="--owner-color:${color}" onclick="openApproval('${a.id}')">
+        <div class="ap-head">
+          <span class="ap-id">${a.id}</span>
+          <span class="ap-prio">${a.priority}</span>
+        </div>
+        <div class="ap-title">${escapeHtml(a.title)}</div>
+        <div class="ap-blocker">${escapeHtml(a.blocker)}</div>
+      </div>`;
+  }).join('') || '<div style="color:var(--muted);font-size:11px;text-align:center;padding:14px">Nada pendiente 🎉</div>';
+
+  // Engines
+  document.getElementById('engines-list').innerHTML = (STATE.cashflowEngines || []).map(e => `
+    <div class="engine-row">
+      <div class="engine-dot ${e.health}"></div>
+      <div class="engine-name">${e.name}</div>
       <div class="engine-mrr">${e.mrr}</div>
+      <div class="engine-note">${escapeHtml(e.note)}</div>
     </div>
   `).join('');
-}
 
-function renderTasks() {
-  const list = document.getElementById('tasks-list');
-  list.innerHTML = tasks.map((t, i) => `
-    <li class="${t.done?'done':''}">
-      <span class="${t.prio}">[${t.prio.toUpperCase()}]</span>
-      <span class="at">@${t.at}</span>
-      <span>${t.text}</span>
+  // Opportunities
+  const opps = STATE.opportunities || [];
+  document.getElementById('opps-count').textContent = opps.length;
+  document.getElementById('opps-list').innerHTML = opps.map(o => `
+    <div class="opp ${o.status === 'hot' ? 'hot' : ''}">
+      <div class="opp-title">${escapeHtml(o.title)}</div>
+      <div class="opp-meta">
+        <span class="opp-value">${escapeHtml(o.value)}</span> ·
+        ${escapeHtml(o.window)} · ${escapeHtml(o.owner)}
+      </div>
+    </div>
+  `).join('') || '<div style="color:var(--muted);font-size:11px;text-align:center;padding:10px">Sin oportunidades abiertas</div>';
+
+  // Ideas
+  const ideas = STATE.ideas || [];
+  document.getElementById('ideas-count').textContent = ideas.length;
+  document.getElementById('ideas-list').innerHTML = ideas.map(i => `
+    <li class="${i.status === 'approved' ? 'done' : ''}">
+      <div class="who">[${escapeHtml(i.src)}]</div>
+      ${escapeHtml(i.text)}
     </li>
   `).join('');
-  document.getElementById('tasks-count').textContent = tasks.filter(t=>!t.done).length;
-}
 
-function renderIdeas() {
-  document.getElementById('ideas-list').innerHTML = ideas.map(i => `
-    <li><span class="at">[${i.src}]</span><span>${i.text}</span></li>
-  `).join('');
-  document.getElementById('ideas-count').textContent = ideas.length;
-  document.getElementById('stat-ideas').textContent = ideas.length;
-}
-
-function renderFeed() {
-  document.getElementById('feed-list').innerHTML = feed.slice(-15).reverse().map(f => `
-    <li><span class="feed-time">${f.t}</span><span><b>[${f.agent}]</b> ${f.txt}</span></li>
-  `).join('');
+  // Feed (worklog, newest first)
+  const feed = (STATE.worklog || []).slice().reverse();
   document.getElementById('feed-count').textContent = feed.length;
+  document.getElementById('feed-list').innerHTML = feed.map(f => `
+    <li><span class="feed-time">${f.t}</span><span><b>[${f.agent}]</b> ${escapeHtml(f.txt)}</span></li>
+  `).join('');
+
+  renderLocalTasks();
+  renderCeoInbox();
+  renderDriveList();
+  renderMailList();
+  updateThinkingToast();
 }
 
 /* ============================================================
-   MODAL
+   CEO INBOX (Tier B) — aggregate of questions/approvals/escalations
 ============================================================ */
-function openAgent(id) {
-  const a = agents.find(x => x.id === id);
-  if (!a) return;
-  const modal = document.getElementById('modal-content');
-  modal.style.setProperty('--agent-color', a.color);
-  modal.innerHTML = `
-    <button class="modal-close" onclick="closeModal()">×</button>
-    <div class="modal-role">${a.title}</div>
-    <h2 style="color:${a.color}">${a.name}</h2>
-    <div class="modal-model">⚡ ${a.model}</div>
+function renderCeoInbox() {
+  const body = document.getElementById('inbox-body');
+  const total = document.getElementById('inbox-total');
+  if (!body || !STATE) return;
 
-    <div class="modal-section">
-      <h4>Misión</h4>
-      <p>${a.mission}</p>
-    </div>
+  const questions = (STATE.agents || []).filter(a => a.question);
+  const p1Approvals = (STATE.approvals || []).filter(a => a.priority === 'p1');
+  const wl = (STATE.worklog || []).slice(-40);
+  const escalations = wl.filter(w => /🚨|escalate/i.test(w.txt || ''));
 
-    <div class="modal-section">
-      <h4>Herramientas</h4>
-      <div class="tool-chips">
-        ${a.tools.map(t => `<span class="tool-chip">${t}</span>`).join('')}
+  total.textContent = questions.length + p1Approvals.length + escalations.length;
+
+  let html = '';
+  if (questions.length) {
+    html += '<div class="inbox-sec"><div class="inbox-sec-label">Preguntas pendientes</div>';
+    questions.forEach(a => {
+      html += `
+        <div class="inbox-row" onclick="openAgentPanel('${a.id}')">
+          <div class="dot" style="background:${a.color}"></div>
+          <div class="txt">
+            <div class="agent-name">${escapeHtml(a.name)}</div>
+            <div>${escapeHtml((a.question || '').slice(0, 90))}${a.question && a.question.length > 90 ? '…' : ''}</div>
+          </div>
+        </div>`;
+    });
+    html += '</div>';
+  }
+  if (p1Approvals.length) {
+    html += '<div class="inbox-sec"><div class="inbox-sec-label">P1 · aprobaciones urgentes</div>';
+    p1Approvals.forEach(a => {
+      const owner = (STATE.agents || []).find(x => x.id === a.owner);
+      html += `
+        <div class="inbox-row" onclick="openApproval('${a.id}')">
+          <div class="dot" style="background:${owner ? owner.color : '#ef4444'}"></div>
+          <div class="txt">
+            <div class="agent-name">${escapeHtml(a.id)} · ${escapeHtml(a.title)}</div>
+            <div style="color:var(--muted)">${escapeHtml(a.blocker || '')}</div>
+          </div>
+        </div>`;
+    });
+    html += '</div>';
+  }
+  if (escalations.length) {
+    html += '<div class="inbox-sec"><div class="inbox-sec-label">Escalaciones recientes</div>';
+    escalations.slice(-3).reverse().forEach(e => {
+      html += `
+        <div class="inbox-row">
+          <div class="dot" style="background:#ef4444"></div>
+          <div class="txt">
+            <div class="agent-name">${escapeHtml(e.agent || '')}</div>
+            <div>${escapeHtml((e.txt || '').slice(0, 100))}</div>
+          </div>
+        </div>`;
+    });
+    html += '</div>';
+  }
+  if (!html) {
+    html = '<div class="inbox-empty">Nada pendiente en tu inbox 🎯</div>';
+  }
+  body.innerHTML = html;
+}
+
+/* ============================================================
+   DRIVE / GMAIL SNAPSHOT PANELS
+============================================================ */
+function fmtRelTime(iso) {
+  if (!iso) return '';
+  const t = new Date(iso).getTime();
+  if (!t) return '';
+  const s = Math.max(0, (Date.now() - t) / 1000);
+  if (s < 60) return 'hace ' + Math.floor(s) + 's';
+  if (s < 3600) return 'hace ' + Math.floor(s / 60) + ' min';
+  if (s < 86400) return 'hace ' + Math.floor(s / 3600) + ' h';
+  return 'hace ' + Math.floor(s / 86400) + ' d';
+}
+
+function renderDriveList() {
+  const list = document.getElementById('drive-list');
+  const cnt = document.getElementById('drive-count');
+  const t = document.getElementById('drive-time');
+  if (!list || !STATE) return;
+  const snap = STATE.driveSnapshot || {};
+  const files = (snap.files || []).slice(0, 8);
+  cnt.textContent = (snap.files || []).length;
+  t.textContent = snap.lastPulledAt ? fmtRelTime(snap.lastPulledAt) : '';
+  if (!files.length) {
+    list.innerHTML = '<div class="snap-empty">Sin snapshot · corre jvh-drive-snapshot</div>';
+    return;
+  }
+  list.innerHTML = files.map(f => `
+    <div class="snap-row">
+      <a class="snap-title" href="${escapeHtml(f.url || '#')}" target="_blank" rel="noopener">${escapeHtml(f.title || '—')}</a>
+      <div class="snap-meta">
+        ${f.engine ? `<span class="snap-engine">${escapeHtml(f.engine)}</span>` : ''}
+        ${escapeHtml(f.kind || '')} · ${escapeHtml(f.modifiedAt || '')}
       </div>
     </div>
+  `).join('');
+}
 
-    <div class="modal-section">
-      <h4>Sub-agentes</h4>
-      <div class="tool-chips">
-        ${a.subAgents.map(s => `<span class="tool-chip">${s}</span>`).join('')}
+function renderMailList() {
+  const list = document.getElementById('mail-list');
+  const cnt = document.getElementById('mail-count');
+  const t = document.getElementById('mail-time');
+  if (!list || !STATE) return;
+  const snap = STATE.mailSnapshot || {};
+  const threads = (snap.threads || []).slice(0, 8);
+  cnt.textContent = (snap.threads || []).length;
+  t.textContent = snap.lastPulledAt ? fmtRelTime(snap.lastPulledAt) : '';
+  if (!threads.length) {
+    list.innerHTML = '<div class="snap-empty">Sin snapshot · corre jvh-gmail-snapshot</div>';
+    return;
+  }
+  list.innerHTML = threads.map(th => `
+    <div class="snap-row">
+      <span class="snap-title">${escapeHtml(th.subject || '—')}${th.hasReplyNeeded ? ' ⚠' : ''}</span>
+      <div class="snap-from">${escapeHtml(th.from || '')}</div>
+      <div class="snap-meta">
+        ${th.engine ? `<span class="snap-engine">${escapeHtml(th.engine)}</span>` : ''}
+        ${escapeHtml(th.receivedAt || '')}
       </div>
     </div>
+  `).join('');
+}
 
-    <div class="modal-section">
-      <h4>Trabajo actual</h4>
-      <p><b>${a.currentTask}</b><br><span style="color:var(--muted);font-size:11px">Último: ${a.lastOutput}</span></p>
-    </div>
+/* ============================================================
+   THINKING LOOP TOAST (Tier B)
+============================================================ */
+function updateThinkingToast() {
+  const el = document.getElementById('thinking-toast');
+  if (!el || !STATE) return;
+  const st = STATE.thinkingLoopStatus || {};
+  const on = !!st.running;
+  el.classList.toggle('on', on);
+  if (on) {
+    const names = (st.agents || []).map(id => {
+      const a = (STATE.agents || []).find(x => x.id === id);
+      return a ? a.name : id;
+    }).join(' + ');
+    document.getElementById('tt-agents').textContent = names || st.note || '—';
+  }
+}
 
-    ${a.question ? `
-      <div class="modal-section">
-        <h4 style="color:${'#fbbf24'}">🟡 Pregunta pendiente para el CEO</h4>
-        <div class="modal-question-box">${a.question}</div>
-        <textarea id="answer-${a.id}" placeholder="Tu respuesta aquí..."></textarea>
-        <button class="primary" onclick="answerQuestion('${a.id}')">Responder y continuar</button>
-      </div>
-    ` : `
-      <div class="modal-section">
-        <h4>Dar instrucciones</h4>
-        <textarea id="instr-${a.id}" placeholder="Instrucción o tarea para ${a.name}..."></textarea>
-        <button class="primary" onclick="sendInstruction('${a.id}')">Enviar instrucción</button>
-      </div>
-    `}
+function renderLocalTasks() {
+  const tl = document.getElementById('tasks-list');
+  document.getElementById('tasks-count').textContent = localTasks.length;
+  if (!localTasks.length) {
+    tl.innerHTML = '<div style="color:var(--muted);font-size:11px;text-align:center;padding:10px">Sin tareas locales — escribe una arriba</div>';
+    return;
+  }
+  tl.innerHTML = localTasks.map((t, i) => `
+    <li class="${t.done ? 'done' : ''}">
+      <div class="who">@${t.who} · ${t.prio}</div>
+      <div>${escapeHtml(t.text)}</div>
+      <div style="font-size:9px;color:var(--muted);margin-top:3px">${t.ts} · <a href="#" onclick="removeTask(${i});return false" style="color:var(--red)">eliminar</a></div>
+    </li>
+  `).join('');
+}
 
-    <div class="modal-section" style="font-size:10px;color:var(--muted);border-top:1px dashed var(--border);padding-top:10px;margin-top:18px">
-      📁 Memory pack: <code>${a.memoryPath}</code>
+/* ============================================================
+   DRAWER HELPERS (memory / plan / reflection — Tier A/C)
+============================================================ */
+function renderDrawerMemory(agentId) {
+  const stream = ((STATE && STATE.memoryStreams) || {})[agentId] || [];
+  if (!stream.length) {
+    return '<div style="color:var(--muted);font-size:10px;text-align:center;padding:8px">Sin eventos en memoria aún</div>';
+  }
+  const recent = stream.slice(-15).reverse();
+  return recent.map(e => {
+    const ts = e.ts ? e.ts.slice(11, 16) : '';
+    return `
+      <div class="mem-row">
+        <span class="mem-kind">${escapeHtml(e.kind || 'obs')}</span>
+        <span class="mem-ts">${ts}</span><br>
+        ${escapeHtml(e.text || '')}
+      </div>`;
+  }).join('');
+}
+
+function renderDrawerPlan(agentId) {
+  const plans = (STATE && STATE.dailyPlans) || {};
+  const p = plans[agentId];
+  if (!p || !p.items || !p.items.length) {
+    return '<div style="color:var(--muted);font-size:10px;text-align:center;padding:8px">Sin plan de hoy · corre jvh-morning-plan</div>';
+  }
+  const doneSet = new Set(p.done || []);
+  return `
+    <div class="dr-plan">
+      <div class="plan-date">📅 ${escapeHtml(p.date || '')}</div>
+      <ol>
+        ${p.items.map((it, i) => `<li style="${doneSet.has(i) || doneSet.has(it) ? 'text-decoration:line-through;opacity:0.6' : ''}">${escapeHtml(it)}</li>`).join('')}
+      </ol>
+      ${p.report ? `<div style="margin-top:7px;padding-top:7px;border-top:1px dashed rgba(255,255,255,0.1);font-size:10px;color:var(--accent2)"><strong>EOD report:</strong> ${escapeHtml(p.report)}</div>` : ''}
     </div>
   `;
-  document.getElementById('modal-bg').classList.add('open');
+}
+
+function renderDrawerReflections(agentId) {
+  const refls = ((STATE && STATE.reflections) || {})[agentId] || [];
+  if (!refls.length) {
+    return '<div style="color:var(--muted);font-size:10px;text-align:center;padding:8px">Sin reflexiones · corre jvh-eod-reflection</div>';
+  }
+  return refls.slice(-5).reverse().map(r => `
+    <div class="dr-reflection">
+      ${escapeHtml(r.text || '')}
+      <div class="refl-ts">${escapeHtml((r.ts || '').slice(0, 16))} · ${escapeHtml(r.scope || '')}</div>
+    </div>
+  `).join('');
+}
+
+/* ============================================================
+   AGENT DRAWER (rich side panel)
+============================================================ */
+async function openAgentPanel(id) {
+  const a = STATE.agents.find(x => x.id === id);
+  if (!a) return;
+  const drawer = document.getElementById('drawer');
+  const body = document.getElementById('drawer-body');
+  drawer.dataset.agentId = id;
+  drawer.style.setProperty('--agent-color', a.color);
+
+  // Filter worklog for this agent (best effort by name substring)
+  const nameNorm = (a.name || '').toLowerCase();
+  const wl = (STATE.worklog || []).filter(w => (w.agent || '').toLowerCase().includes(nameNorm)).slice(-20).reverse();
+
+  const qBlock = a.question ? `
+    <h4>🚨 Pregunta al CEO</h4>
+    <div class="dr-q">
+      ${escapeHtml(a.question)}
+      <div class="dr-actions" style="margin-top:8px">
+        <input id="dr-answer" placeholder="Tu respuesta…" />
+        <button onclick="submitAnswer('${a.id}')">Responder</button>
+      </div>
+      <div id="answer-out-${a.id}"></div>
+    </div>` : '';
+
+  const working = isActivelyWorking(a.id);
+
+  body.innerHTML = `
+    <div class="dr-head">
+      <div class="dr-avatar" style="background:${a.color}">${(a.name || '?')[0]}</div>
+      <div class="dr-title">
+        <h3>${escapeHtml(a.name)} <span style="font-size:10px;color:var(--muted);font-weight:500">· ${escapeHtml(a.title || '')}</span></h3>
+        <p>${escapeHtml(a.model || '')} · ${a.status} · ${a.mood}${working ? ' · <span style="color:var(--accent2)">● trabajando ahora</span>' : ''}</p>
+      </div>
+    </div>
+
+    ${qBlock}
+
+    <h4>Trabajando ahora</h4>
+    <div class="dr-task">${escapeHtml(a.currentTask || '—')}</div>
+
+    <h4>Último output</h4>
+    <div class="dr-output">${escapeHtml(a.lastOutput || '—')}</div>
+
+    <h4>Misión</h4>
+    <p>${escapeHtml(a.mission || '')}</p>
+
+    <h4>Sub-agentes</h4>
+    <div class="dr-tags">${(a.subAgents || []).map(s => `<span class="dr-tag">${escapeHtml(s)}</span>`).join('') || '<span class="dr-tag">—</span>'}</div>
+
+    <h4>Herramientas</h4>
+    <div class="dr-tags">${(a.tools || []).map(t => `<span class="dr-tag">${escapeHtml(t)}</span>`).join('') || '<span class="dr-tag">—</span>'}</div>
+
+    <h4>Memory pack</h4>
+    <p style="font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--accent2)">${escapeHtml(a.memoryPath || '')}</p>
+
+    <h4>📋 Plan del día</h4>
+    <div id="dr-plan-block">${renderDrawerPlan(a.id)}</div>
+
+    <h4>🪞 Reflexiones recientes</h4>
+    <div id="dr-refl-block">${renderDrawerReflections(a.id)}</div>
+
+    <h4>🧠 Memory stream (últimos ${((STATE.memoryStreams || {})[a.id] || []).length})</h4>
+    <div class="dr-memory">
+      ${renderDrawerMemory(a.id)}
+    </div>
+
+    <h4>📜 Worklog reciente (${wl.length})</h4>
+    <div class="dr-wl">
+      ${wl.length ? wl.map(w => `<div class="dr-wl-item"><span class="t">${w.t}</span>${escapeHtml(w.txt)}</div>`).join('') : '<div style="color:var(--muted);font-size:10px;text-align:center;padding:10px">Sin entradas recientes para este agente</div>'}
+    </div>
+
+    <h4>💬 Hablarle directamente</h4>
+    <div class="dr-actions">
+      <input id="dr-chat" placeholder="Instrucción, pregunta, contexto…" />
+      <button onclick="buildChatBlock('${a.id}')">Asignar</button>
+    </div>
+    <div id="chat-output-${a.id}"></div>
+  `;
+
+  drawer.classList.add('open');
+  setTimeout(() => {
+    const el = document.getElementById('dr-answer') || document.getElementById('dr-chat');
+    if (el) el.focus();
+  }, 450);
+}
+
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  cameraStop();
 }
 
 function closeModal() {
-  document.getElementById('modal-bg').classList.remove('open');
+  document.getElementById('modal-bg').classList.remove('on');
 }
 
-function answerQuestion(id) {
-  const txt = document.getElementById('answer-' + id).value.trim();
+async function submitAnswer(id) {
+  const inp = document.getElementById('dr-answer');
+  const txt = (inp && inp.value || '').trim();
   if (!txt) return;
-  const a = agents.find(x => x.id === id);
-  a.question = null;
-  a.lastOutput = 'Respuesta CEO recibida · procesando';
-  const t = new Date();
-  const hh = String(t.getHours()).padStart(2,'0') + ':' + String(t.getMinutes()).padStart(2,'0');
-  feed.push({t: hh, agent: a.name, txt: `CEO respondió: "${txt.slice(0,80)}${txt.length>80?'...':''}"`});
-  renderOffice(); renderFeed();
-  closeModal();
-  alert('Respuesta capturada. Cópiala a Claude en Cowork para que el agente la ejecute:\n\n[' + a.name + '] ' + txt);
+  const out = document.getElementById('answer-out-' + id);
+  out.innerHTML = '<div style="color:var(--muted);font-size:11px;padding:6px">Enviando al backend…</div>';
+  const res = await api('/api/answer', {agent: id, answer: txt});
+  if (res && res.ok) {
+    out.innerHTML = `<div style="color:var(--accent2);font-size:11px;padding:6px">✓ Guardado en office_state.json y DECISIONS.md</div>`;
+    setTimeout(closeDrawer, 900);
+  } else {
+    const a = STATE.agents.find(x => x.id === id);
+    const block =
+`[CEO → ${a.name}]
+Respuesta: ${txt}
+
+→ Backend no disponible. Pega esto en Cowork para que Claude actualice el estado.`;
+    const bid = 'ans-block-' + id;
+    out.innerHTML = `
+      <div style="color:var(--gold);font-size:10px;padding:4px 0">⚠ Backend offline — usa copy-paste</div>
+      <div class="copy-block" id="${bid}">${escapeHtml(block)}</div>
+      <button class="copy-btn" onclick="copyToClipboard('${bid}')">📋 Copiar</button>`;
+  }
 }
 
-function sendInstruction(id) {
-  const txt = document.getElementById('instr-' + id).value.trim();
+async function buildChatBlock(id) {
+  const inp = document.getElementById('dr-chat');
+  const txt = (inp && inp.value || '').trim();
   if (!txt) return;
-  const a = agents.find(x => x.id === id);
-  tasks.unshift({at: a.id, text: txt, prio: 'p2', done: false});
-  const t = new Date();
-  const hh = String(t.getHours()).padStart(2,'0') + ':' + String(t.getMinutes()).padStart(2,'0');
-  feed.push({t: hh, agent: a.name, txt: `Nueva instrucción CEO: ${txt.slice(0,60)}${txt.length>60?'...':''}`});
-  renderOffice(); renderTasks(); renderFeed();
-  closeModal();
+  const a = STATE.agents.find(x => x.id === id);
+  const out = document.getElementById('chat-output-' + id);
+  out.innerHTML = '<div style="color:var(--muted);font-size:11px;padding:6px">Enviando tarea al backend…</div>';
+  const res = await api('/api/task', {who: id, text: txt, prio: 'p2'});
+  if (res && res.ok) {
+    if (inp) inp.value = '';
+    out.innerHTML = `<div style="color:var(--accent2);font-size:11px;padding:6px">✓ Tarea asignada a ${a.name} · guardada en INBOX/TASKS.md y office_state.json</div>`;
+    setTimeout(closeDrawer, 1000);
+  } else {
+    const block =
+`[CEO → ${a.name}]
+${txt}
+
+→ Ejecuta como ${a.name}. Memory pack: ${a.memoryPath}.
+→ Actualiza office_state.json cuando termines.`;
+    const bid = 'chat-block-' + id;
+    out.innerHTML = `
+      <div style="color:var(--gold);font-size:10px;padding:4px 0">⚠ Backend offline — usa copy-paste</div>
+      <div class="copy-block" id="${bid}">${escapeHtml(block)}</div>
+      <button class="copy-btn" onclick="copyToClipboard('${bid}')">📋 Copiar</button>`;
+  }
 }
 
-function addQuickTask() {
-  const input = document.getElementById('quick-task');
-  const txt = input.value.trim();
+function copyToClipboard(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  navigator.clipboard.writeText(el.textContent).then(() => {
+    const btn = el.nextElementSibling;
+    if (btn) {
+      const o = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      setTimeout(() => btn.textContent = o, 1500);
+    }
+  });
+}
+
+function openApproval(id) {
+  const a = (STATE.approvals || []).find(x => x.id === id);
+  if (!a) return;
+  const agent = STATE.agents.find(x => x.id === a.owner);
+  const modal = document.getElementById('modal-content');
+  const bg = document.getElementById('modal-bg');
+  const color = agent ? agent.color : '#ef4444';
+  modal.style.setProperty('--agent-color', color);
+
+  modal.innerHTML = `
+    <button class="close-btn" onclick="closeModal()">✕</button>
+    <h3>${a.id} · ${escapeHtml(a.title)}</h3>
+    <div class="subtitle">Owner: ${agent ? agent.name : a.owner} · Prioridad ${a.priority.toUpperCase()} · ${a.status}</div>
+    <h4>Bloqueador</h4>
+    <p>${escapeHtml(a.blocker)}</p>
+    <h4>Acción del CEO</h4>
+    <div class="chat-box">
+      <input id="ap-input-${a.id}" placeholder="Decisión / respuesta / instrucción…" />
+      <button onclick="buildApprovalBlock('${a.id}')">Generar bloque</button>
+    </div>
+    <div id="ap-output-${a.id}"></div>
+  `;
+  bg.classList.add('on');
+  setTimeout(() => document.getElementById('ap-input-' + a.id)?.focus(), 100);
+}
+
+async function buildApprovalBlock(id) {
+  const txt = document.getElementById('ap-input-' + id).value.trim();
   if (!txt) return;
-  // parse @dept text !prio
-  const deptMatch = txt.match(/@(\w+)/);
-  const prioMatch = txt.match(/!p(\d)/);
-  const dept = deptMatch ? deptMatch[1] : 'coo';
-  const prio = prioMatch ? 'p' + prioMatch[1] : 'p2';
-  const clean = txt.replace(/@\w+/,'').replace(/!p\d/,'').trim();
-  tasks.unshift({at: dept, text: clean, prio, done: false});
-  const t = new Date();
-  const hh = String(t.getHours()).padStart(2,'0') + ':' + String(t.getMinutes()).padStart(2,'0');
-  feed.push({t: hh, agent: 'CEO', txt: `Nueva tarea → @${dept}: ${clean}`});
-  input.value = '';
-  renderTasks(); renderFeed();
+  const out = document.getElementById('ap-output-' + id);
+  out.innerHTML = '<div style="color:var(--muted);font-size:11px;padding:6px">Archivando decisión…</div>';
+  const res = await api('/api/decision', {id, decision: txt});
+  if (res && res.ok) {
+    out.innerHTML = `<div style="color:var(--accent2);font-size:11px;padding:6px">✓ Decisión archivada en _CEO/DECISIONS.md · aprobación cerrada</div>`;
+    setTimeout(closeModal, 1100);
+  } else {
+    const a = (STATE.approvals || []).find(x => x.id === id);
+    const agent = STATE.agents.find(x => x.id === a.owner);
+    const block =
+`[CEO DECISION · ${a.id}]
+Título: ${a.title}
+Owner: ${agent ? agent.name : a.owner}
+
+Decisión: ${txt}`;
+    const bid = 'ap-block-' + id;
+    out.innerHTML = `
+      <div style="color:var(--gold);font-size:10px;padding:4px 0">⚠ Backend offline — usa copy-paste</div>
+      <div class="copy-block" id="${bid}">${escapeHtml(block)}</div>
+      <button class="copy-btn" onclick="copyToClipboard('${bid}')">📋 Copiar</button>`;
+  }
 }
 
 /* ============================================================
-   CLOCK + LIVE HEARTBEAT
+   QUICK TASK CAPTURE
 ============================================================ */
-function tick() {
+async function addQuickTask() {
+  const inp = document.getElementById('quick-task');
+  let raw = inp.value.trim();
+  if (!raw) return;
+  const whoMatch = raw.match(/@(\w+)/);
+  const prioMatch = raw.match(/!p(\d)/);
+  const who = whoMatch ? whoMatch[1].toLowerCase() : 'coo';
+  const prio = prioMatch ? ('p' + prioMatch[1]) : 'p3';
+  const text = raw.replace(/@\w+/, '').replace(/!p\d/, '').trim();
+  const out = document.getElementById('task-output');
+  out.innerHTML = '<div style="color:var(--muted);font-size:11px;padding:6px">Enviando al backend…</div>';
+
+  const res = await api('/api/task', {who, prio, text});
+  if (res && res.ok) {
+    inp.value = '';
+    out.innerHTML = `<div style="color:var(--accent2);font-size:11px;padding:6px">✓ Tarea asignada a <b>${who.toUpperCase()}</b> · prio ${prio} · guardada en INBOX/TASKS.md</div>`;
+    // Also keep local echo for visual continuity
+    localTasks.unshift({who, prio, text, done:false, ts: new Date().toLocaleTimeString('es-DO',{hour:'2-digit',minute:'2-digit'})});
+    localStorage.setItem('jvh_local_tasks', JSON.stringify(localTasks));
+    renderLocalTasks();
+  } else {
+    // Fallback: localStorage + copy-block
+    const task = {who, prio, text, done:false, ts: new Date().toLocaleTimeString('es-DO',{hour:'2-digit',minute:'2-digit'})};
+    localTasks.unshift(task);
+    localStorage.setItem('jvh_local_tasks', JSON.stringify(localTasks));
+    inp.value = '';
+    renderLocalTasks();
+    const block =
+`[CEO → ${who.toUpperCase()}]
+Tarea (${prio}): ${text}
+
+→ Backend offline. Pega esto en Cowork para que Claude lo ejecute.`;
+    const bid = 'tb-' + Date.now();
+    out.innerHTML = `
+      <div style="color:var(--gold);font-size:10px;padding:4px 0">⚠ Backend offline — solo guardado local</div>
+      <div class="copy-block" id="${bid}">${escapeHtml(block)}</div>
+      <button class="copy-btn" onclick="copyToClipboard('${bid}')">📋 Copiar</button>`;
+  }
+}
+
+function removeTask(i) {
+  localTasks.splice(i, 1);
+  localStorage.setItem('jvh_local_tasks', JSON.stringify(localTasks));
+  renderLocalTasks();
+}
+
+/* ============================================================
+   CLOCK
+============================================================ */
+function tickClock() {
   const now = new Date();
   const hh = String(now.getHours()).padStart(2,'0');
   const mm = String(now.getMinutes()).padStart(2,'0');
   const ss = String(now.getSeconds()).padStart(2,'0');
   document.getElementById('clock').textContent = `${hh}:${mm}:${ss}`;
-  document.getElementById('date').textContent = now.toLocaleDateString('es-DO', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
-  document.getElementById('last-update').textContent = now.toLocaleString('es-DO');
-}
-
-const phrases = {
-  coo: ["Despacho general","Consolidando outputs","Revisando prioridades","Escalando al CEO"],
-  finance: ["Cash snapshot UTS","Modelo dilución Javier","Forecast Q2 GMP","Runway check"],
-  legal: ["Revisando SHA","Opción A vs B","Redactando cláusulas DR","Checklist firma"],
-  ops: ["SOP onboarding","Process mapping","Vendor coordination","Launch checklist"],
-  bd: ["Cazando advertiser","Prep call Carol","Lista bancos","Qualifying leads"],
-  marketing: ["One-pager GMP","Deck advertisers","Tagline ideation","Brand voice check"],
-  strategy: ["Piggyback CargX↔UTS","Risk map","90-day plan","Competitor scan"],
-  research: ["Ley 16-95 ITBIS","DOOH LATAM","Competidor monitoring","Regulatorio RD"],
-  exec: ["Agenda CEO","Follow-ups","Priority inbox","Recordatorios"]
-};
-
-function animateLife() {
-  const actives = agents.filter(a => a.status === 'active');
-  const a = actives[Math.floor(Math.random() * actives.length)];
-  const p = phrases[a.id] || [a.currentTask];
-  a.currentTask = p[Math.floor(Math.random() * p.length)];
-  renderOffice();
+  const day = now.toLocaleDateString('es-DO', {weekday:'long', day:'numeric', month:'short'});
+  document.getElementById('clock-label').textContent = day;
 }
 
 /* ============================================================
-   INIT
+   WANDER (agents occasionally move)
 ============================================================ */
-renderOffice();
-renderEngines();
-renderTasks();
-renderIdeas();
-renderFeed();
-tick();
-setInterval(tick, 1000);
-setInterval(animateLife, 3500);
+/* snap a point onto the nearest corridor, so characters appear to walk the hallways */
+function snapToCorridor(x, y) {
+  const cor = (STATE && STATE.corridors) || {horizontal:[210,410,630], vertical:[250,500,730]};
+  // pick closer axis
+  const nearestH = cor.horizontal.reduce((best, yy) => Math.abs(yy - y) < Math.abs(best - y) ? yy : best, cor.horizontal[0]);
+  const nearestV = cor.vertical.reduce((best, xx) => Math.abs(xx - x) < Math.abs(best - x) ? xx : best, cor.vertical[0]);
+  if (Math.abs(nearestH - y) < Math.abs(nearestV - x)) return [x, nearestH];
+  return [nearestV, y];
+}
+
+const _meetingHits = {}; // agentId → timestamp to throttle auto dialogues
+
+function maybeAutoDialogue(group, zoneLabel) {
+  if (!group || group.length < 2) return;
+  const now = Date.now();
+  // throttle per pair
+  const [a, b] = group;
+  const key = [a.id, b.id].sort().join('|');
+  if (_meetingHits[key] && now - _meetingHits[key] < 60_000) return;
+  _meetingHits[key] = now;
+  const lines = {
+    meeting: [
+      `¿Cerramos la postura para ${zoneLabel}?`,
+      `Reviso el último draft contigo.`,
+      `Te paso el memo en 10.`,
+      `¿Escalamos esto al CEO?`,
+      `Alineemos antes del weekly.`
+    ],
+    cafe: [
+      `Café rápido ☕`,
+      `¿Viste la última aprobación?`,
+      `Necesito tu input de 2 min.`,
+      `Luego te cuento de GMP.`
+    ]
+  };
+  const pool = lines[zoneLabel] || lines.meeting;
+  const text = pool[Math.floor(Math.random() * pool.length)];
+  // fire-and-forget — if backend down we still push locally
+  api('/api/dialogue', {from: a.id, to: b.id, text, durationSec: 9}).catch(()=>{});
+  STATE.dialogues = STATE.dialogues || [];
+  STATE.dialogues.push({from:a.id, to:b.id, text, ts:new Date().toISOString(), expiresAt: now/1000 + 9});
+  renderDialogues();
+}
+
+function wanderAgents() {
+  if (!STATE) return;
+  const fp = STATE.floorPlan;
+  const inMeeting = [];
+  const inCafe = [];
+  STATE.agents.forEach(a => {
+    const r = Math.random();
+    if (r < 0.15) {
+      // meeting room
+      a.x = 470 + Math.random() * 180;
+      a.y = 90  + Math.random() * 40;
+      inMeeting.push(a);
+    } else if (r < 0.22) {
+      // café
+      a.x = 830 + Math.random() * 80;
+      a.y = 500 + Math.random() * 60;
+      inCafe.push(a);
+    } else if (r < 0.55) {
+      // walk via corridor toward home
+      const [cx, cy] = snapToCorridor(a.home[0], a.home[1]);
+      a.x = cx + (Math.random() * 20 - 10);
+      a.y = cy + (Math.random() * 12 - 6);
+    } else {
+      // home with jitter
+      a.x = a.home[0] + (Math.random() * 30 - 15);
+      a.y = a.home[1] + (Math.random() * 20 - 10);
+    }
+    const el = document.getElementById('char-' + a.id);
+    if (el) {
+      const W = fp.width, H = fp.height;
+      el.style.left = (a.x / W * 100) + '%';
+      el.style.top  = (a.y / H * 100) + '%';
+    }
+  });
+  // if drawer is following an agent, keep camera centered on them
+  const drawer = document.getElementById('drawer');
+  if (drawer && drawer.classList.contains('open') && drawer.dataset.agentId) {
+    positionCamera();
+  }
+  // auto-dialogue if two or more agents bumped into each other
+  if (inMeeting.length >= 2) maybeAutoDialogue(inMeeting.slice(0, 2), 'meeting');
+  if (inCafe.length >= 2) maybeAutoDialogue(inCafe.slice(0, 2), 'cafe');
+}
 
 /* ============================================================
-   PASSWORD GATE — SHA-256 client-side
-   Contraseña compartida: JVH2026
-   Hash:   b0e80bd80b96d3fa53f3f06c51f2d1e6a8f3d1c8a0f4c8ed28e8d0c13f0fe89b (placeholder, regenerado al vuelo)
+   FETCH STATE (polling)
 ============================================================ */
-const GATE_KEY = 'jvh_office_unlocked';
-// SHA-256("JVH2026") — generado una vez al vuelo si no matchea
-const GATE_HASH = '7e1fbb2c0b7c9e2d8d4e4a3e77bb5b3f3f9e9df68a3a8b0b8c6a7a5d2f8c0e9a'; // will be overwritten on first load
-async function sha256(text){
-  const buf = new TextEncoder().encode(text);
-  const hash = await crypto.subtle.digest('SHA-256', buf);
-  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+function renderToolsStrip() {
+  const el = document.getElementById('tools-strip');
+  if (!el || !STATE || !STATE.toolsManifest) return;
+  const cats = STATE.toolsManifest.categories || [];
+  let html = '<strong style="color:var(--muted);margin-right:4px;">Tools:</strong>';
+  cats.forEach(cat => {
+    (cat.tools || []).forEach(t => {
+      const color = t.status === 'connected' ? '#00c853' : t.status === 'available' ? '#ffa000' : '#f44336';
+      const dot = t.status === 'connected' ? '●' : t.status === 'available' ? '○' : '✕';
+      html += `<span style="background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:12px;padding:2px 10px;display:inline-flex;align-items:center;gap:4px;"><span style="color:${color};font-size:10px;">${dot}</span>${t.name}</span>`;
+    });
+  });
+  el.innerHTML = html;
 }
-// La contraseña real es JVH2026 (un solo shared password para todos los socios)
-const REAL_PWD = 'JVH2026';
-async function tryUnlock(){
-  const v = document.getElementById('gatePwd').value;
-  const err = document.getElementById('gateErr');
-  if (!v) { err.textContent = 'Escribe la contraseña'; return; }
-  const h = await sha256(v);
-  const good = await sha256(REAL_PWD);
-  if (h === good) {
-    sessionStorage.setItem(GATE_KEY, '1');
-    document.getElementById('gate').classList.add('hidden');
-    err.textContent = '';
-  } else {
-    err.textContent = 'Contraseña incorrecta';
-    document.getElementById('gatePwd').value = '';
+
+async function fetchState() {
+  try {
+    const res = await fetch(STATE_URL + '?t=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    STATE = data;
+    lastFetchOk = new Date();
+    document.getElementById('heartbeat').classList.remove('stale');
+    document.getElementById('heartbeat-stage').classList.remove('stale');
+    // Probe health endpoint to detect full backend
+    try {
+      const h = await fetch('/api/health');
+      if (h.ok) { BACKEND_LIVE = true; }
+    } catch (_) { BACKEND_LIVE = false; }
+    document.getElementById('last-update').textContent =
+      lastFetchOk.toLocaleTimeString('es-DO') + (BACKEND_LIVE ? ' · backend LIVE ✓' : ' · read-only ⚠');
+    renderFloor();
+    renderSidebars();
+    renderToolsStrip();
+  } catch (e) {
+    console.warn('Fetch failed:', e);
+    document.getElementById('heartbeat').classList.add('stale');
+    document.getElementById('heartbeat-stage').classList.add('stale');
+    document.getElementById('last-update').textContent = 'OFFLINE · corre server.py';
+    BACKEND_LIVE = false;
+    if (!STATE) {
+      STATE = FALLBACK_STATE;
+      renderFloor();
+      renderSidebars();
+    }
   }
 }
-// Auto-unlock si ya validó en esta sesión
-if (sessionStorage.getItem(GATE_KEY) === '1') {
-  document.getElementById('gate').classList.add('hidden');
-} else {
-  setTimeout(()=>{ const el = document.getElementById('gatePwd'); if(el) el.focus(); }, 100);
+
+/* Minimal fallback if file:// blocks fetch */
+const FALLBACK_STATE = {
+  lastUpdated: new Date().toISOString(),
+  focusLock: {active:["GMP","UTS","CargX"], parked:["Lavazza RD","Axione","Valor","JVH Registration"]},
+  floorPlan: {
+    width: 1000, height: 640,
+    zones: [
+      {id:"ceo",       label:"CEO",           x:20, y:20,  w:180, h:180, color:"#fbbf24"},
+      {id:"meeting",   label:"Sala de Junta", x:410,y:20,  w:280, h:180, color:"#10b981"},
+      {id:"coo",       label:"COO",           x:220,y:20,  w:170, h:180, color:"#10b981"},
+      {id:"finance",   label:"Finance",       x:710,y:20,  w:270, h:180, color:"#3b82f6"},
+      {id:"legal",     label:"Legal / HR",    x:20, y:220, w:220, h:180, color:"#a855f7"},
+      {id:"ops",       label:"Operations",    x:260,y:220, w:220, h:180, color:"#f59e0b"},
+      {id:"bd",        label:"BD",            x:500,y:220, w:220, h:180, color:"#ef4444"},
+      {id:"marketing", label:"Marketing",     x:740,y:220, w:240, h:180, color:"#ec4899"},
+      {id:"strategy",  label:"Strategy",      x:20, y:420, w:240, h:200, color:"#8b5cf6"},
+      {id:"research",  label:"Research",      x:280,y:420, w:240, h:200, color:"#06b6d4"},
+      {id:"exec",      label:"Exec Asst",     x:540,y:420, w:200, h:200, color:"#eab308"},
+      {id:"cafe",      label:"Cafeteria",     x:760,y:420, w:220, h:200, color:"#64748b"}
+    ]
+  },
+  agents: [
+    {id:"coo",      name:"COO",      title:"Chief of Staff",       x:305, y:110, home:[305,110], status:"active",  mood:"focused",   color:"#10b981", model:"Claude Opus 4.6",  currentTask:"Cargando estado…", lastOutput:"—", mission:"Orquestar la oficina",   tools:[], subAgents:[], memoryPath:"_COO/COO_MEMORY_PACK.md",    question:null},
+    {id:"finance",  name:"Finance",  title:"Finanzas & Tax",       x:845, y:110, home:[845,110], status:"active",  mood:"working",   color:"#3b82f6", model:"Claude Sonnet 4.6",currentTask:"Cargando estado…", lastOutput:"—", mission:"Cash flow y modelos",   tools:[], subAgents:[], memoryPath:"Finance/MEMORY_PACK.md",     question:null},
+    {id:"legal",    name:"Legal/HR", title:"Legal & RH",           x:130, y:310, home:[130,310], status:"active",  mood:"thinking",  color:"#a855f7", model:"Claude Opus 4.6",  currentTask:"Cargando estado…", lastOutput:"—", mission:"Contratos y estructura",tools:[], subAgents:[], memoryPath:"Legal_HR/MEMORY_PACK.md",    question:null},
+    {id:"ops",      name:"Ops",      title:"Operaciones",          x:370, y:310, home:[370,310], status:"active",  mood:"working",   color:"#f59e0b", model:"Claude Haiku 4.5", currentTask:"Cargando estado…", lastOutput:"—", mission:"SOPs y procesos",        tools:[], subAgents:[], memoryPath:"Operations/MEMORY_PACK.md",  question:null},
+    {id:"bd",       name:"BD",       title:"Business Development", x:610, y:310, home:[610,310], status:"active",  mood:"hunting",   color:"#ef4444", model:"Claude Sonnet 4.6",currentTask:"Cargando estado…", lastOutput:"—", mission:"Pipeline comercial",     tools:[], subAgents:[], memoryPath:"BusinessDev/MEMORY_PACK.md", question:null},
+    {id:"marketing",name:"Marketing",title:"Marca & Comms",        x:860, y:310, home:[860,310], status:"active",  mood:"working",   color:"#ec4899", model:"Claude Sonnet 4.6",currentTask:"Cargando estado…", lastOutput:"—", mission:"Branding y contenido",  tools:[], subAgents:[], memoryPath:"Marketing/MEMORY_PACK.md",   question:null},
+    {id:"strategy", name:"Strategy", title:"Ventures",             x:140, y:520, home:[140,520], status:"active",  mood:"thinking",  color:"#8b5cf6", model:"Claude Opus 4.6",  currentTask:"Cargando estado…", lastOutput:"—", mission:"Nuevas apuestas",        tools:[], subAgents:[], memoryPath:"Strategy/MEMORY_PACK.md",    question:null},
+    {id:"research", name:"Research", title:"Inteligencia",         x:400, y:520, home:[400,520], status:"active",  mood:"reading",   color:"#06b6d4", model:"Claude Sonnet 4.6",currentTask:"Cargando estado…", lastOutput:"—", mission:"Market research",        tools:[], subAgents:[], memoryPath:"Research/MEMORY_PACK.md",    question:null},
+    {id:"exec",     name:"Exec",     title:"Asistente Ejecutivo",  x:640, y:520, home:[640,520], status:"support", mood:"organizing",color:"#eab308", model:"Claude Haiku 4.5", currentTask:"Cargando estado…", lastOutput:"—", mission:"Agenda CEO",            tools:[], subAgents:[], memoryPath:"ExecAssistant/MEMORY_PACK.md", question:null}
+  ],
+  cashflowEngines: [
+    {name:"UTS",   health:"yellow", mrr:"RD$270K/mo", note:"Estable · 1 cliente ancla"},
+    {name:"GMP",   health:"red",    mrr:"RD$0",       note:"4+1 screens · 0 advertisers"},
+    {name:"CargX", health:"gray",   mrr:"TBD",        note:"Pre-launch"}
+  ],
+  approvals: [],
+  ideas: [],
+  opportunities: [],
+  worklog: [{t:"--:--", agent:"SYS", txt:"Modo OFFLINE — no pude leer office_state.json. Ábrelo con file:// es normal; el estado real carga cuando lo montas con un server local o desde Cowork."}]
+};
+
+/* ============================================================
+   UTIL
+============================================================ */
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
+
+/* ============================================================
+   BOOT
+============================================================ */
+tickClock();
+setInterval(tickClock, 1000);
+fetchState();
+setInterval(fetchState, POLL_MS);
+setInterval(wanderAgents, MOVE_EVERY);
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeModal(); closeDrawer(); }
+  if (e.key === 'Enter' && e.target && e.target.id === 'quick-task') addQuickTask();
+  if (e.key === 'Enter' && e.target && e.target.id === 'dr-answer') {
+    const drawer = document.getElementById('drawer');
+    if (drawer && drawer.dataset.agentId) submitAnswer(drawer.dataset.agentId);
+  }
+  if (e.key === 'Enter' && e.target && e.target.id === 'dr-chat') {
+    const drawer = document.getElementById('drawer');
+    if (drawer && drawer.dataset.agentId) buildChatBlock(drawer.dataset.agentId);
+  }
+});
 </script>
 </body>
 </html>
