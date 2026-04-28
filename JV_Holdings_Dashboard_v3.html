@@ -347,40 +347,102 @@ tr:hover td{background:rgba(201,168,76,.04)}
 
     <!-- ───────── UST ───────── -->
     <div class="tab-panel" id="panel-ust">
-      <div class="section-title">📱 United Smart Tech</div>
-      <div class="section-sub">Distribución de tecnología y financiamiento por nómina · Juan Tomás 70% · Joan Marcos 30%</div>
+      <div class="section-title">📱 United Smart Tech Mobile</div>
+      <div class="section-sub">Distribución, financiamiento por nómina y control financiero · Juan Tomás 70% · Joan Marcos 30% · <span id="ustmStamp">Datos al 25/04/2026</span> · <a href="https://docs.google.com/spreadsheets/d/10ABSEfLsp50-rhYVuUhCma-3cmJ81-Tp/edit" target="_blank" style="color:var(--gold)">Abrir Excel maestro ↗</a></div>
 
       <div class="kpi-grid">
-        <div class="kpi"><div class="kpi-label">Ingresos MTD</div><div class="kpi-value" data-money="859350">—</div><div class="kpi-delta up">5 locaciones activas</div></div>
-        <div class="kpi"><div class="kpi-label">OPEX</div><div class="kpi-value" data-money="1326291">—</div></div>
-        <div class="kpi"><div class="kpi-label">CxC pendiente</div><div class="kpi-value" data-money="686851">—</div><div class="kpi-delta down">4 cuentas activas</div></div>
-        <div class="kpi"><div class="kpi-label">Préstamos JM activos</div><div class="kpi-value">19</div><div class="kpi-delta">RD$128k capital</div></div>
+        <div class="kpi" onclick="openModal('ustmFact')"><div class="kpi-label">Total Facturado</div><div class="kpi-value" data-money="1317626">—</div><div class="kpi-delta up">Dic 25 – Abr 26</div></div>
+        <div class="kpi"><div class="kpi-label">Capital en banco</div><div class="kpi-value" data-money="81579.54">—</div><div class="kpi-delta">Cuenta 39876190017 · disponible</div></div>
+        <div class="kpi" onclick="openModal('ustmCxc')"><div class="kpi-label">CxC Total</div><div class="kpi-value" data-money="863213">—</div><div class="kpi-delta down">188K canales + 675K empleados</div></div>
+        <div class="kpi"><div class="kpi-label">CxP Pendiente</div><div class="kpi-value" style="color:var(--ok)">RD$0</div><div class="kpi-delta up">Carfedx pagado 21/04</div></div>
+        <div class="kpi" onclick="openModal('ustmActivos')"><div class="kpi-label">Activos del Negocio</div><div class="kpi-value" data-money="1655792.54">—</div><div class="kpi-delta">Capital total trabajando</div></div>
+        <div class="kpi"><div class="kpi-label">% Cobro Canales</div><div class="kpi-value" style="color:var(--ok)">80%</div><div class="kpi-delta up">10 de 20 facturas pagadas</div></div>
       </div>
 
       <div class="chart-grid">
         <div class="chart-card">
-          <h3>Ingresos por categoría</h3>
-          <div class="sub">Vapes · Accesorios · Financiamiento</div>
+          <h3>Distribución de facturación</h3>
+          <div class="sub">Por canal · Total RD$1,317,626</div>
           <div class="chart-wrap"><canvas id="chartUstCat"></canvas></div>
         </div>
         <div class="chart-card">
-          <h3>Locaciones activas</h3>
-          <div class="sub">Ranking por ingresos</div>
+          <h3>Dónde está el dinero</h3>
+          <div class="sub">Capital total trabajando · RD$1.66M</div>
+          <div class="chart-wrap"><canvas id="chartUstmDinero"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Top clientes CxC canales</h3>
+          <div class="sub">Ranking por facturado total</div>
           <div class="chart-wrap"><canvas id="chartUstLoc"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Inversión comprometida</h3>
+          <div class="sub">Desglose por destino · RD$720,571</div>
+          <div class="chart-wrap"><canvas id="chartUstmInv"></canvas></div>
         </div>
       </div>
 
+      <!-- CxC por Cliente -->
       <div class="tbl">
-        <div class="tbl-head"><h3>Cuentas por cobrar</h3></div>
+        <div class="tbl-head"><h3>Cuentas por cobrar · canales (al 21/04/2026)</h3></div>
         <table>
-          <thead><tr><th>Cliente</th><th>Tipo</th><th class="num">Monto</th><th>Estado</th></tr></thead>
+          <thead><tr><th>Cliente</th><th>RNC</th><th class="num"># Fact.</th><th class="num">Facturado</th><th class="num">Pagado</th><th class="num">Saldo</th><th>Estado</th></tr></thead>
           <tbody>
-            <tr><td>CCS Farmacias</td><td>Distribución</td><td class="num" data-money="285400">—</td><td><span class="semaforo s-yellow">30 días</span></td></tr>
-            <tr><td>United Petroleum (FMS)</td><td>Distribución</td><td class="num" data-money="198750">—</td><td><span class="semaforo s-green">15 días</span></td></tr>
-            <tr><td>United Store CCS</td><td>Consignación</td><td class="num" data-money="142200">—</td><td><span class="semaforo s-green">Al día</span></td></tr>
-            <tr><td>Préstamos JM (19)</td><td>Financiamiento</td><td class="num" data-money="60501">—</td><td><span class="semaforo s-blue">Activos</span></td></tr>
+            <tr><td><strong>United Store Grupo Haina SRL</strong></td><td>130397988</td><td class="num">11</td><td class="num" data-money="364326">—</td><td class="num" data-money="222401">—</td><td class="num" data-money="141925">—</td><td><span class="semaforo s-yellow">Pendiente parcial</span></td></tr>
+            <tr><td>United Store Grupo Haina (s/p)</td><td>130397988</td><td class="num">1</td><td class="num" data-money="20296">—</td><td class="num">RD$0</td><td class="num" data-money="20296">—</td><td><span class="semaforo s-red">Pendiente</span></td></tr>
+            <tr><td><strong>Caribbean Concession Services</strong></td><td>105080214</td><td class="num">4</td><td class="num" data-money="278923">—</td><td class="num" data-money="261931">—</td><td class="num" data-money="16992">—</td><td><span class="semaforo s-yellow">Casi al día</span></td></tr>
+            <tr><td>United Petroleum</td><td>130071022</td><td class="num">1</td><td class="num" data-money="70800">—</td><td class="num" data-money="70800">—</td><td class="num">RD$0</td><td><span class="semaforo s-green">Pagado</span></td></tr>
+            <tr><td>Food Management Services</td><td>1-24-03293-8</td><td class="num">2</td><td class="num" data-money="215250">—</td><td class="num" data-money="215250">—</td><td class="num">RD$0</td><td><span class="semaforo s-green">Pagado</span></td></tr>
           </tbody>
+          <tfoot>
+            <tr style="border-top:2px solid var(--gold);font-weight:700"><td colspan="2">TOTAL</td><td class="num">19</td><td class="num" data-money="949595">—</td><td class="num" data-money="770382">—</td><td class="num" data-money="188213">—</td><td><span class="semaforo s-blue">80% recuperado</span></td></tr>
+          </tfoot>
         </table>
+      </div>
+
+      <!-- Equipos Financiados (resumen + top 8) -->
+      <div class="tbl" style="margin-top:18px">
+        <div class="tbl-head">
+          <h3>Equipos financiados a empleados (21 empleados)</h3>
+          <span class="semaforo s-yellow">19% recuperado</span>
+        </div>
+        <div style="padding:14px 18px;background:rgba(245,158,11,.08);border-bottom:1px solid var(--line);display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;font-size:12px">
+          <div><div style="color:var(--mut);text-transform:uppercase;font-weight:600;margin-bottom:4px">Costo total equipos</div><div style="font-size:16px;font-weight:700" data-money="580085">—</div></div>
+          <div><div style="color:var(--mut);text-transform:uppercase;font-weight:600;margin-bottom:4px">Total venta</div><div style="font-size:16px;font-weight:700" data-money="725000">—</div></div>
+          <div><div style="color:var(--mut);text-transform:uppercase;font-weight:600;margin-bottom:4px">Adelantos cobrados</div><div style="font-size:16px;font-weight:700;color:var(--ok)" data-money="50000">—</div></div>
+          <div><div style="color:var(--mut);text-transform:uppercase;font-weight:600;margin-bottom:4px">Cobrado a la fecha</div><div style="font-size:16px;font-weight:700;color:var(--ok)" data-money="90998">—</div></div>
+          <div><div style="color:var(--mut);text-transform:uppercase;font-weight:600;margin-bottom:4px">Saldo pendiente</div><div style="font-size:16px;font-weight:700;color:var(--bad)" data-money="584002">—</div></div>
+          <div><div style="color:var(--mut);text-transform:uppercase;font-weight:600;margin-bottom:4px">Cuota mensual total</div><div style="font-size:16px;font-weight:700" data-money="112499">—</div></div>
+          <div><div style="color:var(--mut);text-transform:uppercase;font-weight:600;margin-bottom:4px">Ganancia bruta potencial</div><div style="font-size:16px;font-weight:700;color:var(--gold-2)" data-money="144915">—</div></div>
+          <div><div style="color:var(--mut);text-transform:uppercase;font-weight:600;margin-bottom:4px">Status</div><div style="font-size:13px;font-weight:700"><span style="color:var(--ok)">16 ✅</span> · <span style="color:var(--bad)">5 ⏳</span></div></div>
+        </div>
+        <table>
+          <thead><tr><th>#</th><th>Empleado</th><th>Empresa</th><th>Artículo</th><th class="num">Venta</th><th class="num">Pagado</th><th class="num">Saldo</th><th>%</th><th>Estado</th></tr></thead>
+          <tbody>
+            <tr><td>1</td><td>Meiry Olier</td><td>U. Petroleum</td><td>iPhone 16 Pro Max 1TB</td><td class="num" data-money="70000">—</td><td class="num" data-money="28333">—</td><td class="num" data-money="41667">—</td><td>40%</td><td><span class="semaforo s-yellow">Parcial</span></td></tr>
+            <tr><td>12</td><td>Sebastián Torres</td><td>GMP</td><td>MacBook Air M4</td><td class="num" data-money="60000">—</td><td class="num" data-money="26667">—</td><td class="num" data-money="33333">—</td><td>44%</td><td><span class="semaforo s-yellow">Parcial</span></td></tr>
+            <tr><td>17</td><td>Enrique Mendoza</td><td>U. Petroleum</td><td>iPhone 15 Pro Max + Watch</td><td class="num" data-money="82000">—</td><td class="num" data-money="20000">—</td><td class="num" data-money="62000">—</td><td>24%</td><td><span class="semaforo s-yellow">Parcial</span></td></tr>
+            <tr><td>7</td><td>Eladio</td><td>U. Petroleum</td><td>iPhone 16 Plus 256GB</td><td class="num" data-money="54500">—</td><td class="num" data-money="9083">—</td><td class="num" data-money="45417">—</td><td>17%</td><td><span class="semaforo s-yellow">Parcial</span></td></tr>
+            <tr><td>14</td><td>Ivis Jiménez</td><td>Atlantic Tires</td><td>iPhone 16 Pro Max 256GB Gold</td><td class="num" data-money="53000">—</td><td class="num" data-money="8833">—</td><td class="num" data-money="44167">—</td><td>17%</td><td><span class="semaforo s-yellow">Parcial</span></td></tr>
+            <tr><td>21</td><td>Jhoan Sánchez</td><td>Atlantic Tires</td><td>iPhone 14 Pro Max 256GB</td><td class="num" data-money="42000">—</td><td class="num">RD$0</td><td class="num" data-money="42000">—</td><td>0%</td><td><span class="semaforo s-red">Sin pago</span></td></tr>
+            <tr><td>18</td><td>Edwin Solano</td><td>U. Petroleum</td><td>iPhone 12 Pro Max</td><td class="num" data-money="26500">—</td><td class="num">RD$0</td><td class="num" data-money="26500">—</td><td>0%</td><td><span class="semaforo s-red">Sin pago</span></td></tr>
+            <tr><td>16</td><td>Jose Luis Ramirez</td><td>U. Petroleum</td><td>Laptop Dell 256GB</td><td class="num" data-money="17500">—</td><td class="num">RD$0</td><td class="num" data-money="17500">—</td><td>0%</td><td><span class="semaforo s-red">Sin pago</span></td></tr>
+          </tbody>
+          <tfoot>
+            <tr style="border-top:2px solid var(--gold);font-weight:700"><td colspan="4">TOTAL 21 empleados</td><td class="num" data-money="725000">—</td><td class="num" data-money="90998">—</td><td class="num" data-money="584002">—</td><td>19%</td><td><span class="semaforo s-blue">En proceso</span></td></tr>
+          </tfoot>
+        </table>
+      </div>
+
+      <!-- Banner actualizaciones recientes -->
+      <div class="alert" style="margin-top:18px;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.4);border-left:4px solid var(--ok);padding:14px 18px;border-radius:10px">
+        <strong style="color:var(--ok)">Últimas actualizaciones (USTM Excel)</strong>
+        <div style="margin-top:8px;color:var(--mut);font-size:13px;line-height:1.7">
+          ✅ <strong>21/04/2026:</strong> Caribbean Concession Services pagó RD$262,196 (facturas #12 · #13 · #15)<br>
+          ✅ <strong>25/04/2026:</strong> Nueva factura B0100000018 — United Store Grupo Haina RD$10,620 (ITBIS RD$1,692)<br>
+          ✅ <strong>25/04/2026:</strong> Balance bancario actualizado a RD$81,579.54 · CxC empleados a RD$675,000 (21)<br>
+          ✅ <strong>15/04/2026:</strong> ITBIS Abr 2026 cancelado · RD$15,440.35 · Período 202603
+        </div>
       </div>
 
       <!-- EMAIL AUTOMATION UST -->
@@ -732,6 +794,12 @@ const MODALS = {
     ['GMP · 26 prospectos',1840000],['UST · expansión locaciones',1500000],['CargX · clientes empresariales',235000]]},
   cash:{title:'Cash neto proyectado', body:[
     ['Ingresos consolidados',2074850],['(−) OPEX consolidado',-1487874],['= Cash neto del mes',586976]]},
+  ustmFact:{title:'USTM · Total facturado Dic 25 – Abr 26', body:[
+    ['Equipos financiados (21 empleados)',725000],['Canal CCS mayorista',261930],['Canal Farmacias (vapes)',216000],['Ventas United interno',114696],['= TOTAL FACTURADO',1317626]]},
+  ustmCxc:{title:'USTM · Cuentas por cobrar', body:[
+    ['CxC canales — facturas pendientes',188213],['CxC equipos financiados empleados',675000],['= CxC TOTAL GLOBAL',863213]]},
+  ustmActivos:{title:'USTM · Dónde está el dinero del negocio', body:[
+    ['En banco (disponible inmediato)',81580],['En inventario / teléfonos',661000],['CxC canales pendientes',188213],['CxC equipos financiados empleados',725000],['= TOTAL ACTIVOS DEL NEGOCIO',1655793]]},
 };
 function openModal(k){
   const m = MODALS[k]; if(!m) return;
@@ -819,21 +887,43 @@ function initCharts(){
       plugins:{legend:{position:'right',labels:{color:C.axis,padding:10,font:{size:11}}}}}
   });
 
-  // UST categorías
+  // USTM · Distribución de facturación por canal (donut, datos reales del Excel)
   makeChart('chartUstCat',{
     type:'doughnut',
-    data:{labels:['Vapes & Pouches','Accesorios móviles','Financiamiento JM'],
-      datasets:[{data:[450000,280000,129350].map(moneyVal),
-        backgroundColor:[C.blue,C.gold,C.green],borderColor:'#142447',borderWidth:3}]},
+    data:{labels:['Equipos financiados (47.7%)','Canal CCS mayorista (27.2%)','Canal Farmacias - vapes (22.5%)','Ventas United interno (11.9%)'],
+      datasets:[{data:[725000,261930,216000,114696].map(moneyVal),
+        backgroundColor:[C.gold,C.blue,C.purple,C.green],borderColor:'#142447',borderWidth:3}]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'right',labels:{color:C.axis}}}}
+      plugins:{legend:{position:'right',labels:{color:C.axis,font:{size:11},padding:8}}}}
   });
+  // USTM · Top clientes CxC (horizontal bar)
   makeChart('chartUstLoc',{
     type:'bar',
-    data:{labels:['CCS Farmacias','United Petroleum','United Store CCS','United Store FMS','Otros'],
-      datasets:[{label:'Ingresos',data:[285000,220000,180000,135000,39350].map(moneyVal),backgroundColor:C.gold}]},
+    data:{labels:['United Store G.Haina','Caribbean Concession','Food Management','United Petroleum'],
+      datasets:[
+        {label:'Pagado',  data:[222401,261931,215250,70800].map(moneyVal),backgroundColor:C.green,stack:'s'},
+        {label:'Saldo',   data:[162221,16992,0,0].map(moneyVal),backgroundColor:C.red,stack:'s'}
+      ]},
     options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false}},scales:{x:{ticks:{callback:moneyTick}}}}
+      plugins:{legend:{labels:{color:C.axis}}},scales:{x:{stacked:true,ticks:{callback:moneyTick}},y:{stacked:true}}}
+  });
+  // USTM · Dónde está el dinero del negocio (donut)
+  makeChart('chartUstmDinero',{
+    type:'doughnut',
+    data:{labels:['CxC empleados (43.8%)','Inventario teléfonos (39.9%)','CxC canales (11.4%)','Banco disponible (4.9%)'],
+      datasets:[{data:[725000,661000,188213,81580].map(moneyVal),
+        backgroundColor:[C.orange,C.gold,C.blue,C.green],borderColor:'#142447',borderWidth:3}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'right',labels:{color:C.axis,font:{size:11},padding:8}}}}
+  });
+  // USTM · Inversión comprometida (donut)
+  makeChart('chartUstmInv',{
+    type:'doughnut',
+    data:{labels:['Equipos empleados (49.7%)','Accesorios CCS (14.6%)','iPhone U.Petrol (13.6%)','Accesorios Farmacias (12.0%)','Vapes/abono (5.7%)','Cargadores Higuero (2.0%)','Otros gastos (2.4%)'],
+      datasets:[{data:[458000,76110,70800,62840,30000,10640,12181].map(moneyVal),
+        backgroundColor:[C.gold,C.blue,C.purple,C.teal,C.red,C.orange,C.axis],borderColor:'#142447',borderWidth:3}]},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'right',labels:{color:C.axis,font:{size:10},padding:6}}}}
   });
 
   // GMP industria
@@ -1138,6 +1228,80 @@ function openGmail(brand){
 
 // Allow Enter to login
 document.getElementById('loginPin').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin()});
+
+// ════════════════ USTM LIVE FETCH (auto-refresh from Google Sheet) ════════════════
+// Pulls fresh data from USTM CONTROL FINANCIERO.xlsx via published CSV.
+// Requires the Sheet to be shared as "Anyone with link can view".
+// Falls back silently to the baked-in snapshot values above if fetch fails or sheet is private.
+(function(){
+  const SHEET_ID = '10ABSEfLsp50-rhYVuUhCma-3cmJ81-Tp';
+  const RESUMEN_GID = 0; // First tab (Resumen Ejecutivo) — adjust if needed
+  const URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${RESUMEN_GID}`;
+  function parseCsv(text){
+    return text.split(/\r?\n/).map(line=>{
+      const out=[]; let cur=''; let inQ=false;
+      for(let i=0;i<line.length;i++){
+        const c=line[i];
+        if(c==='"'){inQ=!inQ;continue;}
+        if(c===','&&!inQ){out.push(cur);cur='';continue;}
+        cur+=c;
+      }
+      out.push(cur); return out;
+    });
+  }
+  function num(s){ return Number(String(s||'').replace(/[^\d.-]/g,''))||0; }
+  async function refreshUstm(){
+    try{
+      const res = await fetch(URL,{cache:'no-store'});
+      if(!res.ok) throw new Error('http '+res.status);
+      const rows = parseCsv(await res.text());
+      // Build a flat map from "concept label" -> first numeric in row
+      const find = (label)=>{
+        const r = rows.find(row => row.some(cell => (cell||'').toLowerCase().includes(label.toLowerCase())));
+        if(!r) return null;
+        for(const c of r){ const v=num(c); if(v>100) return v; }
+        return null;
+      };
+      // Map known concepts to KPI selectors
+      const mappings = [
+        {label:'TOTAL FACTURADO',         money:1317626},
+        {label:'Balance bancario real',   money:81579.54},
+        {label:'CxC TOTAL',               money:863213},
+        {label:'TOTAL ACTIVOS',           money:1655792.54},
+      ];
+      let updated = 0;
+      mappings.forEach(m=>{
+        const v = find(m.label);
+        if(v && Math.abs(v - m.money) > 1){
+          // Find the kpi value with matching data-money and update it
+          document.querySelectorAll(`[data-money="${m.money}"]`).forEach(el=>{
+            el.setAttribute('data-money', String(v));
+            updated++;
+          });
+        }
+      });
+      if(updated>0){
+        // Re-apply currency formatter (uses currency var from app)
+        if(typeof applyCurrency==='function') applyCurrency();
+        const stamp=document.getElementById('ustmStamp');
+        if(stamp){ stamp.textContent='Actualizado en vivo · '+new Date().toLocaleString('es-DO'); }
+        console.log('USTM live fetch: '+updated+' valores actualizados');
+      }else{
+        console.log('USTM live fetch OK · sin cambios');
+      }
+    }catch(e){
+      console.warn('USTM live fetch falló (probablemente el Sheet no es público) — usando snapshot:', e.message);
+    }
+  }
+  // Run on load and every 5 min
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', refreshUstm);
+  } else {
+    refreshUstm();
+  }
+  setInterval(refreshUstm, 5*60*1000);
+})();
+
 </script>
 </body>
 </html>
