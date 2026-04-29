@@ -158,6 +158,61 @@ tr:hover td{background:rgba(201,168,76,.04)}
 .dot{width:8px;height:8px;border-radius:50%}
 .dot.hot{background:#EF4444}.dot.warm{background:#F59E0B}.dot.cold{background:#64748B}
 
+/* ───────── PROSPECTOS MASTER TAB ───────── */
+.prosp-toolbar{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;align-items:center}
+.prosp-search{flex:1;min-width:260px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;color:var(--txt);font-family:inherit;font-size:13px}
+.prosp-search:focus{outline:none;border-color:var(--gold)}
+.prosp-chip{background:var(--card);border:1px solid var(--line);color:var(--mut);padding:8px 14px;border-radius:30px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s}
+.prosp-chip:hover{border-color:var(--gold);color:var(--gold-2)}
+.prosp-chip.active{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.prosp-stats{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:14px;font-size:12px;color:var(--mut)}
+.prosp-stats span b{color:var(--gold-2)}
+.prosp-table{width:100%;background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;border-collapse:collapse}
+.prosp-table thead{background:rgba(201,168,76,.08);border-bottom:1px solid var(--line)}
+.prosp-table th{padding:14px 16px;text-align:left;font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.06em;font-weight:700;white-space:nowrap}
+.prosp-table td{padding:13px 16px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle}
+.prosp-table tr:last-child td{border-bottom:none}
+.prosp-table tr:hover{background:rgba(255,255,255,.02)}
+.prosp-table .p-co{font-weight:600;color:var(--txt)}
+.prosp-table .p-meta{color:var(--mut);font-size:11px;margin-top:2px}
+.prosp-badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.prosp-badge.hot{background:rgba(239,68,68,.18);color:#FCA5A5}
+.prosp-badge.warm{background:rgba(245,158,11,.18);color:#FCD34D}
+.prosp-badge.cold{background:rgba(100,116,139,.2);color:#CBD5E1}
+.prosp-brand{display:inline-block;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;background:rgba(59,130,246,.18);color:#93C5FD;text-transform:uppercase;letter-spacing:.04em}
+.prosp-brand.gmp{background:rgba(168,85,247,.18);color:#D8B4FE}
+.prosp-brand.ust{background:rgba(34,197,94,.18);color:#86EFAC}
+.prosp-brand.cargx{background:rgba(245,158,11,.18);color:#FCD34D}
+.prosp-actions{display:flex;gap:6px;flex-wrap:wrap}
+.act-btn{background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--txt);padding:7px 11px;border-radius:8px;font-size:12px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:5px;font-family:inherit;font-weight:600;transition:all .15s}
+.act-btn:hover{border-color:var(--gold);color:var(--gold-2)}
+.act-btn.email{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.35);color:#93C5FD}
+.act-btn.email:hover{background:rgba(59,130,246,.22);color:#BFDBFE}
+.act-btn.wa{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.35);color:#86EFAC}
+.act-btn.wa:hover{background:rgba(34,197,94,.22);color:#BBF7D0}
+.act-btn.disabled{opacity:.35;cursor:not-allowed;pointer-events:none}
+.tpl-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
+.tpl-modal.show{display:flex}
+.tpl-card{background:var(--card);border:1px solid var(--gold);border-radius:16px;max-width:680px;width:100%;max-height:90vh;overflow:auto;padding:28px}
+.tpl-card h3{font-size:18px;font-weight:800;margin-bottom:6px}
+.tpl-card .tpl-sub{color:var(--mut);font-size:12px;margin-bottom:18px}
+.tpl-card label{display:block;font-size:11px;color:var(--mut);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;margin-top:14px}
+.tpl-card input,.tpl-card textarea,.tpl-card select{width:100%;background:rgba(10,20,40,.5);border:1px solid var(--line);border-radius:10px;padding:11px 14px;color:var(--txt);font-family:inherit;font-size:13px}
+.tpl-card textarea{min-height:140px;resize:vertical}
+.tpl-card .tpl-row{display:flex;gap:10px;margin-top:18px;justify-content:flex-end}
+.tpl-card .tpl-row button{padding:10px 20px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--txt);cursor:pointer;font-family:inherit;font-weight:600;font-size:13px}
+.tpl-card .tpl-row button.primary{background:linear-gradient(135deg,var(--gold),var(--gold-2));color:var(--navy);border-color:var(--gold)}
+.tpl-card .tpl-row button:hover{filter:brightness(1.1)}
+.empty-state{text-align:center;padding:60px 20px;color:var(--mut)}
+.empty-state h4{font-size:16px;color:var(--txt);margin-bottom:8px}
+
+/* Quick action mini buttons inside existing contact cards */
+.contacts-list .ci .ci-acts{display:flex;gap:4px;margin-left:auto}
+.contacts-list .ci .ci-acts a{padding:4px 8px;border-radius:6px;font-size:11px;text-decoration:none;background:rgba(255,255,255,.08);color:var(--txt);border:1px solid var(--line)}
+.contacts-list .ci .ci-acts a.email{background:rgba(59,130,246,.15);color:#93C5FD;border-color:rgba(59,130,246,.3)}
+.contacts-list .ci .ci-acts a.wa{background:rgba(34,197,94,.15);color:#86EFAC;border-color:rgba(34,197,94,.3)}
+.contacts-list .ci .ci-acts a.disabled{opacity:.3;pointer-events:none}
+
 /* MODAL */
 .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:200;padding:20px;backdrop-filter:blur(6px)}
 .modal-bg.visible{display:flex}
@@ -661,6 +716,63 @@ tr:hover td{background:rgba(201,168,76,.04)}
       </div>
     </div>
 
+    <!-- ───────── PROSPECTOS MASTER ───────── -->
+    <div class="tab-panel" id="panel-prospectos">
+      <div class="section-title">👥 Prospectos · Master</div>
+      <div class="section-sub">Email + WhatsApp directos desde el cockpit · todos los contactos verificados de GMP, UST y CargX</div>
+
+      <div class="prosp-toolbar">
+        <input type="text" class="prosp-search" id="prospSearch" placeholder="🔍 Buscar por empresa, persona, email, industria…" oninput="renderProspectos()">
+        <button class="prosp-chip active" data-filter="brand" data-val="all" onclick="setProspFilter('brand','all')">Todas</button>
+        <button class="prosp-chip" data-filter="brand" data-val="gmp" onclick="setProspFilter('brand','gmp')">GMP</button>
+        <button class="prosp-chip" data-filter="brand" data-val="ust" onclick="setProspFilter('brand','ust')">UST</button>
+        <button class="prosp-chip" data-filter="brand" data-val="cargx" onclick="setProspFilter('brand','cargx')">CargX</button>
+        <span style="width:1px;height:24px;background:var(--line);margin:0 6px"></span>
+        <button class="prosp-chip active" data-filter="status" data-val="all" onclick="setProspFilter('status','all')">Todos</button>
+        <button class="prosp-chip" data-filter="status" data-val="hot" onclick="setProspFilter('status','hot')">🔥 Hot</button>
+        <button class="prosp-chip" data-filter="status" data-val="warm" onclick="setProspFilter('status','warm')">🟡 Warm</button>
+        <button class="prosp-chip" data-filter="status" data-val="cold" onclick="setProspFilter('status','cold')">❄️ Cold</button>
+        <span style="width:1px;height:24px;background:var(--line);margin:0 6px"></span>
+        <button class="prosp-chip active" data-filter="has" data-val="all" onclick="setProspFilter('has','all')">Cualquiera</button>
+        <button class="prosp-chip" data-filter="has" data-val="email" onclick="setProspFilter('has','email')">✉️ Con email</button>
+        <button class="prosp-chip" data-filter="has" data-val="phone" onclick="setProspFilter('has','phone')">📱 Con tel</button>
+        <button class="prosp-chip" data-filter="has" data-val="both" onclick="setProspFilter('has','both')">✅ Ambos</button>
+      </div>
+
+      <div class="prosp-stats" id="prospStats"></div>
+
+      <table class="prosp-table">
+        <thead>
+          <tr>
+            <th>Empresa / Contacto</th>
+            <th>Marca</th>
+            <th>Industria</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="prospTbody"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ───────── TEMPLATE MODAL ───────── -->
+<div class="tpl-modal" id="tplModal" onclick="if(event.target===this)closeTplModal()">
+  <div class="tpl-card">
+    <h3 id="tplTitle">Componer mensaje</h3>
+    <div class="tpl-sub" id="tplSub"></div>
+    <label>Plantilla</label>
+    <select id="tplSelect" onchange="applyTemplate()"></select>
+    <label>Asunto (solo email)</label>
+    <input type="text" id="tplSubject">
+    <label>Mensaje</label>
+    <textarea id="tplBody"></textarea>
+    <div class="tpl-row">
+      <button onclick="closeTplModal()">Cancelar</button>
+      <button class="primary" id="tplSend">Enviar</button>
+    </div>
   </div>
 </div>
 
@@ -680,10 +792,10 @@ let user = null;
 
 // Cada EMPRESA tiene su propia contraseña + acceso a sus tabs
 const COMPANIES = {
-  holding: {pwd:'JV-2200',      label:'JV Holdings · Owner',      tabs:['overview','ust','gmp','cargx','holding']},
-  ust:     {pwd:'UST-tech26',   label:'United Smart Tech',        tabs:['ust']},
-  gmp:     {pwd:'GMP-screen26', label:'GMP Global Media Partners',tabs:['gmp']},
-  cargx:   {pwd:'CARGX-truck26',label:'CargX',                    tabs:['cargx']},
+  holding: {pwd:'JV-2200',      label:'JV Holdings · Owner',      tabs:['overview','ust','gmp','cargx','holding','prospectos']},
+  ust:     {pwd:'UST-tech26',   label:'United Smart Tech',        tabs:['ust','prospectos']},
+  gmp:     {pwd:'GMP-screen26', label:'GMP Global Media Partners',tabs:['gmp','prospectos']},
+  cargx:   {pwd:'CARGX-truck26',label:'CargX',                    tabs:['cargx','prospectos']},
 };
 
 const TAB_LABELS = {
@@ -691,7 +803,8 @@ const TAB_LABELS = {
   ust:'📱 United Smart Tech',
   gmp:'📺 GMP',
   cargx:'🚛 CargX',
-  holding:'🏛️ Holding'
+  holding:'🏛️ Holding',
+  prospectos:'👥 Prospectos'
 };
 
 // ════════════════ LOGIN ════════════════
@@ -1301,6 +1414,290 @@ document.getElementById('loginPin').addEventListener('keydown',e=>{if(e.key==='E
   }
   setInterval(refreshUstm, 5*60*1000);
 })();
+
+// ════════════════ PROSPECTOS MASTER ════════════════
+const PROSP_FILTERS = { brand:'all', status:'all', has:'all' };
+const SENDER = { name:'Juan Tomás Díaz Rainieri', wa:'18299XXXXXX' /* edit if needed */ };
+
+// Plantillas por marca y tipo
+const TEMPLATES = {
+  gmp: {
+    email_general: {
+      subject: 'GMP · Pantallas DOOH en estaciones premium de RD para {{company}}',
+      body: 'Hola {{contact}},\n\nSoy {{sender}} de GMP – Global Media Partners RD. Operamos una red de pantallas digitales (DOOH) ubicadas en estaciones de servicio de alto tráfico en Santo Domingo y Punta Cana — aire acondicionado, audiencia cautiva, mix demográfico de alto poder adquisitivo.\n\nNos gustaría presentarles una propuesta hecha a la medida para {{company}}: alcance estimado, segmentación por estación, formatos creativos y costo-impacto vs medios tradicionales.\n\n¿Tendría 15 minutos esta semana o la próxima para una llamada breve?\n\nSaludos,\n{{sender}}\nGMP – Global Media Partners RD\nwww.globalmediapartners.do'
+    },
+    wa_intro: {
+      subject:'',
+      body: 'Hola {{contact}}, soy {{sender}} de GMP – Global Media Partners RD. Operamos pantallas DOOH en estaciones premium de SD y Punta Cana. Me gustaría presentarles una propuesta para {{company}}. ¿Le va bien una breve llamada esta semana?'
+    }
+  },
+  ust: {
+    email_general: {
+      subject: 'United Mobile · Programa de equipos celulares con financiamiento por nómina para {{company}}',
+      body: 'Hola {{contact}},\n\nSoy {{sender}} de United Smart Tech / United Mobile. Tenemos un programa B2B para empresas como {{company}} que permite ofrecer a sus colaboradores acceso a equipos celulares (Android e iPhone) y accesorios con financiamiento por nómina hasta 6 meses, garantía 12 meses y soporte local.\n\nLa propuesta no requiere capital de la empresa — nosotros asumimos el riesgo de crédito y manejamos la operación end-to-end.\n\n¿Tendría espacio para una reunión breve para presentarle el programa y sus beneficios?\n\nSaludos,\n{{sender}}\nUnited Smart Tech / United Mobile'
+    },
+    wa_intro: {
+      subject:'',
+      body: 'Hola {{contact}}, soy {{sender}} de United Mobile. Ofrecemos a empresas un programa de equipos celulares para empleados con financiamiento por nómina y garantía 12 meses, sin capital propio de la empresa. ¿Le interesa una reunión breve para presentárselo a {{company}}?'
+    }
+  },
+  cargx: {
+    email_general: {
+      subject: 'CargX · Servicio de transporte y logística B2B para {{company}}',
+      body: 'Hola {{contact}},\n\nSoy {{sender}} de CargX, operador de carga y logística B2B en RD con foco en F&B, retail y hospitality. Manejamos rutas regulares Santo Domingo – Punta Cana y zonas turísticas con flota propia, control de temperatura y trazabilidad digital.\n\nMe gustaría conocer las necesidades logísticas de {{company}} y presentarles una propuesta operativa específica.\n\n¿Tendría 15 minutos esta semana para una llamada breve?\n\nSaludos,\n{{sender}}\nCargX · Logística B2B'
+    },
+    wa_intro: {
+      subject:'',
+      body: 'Hola {{contact}}, soy {{sender}} de CargX. Operamos transporte B2B con rutas SD–Punta Cana, flota propia y trazabilidad digital. ¿Tendría 15 min esta semana para presentar una propuesta a {{company}}?'
+    }
+  }
+};
+
+// Aplana PROSPECTS de todos los brands en un solo array
+function flattenProspects(){
+  const all = [];
+  Object.entries(PROSPECTS).forEach(([brand, list])=>{
+    list.forEach(p=>{
+      all.push({ ...p, brand });
+    });
+  });
+  return all;
+}
+
+// Normaliza un teléfono a E.164 sin + (solo dígitos), asumiendo RD si no hay código
+function normalizePhone(raw){
+  if(!raw || raw==='—' || raw==='-') return null;
+  const digits = String(raw).replace(/\D/g,'');
+  if(!digits) return null;
+  // RD numbers: 10 dígitos (809/829/849 + 7) → prepend 1
+  if(digits.length===10 && /^(809|829|849)/.test(digits)) return '1'+digits;
+  // Si ya viene con 1 al inicio (11 dígitos) lo dejamos
+  if(digits.length===11 && digits.startsWith('1')) return digits;
+  // Otros casos: devolvemos como está
+  return digits;
+}
+
+function hasEmail(p){ return p.email && p.email!=='—' && p.email!=='-'; }
+function hasPhone(p){ return !!normalizePhone(p.phone); }
+
+function setProspFilter(key, val){
+  PROSP_FILTERS[key] = val;
+  document.querySelectorAll('.prosp-chip[data-filter="'+key+'"]').forEach(c=>{
+    c.classList.toggle('active', c.dataset.val===val);
+  });
+  renderProspectos();
+}
+
+function renderProspectos(){
+  const tbody = document.getElementById('prospTbody');
+  const stats = document.getElementById('prospStats');
+  if(!tbody) return;
+  const q = (document.getElementById('prospSearch')?.value||'').toLowerCase().trim();
+  const all = flattenProspects();
+  const filtered = all.filter(p=>{
+    if(PROSP_FILTERS.brand!=='all' && p.brand!==PROSP_FILTERS.brand) return false;
+    if(PROSP_FILTERS.status!=='all' && p.status!==PROSP_FILTERS.status) return false;
+    if(PROSP_FILTERS.has==='email' && !hasEmail(p)) return false;
+    if(PROSP_FILTERS.has==='phone' && !hasPhone(p)) return false;
+    if(PROSP_FILTERS.has==='both' && (!hasEmail(p) || !hasPhone(p))) return false;
+    if(q){
+      const hay = ((p.company||'')+' '+(p.contact||'')+' '+(p.email||'')+' '+(p.phone||'')+' '+(p.industry||'')).toLowerCase();
+      if(!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  // Stats
+  const totals = { all: all.length, hot:0, warm:0, cold:0, withEmail:0, withPhone:0, both:0 };
+  all.forEach(p=>{
+    totals[p.status] = (totals[p.status]||0) + 1;
+    if(hasEmail(p)) totals.withEmail++;
+    if(hasPhone(p)) totals.withPhone++;
+    if(hasEmail(p) && hasPhone(p)) totals.both++;
+  });
+  stats.innerHTML = '<span><b>'+filtered.length+'</b> mostrados de <b>'+all.length+'</b> · 🔥 <b>'+totals.hot+'</b> hot · 🟡 <b>'+totals.warm+'</b> warm · ❄️ <b>'+totals.cold+'</b> cold · ✉️ <b>'+totals.withEmail+'</b> con email · 📱 <b>'+totals.withPhone+'</b> con tel · ✅ <b>'+totals.both+'</b> con ambos</span>';
+
+  if(!filtered.length){
+    tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state"><h4>Sin resultados</h4><div>Limpia los filtros o ajusta la búsqueda.</div></div></td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(p=>{
+    const phone = normalizePhone(p.phone);
+    const emailOk = hasEmail(p);
+    const phoneOk = !!phone;
+    const statusBadge = '<span class="prosp-badge '+p.status+'">'+ ({hot:'🔥 Hot',warm:'🟡 Warm',cold:'❄️ Cold'}[p.status]||p.status) +'</span>';
+    const brandBadge = '<span class="prosp-brand '+p.brand+'">'+p.brand+'</span>';
+    const emailDisp = emailOk ? '<span class="p-meta">'+p.email+'</span>' : '<span class="p-meta" style="opacity:.5">— sin email —</span>';
+    const phoneDisp = phoneOk ? '<span class="p-meta">'+p.phone+'</span>' : '';
+    const emailBtn = emailOk
+      ? '<button class="act-btn email" onclick="openTplModal(\''+p.brand+'\','+p.id+',\'email\')">✉️ Email</button>'
+      : '<button class="act-btn email disabled" title="Sin email">✉️ Email</button>';
+    const waBtn = phoneOk
+      ? '<button class="act-btn wa" onclick="openTplModal(\''+p.brand+'\','+p.id+',\'wa\')">💬 WhatsApp</button>'
+      : '<button class="act-btn wa disabled" title="Sin teléfono">💬 WhatsApp</button>';
+    const directBtn = (emailOk||phoneOk) ? '<button class="act-btn" onclick="copyContact(\''+p.brand+'\','+p.id+')" title="Copiar contacto">📋</button>' : '';
+    return '<tr>'+
+      '<td><div class="p-co">'+(p.company||'—')+'</div><div class="p-meta">'+(p.contact||'—')+'</div>'+emailDisp+(phoneOk?'<br>'+phoneDisp:'')+'</td>'+
+      '<td>'+brandBadge+'</td>'+
+      '<td><span class="p-meta">'+(p.industry||'—')+'</span></td>'+
+      '<td>'+statusBadge+'</td>'+
+      '<td><div class="prosp-actions">'+emailBtn+waBtn+directBtn+'</div></td>'+
+    '</tr>';
+  }).join('');
+}
+
+function copyContact(brand, id){
+  const p = PROSPECTS[brand].find(x=>x.id==id);
+  if(!p) return;
+  const txt = (p.company||'')+' · '+(p.contact||'')+(hasEmail(p)?' · '+p.email:'')+(hasPhone(p)?' · '+p.phone:'');
+  navigator.clipboard.writeText(txt).then(()=>{
+    alert('Copiado: '+txt);
+  });
+}
+
+// Mensajería: abre modal con plantilla editable
+let _tplCtx = null;
+function openTplModal(brand, id, channel){
+  const p = PROSPECTS[brand].find(x=>x.id==id);
+  if(!p) return;
+  _tplCtx = { p, brand, channel };
+  document.getElementById('tplTitle').textContent = (channel==='email'?'✉️ Componer email para ':'💬 Mensaje WhatsApp para ') + (p.company||'');
+  document.getElementById('tplSub').textContent = (p.contact||'') + ' · ' + (channel==='email'?(p.email||'sin email'):(p.phone||'sin teléfono'));
+  // Llenar plantillas según canal
+  const sel = document.getElementById('tplSelect');
+  sel.innerHTML='';
+  const tpls = TEMPLATES[brand]||{};
+  Object.entries(tpls).forEach(([k,v])=>{
+    if(channel==='email' && !k.startsWith('email')) return;
+    if(channel==='wa' && !k.startsWith('wa')) return;
+    const opt = document.createElement('option');
+    opt.value = k;
+    opt.textContent = k.replace('email_','Email · ').replace('wa_','WhatsApp · ');
+    sel.appendChild(opt);
+  });
+  if(channel==='email'){
+    document.getElementById('tplSubject').parentElement.style.display='block';
+  } else {
+    // ocultar subject para WhatsApp
+    document.getElementById('tplSubject').parentElement.style.display='none';
+  }
+  applyTemplate();
+  // Botón enviar
+  const btn = document.getElementById('tplSend');
+  btn.textContent = channel==='email' ? '✉️ Abrir en mi correo' : '💬 Abrir WhatsApp';
+  btn.onclick = sendNow;
+  document.getElementById('tplModal').classList.add('show');
+}
+
+function applyTemplate(){
+  if(!_tplCtx) return;
+  const { p, brand, channel } = _tplCtx;
+  const k = document.getElementById('tplSelect').value;
+  const t = (TEMPLATES[brand]||{})[k];
+  if(!t) return;
+  const ctx = {
+    company: p.company||'',
+    contact: (p.contact||'').split(',')[0].split('/')[0].trim() || 'equipo',
+    sender: SENDER.name,
+    email: p.email||'',
+    phone: p.phone||''
+  };
+  const fill = s => s.replace(/\{\{(\w+)\}\}/g, (_,k)=> ctx[k]||'');
+  document.getElementById('tplSubject').value = fill(t.subject||'');
+  document.getElementById('tplBody').value = fill(t.body||'');
+}
+
+function closeTplModal(){
+  document.getElementById('tplModal').classList.remove('show');
+  _tplCtx = null;
+}
+
+function sendNow(){
+  if(!_tplCtx) return;
+  const { p, channel } = _tplCtx;
+  const subject = document.getElementById('tplSubject').value;
+  const body = document.getElementById('tplBody').value;
+  if(channel==='email'){
+    const url = 'mailto:'+encodeURIComponent(p.email)+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+    window.location.href = url;
+  } else {
+    const phone = normalizePhone(p.phone);
+    if(!phone){alert('Sin teléfono válido');return}
+    const url = 'https://wa.me/'+phone+'?text='+encodeURIComponent(body);
+    window.open(url, '_blank');
+  }
+  closeTplModal();
+}
+
+// Cargador opcional desde JSON externo (para reemplazar/extender PROSPECTS desde tu hoja master)
+async function loadProspectsFromJSON(){
+  try{
+    const r = await fetch('prospectos.json',{cache:'no-store'});
+    if(!r.ok) return; // no hay archivo, ignorar
+    const data = await r.json();
+    // formato esperado: { gmp:[…], ust:[…], cargx:[…] }
+    if(data && typeof data === 'object'){
+      ['gmp','ust','cargx'].forEach(b=>{
+        if(Array.isArray(data[b])) PROSPECTS[b] = data[b];
+      });
+      console.log('Prospectos: cargados desde prospectos.json');
+      // re-render si la pestaña ya está visible
+      renderProspectos();
+      populateProspects();
+    }
+  }catch(e){
+    console.log('Prospectos: usando data embebida (no se encontró prospectos.json)');
+  }
+}
+
+// Override populateProspects para añadir mini-acciones email/wa en las contact lists existentes
+const _origPopulate = populateProspects;
+populateProspects = function(){
+  ['gmp','ust','cargx'].forEach(k=>{
+    const sel = document.getElementById(k+'Prospect');
+    const list = document.getElementById(k+'ContactList');
+    if(!sel) return;
+    sel.innerHTML = '<option value="">— Selecciona —</option>';
+    PROSPECTS[k].forEach(p=>{
+      const opt = document.createElement('option');
+      opt.value=p.id;
+      const icon = {hot:'🔥',warm:'🟡',cold:'❄️'}[p.status]||'';
+      opt.textContent = icon+' '+p.company;
+      sel.appendChild(opt);
+    });
+    if(list){
+      list.innerHTML = PROSPECTS[k].map(p=>{
+        const phone = normalizePhone(p.phone);
+        const emailOk = hasEmail(p);
+        const emailA = emailOk
+          ? '<a class="email" href="#" onclick="event.stopPropagation();openTplModal(\''+k+'\','+p.id+',\'email\');return false">✉</a>'
+          : '<a class="email disabled" onclick="event.stopPropagation();return false">✉</a>';
+        const waA = phone
+          ? '<a class="wa" href="#" onclick="event.stopPropagation();openTplModal(\''+k+'\','+p.id+',\'wa\');return false">💬</a>'
+          : '<a class="wa disabled" onclick="event.stopPropagation();return false">💬</a>';
+        return '<div class="ci" onclick="document.getElementById(\''+k+'Prospect\').value='+p.id+';loadProspect(\''+k+'\','+p.id+')">'+
+          '<div class="dot '+p.status+'"></div>'+
+          '<div class="name">'+p.company+'</div>'+
+          '<div class="ci-acts">'+emailA+waA+'</div>'+
+        '</div>';
+      }).join('');
+    }
+  });
+};
+
+// Hook: cuando se abre el tab de prospectos, render
+const _origGoTab = goTab;
+goTab = function(t){
+  _origGoTab(t);
+  if(t==='prospectos') renderProspectos();
+};
+
+// Intentar cargar JSON externo cuando el dashboard arranca
+document.addEventListener('DOMContentLoaded', ()=>{
+  // No bloqueamos el render principal — solo si el archivo existe, sobrescribe
+  loadProspectsFromJSON();
+});
 
 </script>
 </body>

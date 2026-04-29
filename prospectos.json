@@ -1,0 +1,636 @@
+{
+  "gmp": [
+    {
+      "id": 1,
+      "company": "Frito-Lay Dominicana (PepsiCo)",
+      "contact": "Ana Paola Prieto",
+      "email": "ana.prieto@pepsico.com",
+      "phone": "—",
+      "status": "hot",
+      "industry": "snacks",
+      "potential": 200000
+    },
+    {
+      "id": 2,
+      "company": "PepsiCo Beverages DR",
+      "contact": "Mateus Caldeira",
+      "email": "mateus.caldeira@pepsico.com",
+      "phone": "—",
+      "status": "hot",
+      "industry": "bebidas",
+      "potential": 240000
+    },
+    {
+      "id": 3,
+      "company": "Coca-Cola FEMSA Dominicana",
+      "contact": "Ana V. García",
+      "email": "ana.garcia@coca-colafemsa.com",
+      "phone": "—",
+      "status": "hot",
+      "industry": "bebidas",
+      "potential": 260000
+    },
+    {
+      "id": 4,
+      "company": "Philip Morris Dominicana",
+      "contact": "Gustavo Liberatti",
+      "email": "gustavo.liberatti@pmi.com",
+      "phone": "—",
+      "status": "hot",
+      "industry": "retail",
+      "potential": 220000
+    },
+    {
+      "id": 5,
+      "company": "Cervecería Nacional (AB InBev)",
+      "contact": "Mildred Santana",
+      "email": "Institucional.CND@ab-inbev.com",
+      "phone": "809-562-5000",
+      "status": "hot",
+      "industry": "bebidas",
+      "potential": 240000
+    },
+    {
+      "id": 6,
+      "company": "Ron Brugal (Edrington)",
+      "contact": "Mario Pujols",
+      "email": "mario.pujols@brugal.com.do",
+      "phone": "809-566-5651",
+      "status": "hot",
+      "industry": "bebidas",
+      "potential": 220000
+    },
+    {
+      "id": 7,
+      "company": "Grupo Puntacana",
+      "contact": "Manuel Sajour",
+      "email": "m.sajour@puntacana.com",
+      "phone": "809-959-2222",
+      "status": "hot",
+      "industry": "turismo",
+      "potential": 240000
+    },
+    {
+      "id": 8,
+      "company": "Cap Cana",
+      "contact": "Nicolle Reyes",
+      "email": "n.reyes@capcana.com",
+      "phone": "—",
+      "status": "hot",
+      "industry": "inmobiliaria",
+      "potential": 180000
+    },
+    {
+      "id": 9,
+      "company": "Supermercados Bravo",
+      "contact": "Yudelka Frías Rodríguez",
+      "email": "yudelka.frias@bravo.com.do",
+      "phone": "—",
+      "status": "hot",
+      "industry": "supermercado",
+      "potential": 160000
+    },
+    {
+      "id": 10,
+      "company": "Banreservas",
+      "contact": "Gisselle Díaz Melo",
+      "email": "gisselle.melo@banreservas.com",
+      "phone": "—",
+      "status": "hot",
+      "industry": "banco",
+      "potential": 200000
+    },
+    {
+      "id": 11,
+      "company": "Casa de Campo Resort",
+      "contact": "Sarah Rodríguez",
+      "email": "rrodriguez@ccampo.com",
+      "phone": "—",
+      "status": "hot",
+      "industry": "hotel",
+      "potential": 200000
+    },
+    {
+      "id": 12,
+      "company": "MINISO Dominican Republic",
+      "contact": "Joselyn Goico",
+      "email": "joselyn.goico@miniso.com",
+      "phone": "—",
+      "status": "warm",
+      "industry": "retail",
+      "potential": 120000
+    },
+    {
+      "id": 13,
+      "company": "Burger King Dominicana",
+      "contact": "Isabel Turull",
+      "email": "isabel.turull@burgerking.com.do",
+      "phone": "—",
+      "status": "warm",
+      "industry": "restaurante",
+      "potential": 160000
+    },
+    {
+      "id": 14,
+      "company": "Min. Turismo / Go DR",
+      "contact": "Raquel Reyes",
+      "email": "raquel.reyes@godominicanrepublic.com",
+      "phone": "—",
+      "status": "warm",
+      "industry": "turismo",
+      "potential": 180000
+    },
+    {
+      "id": 15,
+      "company": "Iberostar Dominicana",
+      "contact": "Angelica Albuerme",
+      "email": "angelica.albuerme@iberostar.com",
+      "phone": "—",
+      "status": "warm",
+      "industry": "hotel",
+      "potential": 180000
+    },
+    {
+      "id": 16,
+      "company": "El Dorado Water Park",
+      "contact": "Dpto. Comercial",
+      "email": "comercial@eldoradowaterpark.com",
+      "phone": "809-959-1777",
+      "status": "hot",
+      "industry": "entretenimiento",
+      "potential": 180000
+    },
+    {
+      "id": 17,
+      "company": "Coco Bongo",
+      "contact": "Aurelia / Marketing",
+      "email": "aurelia@cocobongo.com.do",
+      "phone": "809-466-1111",
+      "status": "hot",
+      "industry": "entretenimiento",
+      "potential": 160000
+    },
+    {
+      "id": 18,
+      "company": "Nestlé Dominicana",
+      "contact": "Brand Mgr Nescafé",
+      "email": "servicios.consumidor@do.nestle.com",
+      "phone": "809-508-5100",
+      "status": "warm",
+      "industry": "retail",
+      "potential": 160000
+    },
+    {
+      "id": 19,
+      "company": "Hard Rock Hotel PC",
+      "contact": "Jonathan E. Francois",
+      "email": "—",
+      "phone": "809-687-0000",
+      "status": "warm",
+      "industry": "hotel",
+      "potential": 200000
+    },
+    {
+      "id": 20,
+      "company": "Claro Dominicana",
+      "contact": "Jenny Abreu",
+      "email": "—",
+      "phone": "809-220-1111",
+      "status": "warm",
+      "industry": "telecom",
+      "potential": 280000
+    },
+    {
+      "id": 21,
+      "company": "Dolphin Discovery PC",
+      "contact": "Paola Dominici",
+      "email": "—",
+      "phone": "809-903-8522",
+      "status": "warm",
+      "industry": "entretenimiento",
+      "potential": 120000
+    },
+    {
+      "id": 22,
+      "company": "Monster Energy DR",
+      "contact": "Gerente Comercial",
+      "email": "—",
+      "phone": "809-789-1103",
+      "status": "hot",
+      "industry": "bebidas",
+      "potential": 180000
+    },
+    {
+      "id": 23,
+      "company": "Industrias Banilejas / Café SD",
+      "contact": "Gerente de Marca",
+      "email": "—",
+      "phone": "809-526-3535",
+      "status": "hot",
+      "industry": "bebidas",
+      "potential": 200000
+    },
+    {
+      "id": 24,
+      "company": "Delta Comercial (Toyota/Lexus)",
+      "contact": "Dir. de Mercadeo",
+      "email": "—",
+      "phone": "809-620-3000",
+      "status": "warm",
+      "industry": "automotriz",
+      "potential": 200000
+    },
+    {
+      "id": 25,
+      "company": "Viva Telecom",
+      "contact": "Director Comercial",
+      "email": "—",
+      "phone": "809-503-7550",
+      "status": "warm",
+      "industry": "telecom",
+      "potential": 180000
+    },
+    {
+      "id": 26,
+      "company": "Banco Popular Dominicano",
+      "contact": "Publicidad",
+      "email": "—",
+      "phone": "809-544-5555",
+      "status": "warm",
+      "industry": "banco",
+      "potential": 200000
+    }
+  ],
+  "ust": [
+    {
+      "id": 1,
+      "company": "United Petroleum (Grupo Haina)",
+      "contact": "Gerente de RRHH",
+      "email": "—",
+      "phone": "—",
+      "status": "hot"
+    },
+    {
+      "id": 2,
+      "company": "Centro Pieza",
+      "contact": "Gerente de RRHH",
+      "email": "—",
+      "phone": "—",
+      "status": "hot"
+    },
+    {
+      "id": 3,
+      "company": "Caribbean Catering (CCS)",
+      "contact": "Gerente Operaciones",
+      "email": "—",
+      "phone": "—",
+      "status": "hot"
+    },
+    {
+      "id": 4,
+      "company": "Food Management Services",
+      "contact": "Gerente de RRHH",
+      "email": "—",
+      "phone": "—",
+      "status": "hot"
+    },
+    {
+      "id": 5,
+      "company": "United Store (Grupo Haina)",
+      "contact": "Gerente Comercial",
+      "email": "—",
+      "phone": "—",
+      "status": "hot"
+    },
+    {
+      "id": 6,
+      "company": "Farmacia Carol",
+      "contact": "Gerente de Compras",
+      "email": "—",
+      "phone": "809-541-9151",
+      "status": "warm"
+    },
+    {
+      "id": 7,
+      "company": "Farmacia Medicar GBC",
+      "contact": "Comprador Corporativo",
+      "email": "suc.monumental@farmaciamedicargbc.com",
+      "phone": "809-475-4444",
+      "status": "warm"
+    },
+    {
+      "id": 8,
+      "company": "Frito-Lay (PepsiCo)",
+      "contact": "Ana Paola Prieto",
+      "email": "ana.prieto@pepsico.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 9,
+      "company": "PepsiCo Beverages DR",
+      "contact": "Mateus Caldeira",
+      "email": "mateus.caldeira@pepsico.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 10,
+      "company": "Coca-Cola FEMSA",
+      "contact": "Ana V. García",
+      "email": "ana.garcia@coca-colafemsa.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 11,
+      "company": "Philip Morris DR",
+      "contact": "Gustavo Liberatti",
+      "email": "gustavo.liberatti@pmi.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 12,
+      "company": "Cervecería Nacional (AB InBev)",
+      "contact": "Mildred Santana",
+      "email": "Institucional.CND@ab-inbev.com",
+      "phone": "809-562-5000",
+      "status": "warm"
+    },
+    {
+      "id": 13,
+      "company": "Ron Brugal",
+      "contact": "Mario Pujols",
+      "email": "mario.pujols@brugal.com.do",
+      "phone": "809-566-5651",
+      "status": "warm"
+    },
+    {
+      "id": 14,
+      "company": "Grupo Puntacana",
+      "contact": "Manuel Sajour",
+      "email": "m.sajour@puntacana.com",
+      "phone": "809-959-2222",
+      "status": "warm"
+    },
+    {
+      "id": 15,
+      "company": "Cap Cana",
+      "contact": "Nicolle Reyes",
+      "email": "n.reyes@capcana.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 16,
+      "company": "Supermercados Bravo",
+      "contact": "Yudelka Frías",
+      "email": "yudelka.frias@bravo.com.do",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 17,
+      "company": "Banreservas",
+      "contact": "Gisselle Díaz Melo",
+      "email": "gisselle.melo@banreservas.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 18,
+      "company": "Casa de Campo Resort",
+      "contact": "Sarah Rodríguez",
+      "email": "rrodriguez@ccampo.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 19,
+      "company": "MINISO DR",
+      "contact": "Joselyn Goico",
+      "email": "joselyn.goico@miniso.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 20,
+      "company": "Burger King DR",
+      "contact": "Isabel Turull",
+      "email": "isabel.turull@burgerking.com.do",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 21,
+      "company": "Min. Turismo / Go DR",
+      "contact": "Raquel Reyes",
+      "email": "raquel.reyes@godominicanrepublic.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 22,
+      "company": "Iberostar Dominicana",
+      "contact": "Angelica Albuerme",
+      "email": "angelica.albuerme@iberostar.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 23,
+      "company": "Nestlé Dominicana",
+      "contact": "Brand Mgr",
+      "email": "servicios.consumidor@do.nestle.com",
+      "phone": "809-508-5100",
+      "status": "warm"
+    },
+    {
+      "id": 24,
+      "company": "El Dorado Water Park",
+      "contact": "Dpto. Comercial",
+      "email": "comercial@eldoradowaterpark.com",
+      "phone": "809-959-1777",
+      "status": "warm"
+    },
+    {
+      "id": 25,
+      "company": "Coco Bongo",
+      "contact": "Aurelia / Marketing",
+      "email": "aurelia@cocobongo.com.do",
+      "phone": "809-466-1111",
+      "status": "warm"
+    }
+  ],
+  "cargx": [
+    {
+      "id": 1,
+      "company": "Grupo Puntacana (F&B Supply)",
+      "contact": "Manuel Sajour",
+      "email": "m.sajour@puntacana.com",
+      "phone": "809-959-2222",
+      "status": "hot"
+    },
+    {
+      "id": 2,
+      "company": "United Petroleum (interno)",
+      "contact": "JT Sr.",
+      "email": "—",
+      "phone": "—",
+      "status": "hot"
+    },
+    {
+      "id": 3,
+      "company": "Hard Rock Hotel PC (Logistics)",
+      "contact": "Dir. de Compras",
+      "email": "—",
+      "phone": "809-687-0000",
+      "status": "warm"
+    },
+    {
+      "id": 4,
+      "company": "Grupo Ramos (Distribución)",
+      "contact": "Gerente Logística",
+      "email": "—",
+      "phone": "809-472-4444",
+      "status": "warm"
+    },
+    {
+      "id": 5,
+      "company": "Frito-Lay (PepsiCo)",
+      "contact": "Ana Paola Prieto",
+      "email": "ana.prieto@pepsico.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 6,
+      "company": "PepsiCo Beverages DR",
+      "contact": "Mateus Caldeira",
+      "email": "mateus.caldeira@pepsico.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 7,
+      "company": "Coca-Cola FEMSA",
+      "contact": "Ana V. García",
+      "email": "ana.garcia@coca-colafemsa.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 8,
+      "company": "Philip Morris DR",
+      "contact": "Gustavo Liberatti",
+      "email": "gustavo.liberatti@pmi.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 9,
+      "company": "Cervecería Nacional (AB InBev)",
+      "contact": "Mildred Santana",
+      "email": "Institucional.CND@ab-inbev.com",
+      "phone": "809-562-5000",
+      "status": "warm"
+    },
+    {
+      "id": 10,
+      "company": "Ron Brugal",
+      "contact": "Mario Pujols",
+      "email": "mario.pujols@brugal.com.do",
+      "phone": "809-566-5651",
+      "status": "warm"
+    },
+    {
+      "id": 11,
+      "company": "Cap Cana",
+      "contact": "Nicolle Reyes",
+      "email": "n.reyes@capcana.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 12,
+      "company": "Supermercados Bravo",
+      "contact": "Yudelka Frías",
+      "email": "yudelka.frias@bravo.com.do",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 13,
+      "company": "Banreservas",
+      "contact": "Gisselle Díaz Melo",
+      "email": "gisselle.melo@banreservas.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 14,
+      "company": "Casa de Campo Resort",
+      "contact": "Sarah Rodríguez",
+      "email": "rrodriguez@ccampo.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 15,
+      "company": "MINISO DR",
+      "contact": "Joselyn Goico",
+      "email": "joselyn.goico@miniso.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 16,
+      "company": "Burger King DR",
+      "contact": "Isabel Turull",
+      "email": "isabel.turull@burgerking.com.do",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 17,
+      "company": "Min. Turismo / Go DR",
+      "contact": "Raquel Reyes",
+      "email": "raquel.reyes@godominicanrepublic.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 18,
+      "company": "Iberostar Dominicana",
+      "contact": "Angelica Albuerme",
+      "email": "angelica.albuerme@iberostar.com",
+      "phone": "—",
+      "status": "warm"
+    },
+    {
+      "id": 19,
+      "company": "Nestlé Dominicana",
+      "contact": "Brand Mgr",
+      "email": "servicios.consumidor@do.nestle.com",
+      "phone": "809-508-5100",
+      "status": "warm"
+    },
+    {
+      "id": 20,
+      "company": "El Dorado Water Park",
+      "contact": "Dpto. Comercial",
+      "email": "comercial@eldoradowaterpark.com",
+      "phone": "809-959-1777",
+      "status": "warm"
+    },
+    {
+      "id": 21,
+      "company": "Coco Bongo",
+      "contact": "Aurelia / Marketing",
+      "email": "aurelia@cocobongo.com.do",
+      "phone": "809-466-1111",
+      "status": "warm"
+    }
+  ]
+}
