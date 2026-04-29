@@ -1420,7 +1420,7 @@ const PROSP_FILTERS = { brand:'all', status:'all', has:'all' };
 const SENDER = { name:'Juan Tomás Díaz Rainieri', wa:'18299XXXXXX' /* edit if needed */ };
 
 // Plantillas por marca y tipo
-const TEMPLATES = {
+const PROSP_TEMPLATES = {
   gmp: {
     email_general: {
       subject: 'GMP · Pantallas DOOH en estaciones premium de RD para {{company}}',
@@ -1567,7 +1567,7 @@ function openTplModal(brand, id, channel){
   // Llenar plantillas según canal
   const sel = document.getElementById('tplSelect');
   sel.innerHTML='';
-  const tpls = TEMPLATES[brand]||{};
+  const tpls = PROSP_TEMPLATES[brand]||{};
   Object.entries(tpls).forEach(([k,v])=>{
     if(channel==='email' && !k.startsWith('email')) return;
     if(channel==='wa' && !k.startsWith('wa')) return;
@@ -1594,7 +1594,7 @@ function applyTemplate(){
   if(!_tplCtx) return;
   const { p, brand, channel } = _tplCtx;
   const k = document.getElementById('tplSelect').value;
-  const t = (TEMPLATES[brand]||{})[k];
+  const t = (PROSP_TEMPLATES[brand]||{})[k];
   if(!t) return;
   const ctx = {
     company: p.company||'',
@@ -1651,52 +1651,56 @@ async function loadProspectsFromJSON(){
   }
 }
 
-// Override populateProspects para añadir mini-acciones email/wa en las contact lists existentes
-const _origPopulate = populateProspects;
-populateProspects = function(){
+// Decorador: añade mini-acciones ✉ 💬 a las contact-lists existentes después de que populateProspects() haya corrido
+function decorateContactLists(){
   ['gmp','ust','cargx'].forEach(k=>{
-    const sel = document.getElementById(k+'Prospect');
     const list = document.getElementById(k+'ContactList');
-    if(!sel) return;
-    sel.innerHTML = '<option value="">— Selecciona —</option>';
-    PROSPECTS[k].forEach(p=>{
-      const opt = document.createElement('option');
-      opt.value=p.id;
-      const icon = {hot:'🔥',warm:'🟡',cold:'❄️'}[p.status]||'';
-      opt.textContent = icon+' '+p.company;
-      sel.appendChild(opt);
+    if(!list) return;
+    PROSPECTS[k].forEach((p, idx)=>{
+      const ci = list.children[idx];
+      if(!ci || ci.querySelector('.ci-acts')) return;
+      const phone = normalizePhone(p.phone);
+      const emailOk = hasEmail(p);
+      const acts = document.createElement('div');
+      acts.className = 'ci-acts';
+      const eA = document.createElement('a');
+      eA.className = 'email' + (emailOk ? '' : ' disabled');
+      eA.textContent = '\u2709';
+      if(emailOk){ eA.href='#'; eA.addEventListener('click', (e)=>{ e.stopPropagation(); e.preventDefault(); openTplModal(k, p.id, 'email'); }); }
+      const wA = document.createElement('a');
+      wA.className = 'wa' + (phone ? '' : ' disabled');
+      wA.textContent = '\ud83d\udcac';
+      if(phone){ wA.href='#'; wA.addEventListener('click', (e)=>{ e.stopPropagation(); e.preventDefault(); openTplModal(k, p.id, 'wa'); }); }
+      acts.appendChild(eA);
+      acts.appendChild(wA);
+      ci.appendChild(acts);
     });
-    if(list){
-      list.innerHTML = PROSPECTS[k].map(p=>{
-        const phone = normalizePhone(p.phone);
-        const emailOk = hasEmail(p);
-        const emailA = emailOk
-          ? '<a class="email" href="#" onclick="event.stopPropagation();openTplModal(\''+k+'\','+p.id+',\'email\');return false">✉</a>'
-          : '<a class="email disabled" onclick="event.stopPropagation();return false">✉</a>';
-        const waA = phone
-          ? '<a class="wa" href="#" onclick="event.stopPropagation();openTplModal(\''+k+'\','+p.id+',\'wa\');return false">💬</a>'
-          : '<a class="wa disabled" onclick="event.stopPropagation();return false">💬</a>';
-        return '<div class="ci" onclick="document.getElementById(\''+k+'Prospect\').value='+p.id+';loadProspect(\''+k+'\','+p.id+')">'+
-          '<div class="dot '+p.status+'"></div>'+
-          '<div class="name">'+p.company+'</div>'+
-          '<div class="ci-acts">'+emailA+waA+'</div>'+
-        '</div>';
-      }).join('');
+  });
+}
+
+// Hook: cuando se abre el tab de prospectos, render. No reasignamos goTab (es function declaration).
+function hookProspectosTab(){
+  document.addEventListener('click', function(ev){
+    const t = ev.target.closest('.tab');
+    if(t && t.dataset.tab === 'prospectos') {
+      setTimeout(renderProspectos, 0);
     }
   });
-};
+  if(location.hash === '#prospectos') {
+    setTimeout(renderProspectos, 100);
+  }
+}
 
-// Hook: cuando se abre el tab de prospectos, render
-const _origGoTab = goTab;
-goTab = function(t){
-  _origGoTab(t);
-  if(t==='prospectos') renderProspectos();
-};
-
-// Intentar cargar JSON externo cuando el dashboard arranca
+// Intentar cargar JSON externo cuando el dashboard arranca + hookear tabs + decorar listas
 document.addEventListener('DOMContentLoaded', ()=>{
-  // No bloqueamos el render principal — solo si el archivo existe, sobrescribe
   loadProspectsFromJSON();
+  hookProspectosTab();
+  // Observer: cuando populateProspects rellene las contact-lists, decorarlas
+  ['gmp','ust','cargx'].forEach(k=>{
+    const list = document.getElementById(k+'ContactList');
+    if(!list) return;
+    new MutationObserver(()=>{ decorateContactLists(); }).observe(list, {childList:true});
+  });
 });
 
 </script>
