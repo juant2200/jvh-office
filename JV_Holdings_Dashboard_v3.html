@@ -765,8 +765,10 @@ tr:hover td{background:rgba(201,168,76,.04)}
     <div class="tpl-sub" id="tplSub"></div>
     <label>Plantilla</label>
     <select id="tplSelect" onchange="applyTemplate()"></select>
-    <label>Asunto (solo email)</label>
-    <input type="text" id="tplSubject">
+    <div id="tplSubjectWrap">
+      <label>Asunto (solo email)</label>
+      <input type="text" id="tplSubject">
+    </div>
     <label>Mensaje</label>
     <textarea id="tplBody"></textarea>
     <div class="tpl-row">
@@ -1576,12 +1578,8 @@ function openTplModal(brand, id, channel){
     opt.textContent = k.replace('email_','Email · ').replace('wa_','WhatsApp · ');
     sel.appendChild(opt);
   });
-  if(channel==='email'){
-    document.getElementById('tplSubject').parentElement.style.display='block';
-  } else {
-    // ocultar subject para WhatsApp
-    document.getElementById('tplSubject').parentElement.style.display='none';
-  }
+  // Mostrar/ocultar el campo Asunto según canal (sin tocar la card padre)
+  document.getElementById('tplSubjectWrap').style.display = (channel==='email') ? 'block' : 'none';
   applyTemplate();
   // Botón enviar
   const btn = document.getElementById('tplSend');
