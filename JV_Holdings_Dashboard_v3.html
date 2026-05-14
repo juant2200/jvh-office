@@ -756,11 +756,12 @@ tr:hover td{background:rgba(201,168,76,.04)}
   <div class="tpl-card">
     <h3 id="tplTitle">Componer mensaje</h3>
     <div class="tpl-sub" id="tplSub"></div>
-    <label>Enviar como (cambia el mensaje):</label>
+    <div class="tpl-sub" id="tplFromInfo" style="margin-top:4px;font-size:12px;color:var(--muted, #6b7280)"></div>
+    <label>Enviar como (cambia el mensaje y el remitente):</label>
     <div class="send-as-row">
-      <button type="button" class="send-as-chip active" data-brand="gmp" onclick="setSendAs('gmp');applyTemplate()">📺 GMP</button>
-      <button type="button" class="send-as-chip" data-brand="ust" onclick="setSendAs('ust');applyTemplate()">📱 UST</button>
-      <button type="button" class="send-as-chip" data-brand="cargx" onclick="setSendAs('cargx');applyTemplate()">🚛 CargX</button>
+      <button type="button" class="send-as-chip active" data-brand="gmp" onclick="setSendAs('gmp');applyTemplate();updateFromInfo()">📺 GMP</button>
+      <button type="button" class="send-as-chip" data-brand="ust" onclick="setSendAs('ust');applyTemplate();updateFromInfo()">📱 UST</button>
+      <button type="button" class="send-as-chip" data-brand="cargx" onclick="setSendAs('cargx');applyTemplate();updateFromInfo()">🚛 CargX</button>
     </div>
     <label>Plantilla</label>
     <select id="tplSelect" onchange="applyTemplate()"></select>
@@ -1108,9 +1109,9 @@ const PROSPECTS = {
     {id:2, company:"PepsiCo Beverages DR", contact:"Mateus Caldeira", email:"mateus.caldeira@pepsico.com", phone:"—", status:"hot", industry:"bebidas", potential:240000},
     {id:3, company:"Coca-Cola FEMSA Dominicana", contact:"Ana V. García", email:"ana.garcia@coca-colafemsa.com", phone:"—", status:"hot", industry:"bebidas", potential:260000},
     {id:4, company:"Philip Morris Dominicana", contact:"Gustavo Liberatti", email:"gustavo.liberatti@pmi.com", phone:"—", status:"hot", industry:"retail", potential:220000},
-    {id:5, company:"Cervecería Nacional (AB InBev)", contact:"Mildred Santana", email:"Institucional.CND@ab-inbev.com", phone:"809-562-5000", status:"hot", industry:"bebidas", potential:240000},
-    {id:6, company:"Ron Brugal (Edrington)", contact:"Mario Pujols", email:"mario.pujols@brugal.com.do", phone:"809-566-5651", status:"hot", industry:"bebidas", potential:220000},
-    {id:7, company:"Grupo Puntacana", contact:"Manuel Sajour", email:"m.sajour@puntacana.com", phone:"809-959-2222", status:"hot", industry:"turismo", potential:240000},
+    {id:5, company:"Cervecería Nacional (AB InBev)", contact:"Mildred Santana", email:"Institucional.CND@ab-inbev.com", phone:"+1 809-562-5000", status:"hot", industry:"bebidas", potential:240000},
+    {id:6, company:"Ron Brugal (Edrington)", contact:"Mario Pujols", email:"mario.pujols@brugal.com.do", phone:"+1 809-566-5651", status:"hot", industry:"bebidas", potential:220000},
+    {id:7, company:"Grupo Puntacana", contact:"Manuel Sajour", email:"m.sajour@puntacana.com", phone:"+1 809-959-2222", status:"hot", industry:"turismo", potential:240000},
     {id:8, company:"Cap Cana", contact:"Nicolle Reyes", email:"n.reyes@capcana.com", phone:"—", status:"hot", industry:"inmobiliaria", potential:180000},
     {id:9, company:"Supermercados Bravo", contact:"Yudelka Frías Rodríguez", email:"yudelka.frias@bravo.com.do", phone:"—", status:"hot", industry:"supermercado", potential:160000},
     {id:10, company:"Banreservas", contact:"Gisselle Díaz Melo", email:"gisselle.melo@banreservas.com", phone:"—", status:"hot", industry:"banco", potential:200000},
@@ -1120,29 +1121,29 @@ const PROSPECTS = {
     {id:14, company:"Min. Turismo / Go DR", contact:"Raquel Reyes", email:"raquel.reyes@godominicanrepublic.com", phone:"—", status:"warm", industry:"turismo", potential:180000},
     {id:15, company:"Iberostar Dominicana", contact:"Angelica Albuerme", email:"angelica.albuerme@iberostar.com", phone:"—", status:"warm", industry:"hotel", potential:180000},
     // ── EXISTING DASHBOARD (with phones, no personal email) ──
-    {id:16, company:"El Dorado Water Park", contact:"Dpto. Comercial", email:"comercial@eldoradowaterpark.com", phone:"809-959-1777", status:"hot", industry:"entretenimiento", potential:180000},
-    {id:17, company:"Coco Bongo", contact:"Aurelia / Marketing", email:"aurelia@cocobongo.com.do", phone:"809-466-1111", status:"hot", industry:"entretenimiento", potential:160000},
-    {id:18, company:"Nestlé Dominicana", contact:"Brand Mgr Nescafé", email:"servicios.consumidor@do.nestle.com", phone:"809-508-5100", status:"warm", industry:"retail", potential:160000},
-    {id:19, company:"Hard Rock Hotel PC", contact:"Jonathan E. Francois", email:"—", phone:"809-687-0000", status:"warm", industry:"hotel", potential:200000},
-    {id:20, company:"Claro Dominicana", contact:"Jenny Abreu", email:"—", phone:"809-220-1111", status:"warm", industry:"telecom", potential:280000},
-    {id:21, company:"Dolphin Discovery PC", contact:"Paola Dominici", email:"—", phone:"809-903-8522", status:"warm", industry:"entretenimiento", potential:120000},
+    {id:16, company:"El Dorado Water Park", contact:"Dpto. Comercial", email:"comercial@eldoradowaterpark.com", phone:"+1 809-959-1777", status:"hot", industry:"entretenimiento", potential:180000},
+    {id:17, company:"Coco Bongo", contact:"Aurelia / Marketing", email:"aurelia@cocobongo.com.do", phone:"+1 809-466-1111", status:"hot", industry:"entretenimiento", potential:160000},
+    {id:18, company:"Nestlé Dominicana", contact:"Brand Mgr Nescafé", email:"servicios.consumidor@do.nestle.com", phone:"+1 809-508-5100", status:"warm", industry:"retail", potential:160000},
+    {id:19, company:"Hard Rock Hotel PC", contact:"Jonathan E. Francois", email:"—", phone:"+1 809-687-0000", status:"warm", industry:"hotel", potential:200000},
+    {id:20, company:"Claro Dominicana", contact:"Jenny Abreu", email:"—", phone:"+1 809-220-1111", status:"warm", industry:"telecom", potential:280000},
+    {id:21, company:"Dolphin Discovery PC", contact:"Paola Dominici", email:"—", phone:"+1 809-903-8522", status:"warm", industry:"entretenimiento", potential:120000},
     // ── NEW HIGH-POTENTIAL (phone only, need email) ──
-    {id:22, company:"Monster Energy DR", contact:"Gerente Comercial", email:"—", phone:"809-789-1103", status:"hot", industry:"bebidas", potential:180000},
-    {id:23, company:"Industrias Banilejas / Café SD", contact:"Gerente de Marca", email:"—", phone:"809-526-3535", status:"hot", industry:"bebidas", potential:200000},
-    {id:24, company:"Delta Comercial (Toyota/Lexus)", contact:"Dir. de Mercadeo", email:"—", phone:"809-620-3000", status:"warm", industry:"automotriz", potential:200000},
-    {id:25, company:"Viva Telecom", contact:"Director Comercial", email:"—", phone:"809-503-7550", status:"warm", industry:"telecom", potential:180000},
-    {id:26, company:"Banco Popular Dominicano", contact:"Publicidad", email:"—", phone:"809-544-5555", status:"warm", industry:"banco", potential:200000},,
+    {id:22, company:"Monster Energy DR", contact:"Gerente Comercial", email:"—", phone:"+1 809-789-1103", status:"hot", industry:"bebidas", potential:180000},
+    {id:23, company:"Industrias Banilejas / Café SD", contact:"Gerente de Marca", email:"—", phone:"+1 809-526-3535", status:"hot", industry:"bebidas", potential:200000},
+    {id:24, company:"Delta Comercial (Toyota/Lexus)", contact:"Dir. de Mercadeo", email:"—", phone:"+1 809-620-3000", status:"warm", industry:"automotriz", potential:200000},
+    {id:25, company:"Viva Telecom", contact:"Director Comercial", email:"—", phone:"+1 809-503-7550", status:"warm", industry:"telecom", potential:180000},
+    {id:26, company:"Banco Popular Dominicano", contact:"Publicidad", email:"—", phone:"809-544-5555", status:"warm", industry:"banco", potential:200000},
     // ── DEPURADO TIER S (21 contactos) ──
-    {id:100, company:"Grupo Haina", contact:"Jinnet Puig Pimentel", email:"asist.presidencia@grupohaina.com", phone:"+1 829-733-4935 / +1 829-745-3788 / +1 809-467-5700", status:"warm", industry:"oficina corp", potential:0},
-    {id:101, company:"Diageo Dominican Republic", contact:"Nahtalie Duran", email:"nahtalie.duran@diageo.com", phone:"+1 809-338-8103 (Corp)", status:"warm", industry:"oficina corp", potential:0},
+    {id:100, company:"Grupo Haina", contact:"Jinnet Puig Pimentel", email:"asist.presidencia@grupohaina.com", phone:"+1 829-733-4935", status:"warm", industry:"oficina corp", potential:0},
+    {id:101, company:"Diageo Dominican Republic", contact:"Nahtalie Duran", email:"nahtalie.duran@diageo.com", phone:"—", status:"warm", industry:"oficina corp", potential:0},
     {id:102, company:"Altice Dominicana", contact:"VP Marketing / Comms", email:"atencion@altice.net.do", phone:"+1 809-200-1111", status:"cold", industry:"telecom", potential:0},
     {id:103, company:"Farmacia Medicar GBC", contact:"Dpto. Marketing", email:"suc.monumental@farmaciamedicargbc.com", phone:"+1 809-475-4444", status:"cold", industry:"general", potential:0},
     {id:104, company:"Sigma Alimentos Dominicana", contact:"Puccini Antonio Ortega", email:"rgenao@sigma-alimentos.com", phone:"+1 809-571-2277", status:"cold", industry:"general", potential:0},
     {id:105, company:"Seguros Universal", contact:"Dpto. Marketing", email:"talentos@universal.com.do", phone:"+1 809-544-7000", status:"warm", industry:"oficina corp", potential:0},
     {id:106, company:"Banco Popular Dominicano", contact:"Dpto. Publicidad", email:"vozdelcliente@bpd.com.do", phone:"+1 809-544-5555", status:"warm", industry:"oficina corp", potential:0},
-    {id:107, company:"Claro RD", contact:"Jenny Abreu", email:"jenny.abreu@claro.com.do", phone:"+1 809-220-1212 (Corp)", status:"warm", industry:"oficina corp", potential:0},
+    {id:107, company:"Claro RD", contact:"Jenny Abreu", email:"jenny.abreu@claro.com.do", phone:"—", status:"warm", industry:"oficina corp", potential:0},
     {id:108, company:"BHD León", contact:"Servicio al Cliente", email:"servicioalcliente@bhd.com.do", phone:"+1 809-243-5000", status:"warm", industry:"oficina corp", potential:0},
-    {id:109, company:"Banco de Reservas", contact:"Alejandra Diaz", email:"adiaz@banreservas.com", phone:"+1 809-467-9784 (809)", status:"cold", industry:"banco", potential:0},
+    {id:109, company:"Banco de Reservas", contact:"Alejandra Diaz", email:"adiaz@banreservas.com", phone:"+1 809-467-9784", status:"cold", industry:"banco", potential:0},
     {id:110, company:"MAPFRE BHD Seguros", contact:"Dpto. Marketing", email:"reclutamiento@mapfrebhd.com.do", phone:"—", status:"warm", industry:"oficina corp", potential:0},
     {id:111, company:"Banco BHD León", contact:"Jose Sanoja", email:"jose.sanoja@bhdleon.com.do", phone:"—", status:"warm", industry:"oficina corp", potential:0},
     {id:112, company:"Ministry of Tourism Dominican Republic", contact:"Raquel Reyes", email:"raquel.reyes@godominicanrepublic.com", phone:"—", status:"warm", industry:"oficina corp", potential:0},
@@ -1157,21 +1158,16 @@ const PROSPECTS = {
   ],
   ust:[
     // ── UST CORE PROSPECTS ──
-    {id:1, company:"United Petroleum (Grupo Haina)", contact:"Gerente de RRHH", email:"—", phone:"—", status:"hot"},
-    {id:2, company:"Centro Pieza", contact:"Gerente de RRHH", email:"—", phone:"—", status:"hot"},
-    {id:3, company:"Caribbean Catering (CCS)", contact:"Gerente Operaciones", email:"—", phone:"—", status:"hot"},
-    {id:4, company:"Food Management Services", contact:"Gerente de RRHH", email:"—", phone:"—", status:"hot"},
-    {id:5, company:"United Store (Grupo Haina)", contact:"Gerente Comercial", email:"—", phone:"—", status:"hot"},
-    {id:6, company:"Farmacia Carol", contact:"Gerente de Compras", email:"—", phone:"809-541-9151", status:"warm"},
-    {id:7, company:"Farmacia Medicar GBC", contact:"Comprador Corporativo", email:"suc.monumental@farmaciamedicargbc.com", phone:"809-475-4444", status:"warm"},
+    {id:6, company:"Farmacia Carol", contact:"Gerente de Compras", email:"—", phone:"+1 809-541-9151", status:"warm"},
+    {id:7, company:"Farmacia Medicar GBC", contact:"Comprador Corporativo", email:"suc.monumental@farmaciamedicargbc.com", phone:"+1 809-475-4444", status:"warm"},
     // ── ALL VERIFIED EMAILS (shared across companies) ──
     {id:8, company:"Frito-Lay (PepsiCo)", contact:"Ana Paola Prieto", email:"ana.prieto@pepsico.com", phone:"—", status:"warm"},
     {id:9, company:"PepsiCo Beverages DR", contact:"Mateus Caldeira", email:"mateus.caldeira@pepsico.com", phone:"—", status:"warm"},
     {id:10, company:"Coca-Cola FEMSA", contact:"Ana V. García", email:"ana.garcia@coca-colafemsa.com", phone:"—", status:"warm"},
     {id:11, company:"Philip Morris DR", contact:"Gustavo Liberatti", email:"gustavo.liberatti@pmi.com", phone:"—", status:"warm"},
-    {id:12, company:"Cervecería Nacional (AB InBev)", contact:"Mildred Santana", email:"Institucional.CND@ab-inbev.com", phone:"809-562-5000", status:"warm"},
-    {id:13, company:"Ron Brugal", contact:"Mario Pujols", email:"mario.pujols@brugal.com.do", phone:"809-566-5651", status:"warm"},
-    {id:14, company:"Grupo Puntacana", contact:"Manuel Sajour", email:"m.sajour@puntacana.com", phone:"809-959-2222", status:"warm"},
+    {id:12, company:"Cervecería Nacional (AB InBev)", contact:"Mildred Santana", email:"Institucional.CND@ab-inbev.com", phone:"+1 809-562-5000", status:"warm"},
+    {id:13, company:"Ron Brugal", contact:"Mario Pujols", email:"mario.pujols@brugal.com.do", phone:"+1 809-566-5651", status:"warm"},
+    {id:14, company:"Grupo Puntacana", contact:"Manuel Sajour", email:"m.sajour@puntacana.com", phone:"+1 809-959-2222", status:"warm"},
     {id:15, company:"Cap Cana", contact:"Nicolle Reyes", email:"n.reyes@capcana.com", phone:"—", status:"warm"},
     {id:16, company:"Supermercados Bravo", contact:"Yudelka Frías", email:"yudelka.frias@bravo.com.do", phone:"—", status:"warm"},
     {id:17, company:"Banreservas", contact:"Gisselle Díaz Melo", email:"gisselle.melo@banreservas.com", phone:"—", status:"warm"},
@@ -1180,28 +1176,28 @@ const PROSPECTS = {
     {id:20, company:"Burger King DR", contact:"Isabel Turull", email:"isabel.turull@burgerking.com.do", phone:"—", status:"warm"},
     {id:21, company:"Min. Turismo / Go DR", contact:"Raquel Reyes", email:"raquel.reyes@godominicanrepublic.com", phone:"—", status:"warm"},
     {id:22, company:"Iberostar Dominicana", contact:"Angelica Albuerme", email:"angelica.albuerme@iberostar.com", phone:"—", status:"warm"},
-    {id:23, company:"Nestlé Dominicana", contact:"Brand Mgr", email:"servicios.consumidor@do.nestle.com", phone:"809-508-5100", status:"warm"},
-    {id:24, company:"El Dorado Water Park", contact:"Dpto. Comercial", email:"comercial@eldoradowaterpark.com", phone:"809-959-1777", status:"warm"},
-    {id:25, company:"Coco Bongo", contact:"Aurelia / Marketing", email:"aurelia@cocobongo.com.do", phone:"809-466-1111", status:"warm"},,
+    {id:23, company:"Nestlé Dominicana", contact:"Brand Mgr", email:"servicios.consumidor@do.nestle.com", phone:"+1 809-508-5100", status:"warm"},
+    {id:24, company:"El Dorado Water Park", contact:"Dpto. Comercial", email:"comercial@eldoradowaterpark.com", phone:"+1 809-959-1777", status:"warm"},
+    {id:25, company:"Coco Bongo", contact:"Aurelia / Marketing", email:"aurelia@cocobongo.com.do", phone:"809-466-1111", status:"warm"},
     // ── DEPURADO TIER S (133 contactos) ──
     {id:100, company:"Unilever Caribe", contact:"Marcelo Rosatto", email:"consumecare.usl@unilever.com", phone:"+1 809-732-7461", status:"warm", industry:"retail", potential:0},
     {id:101, company:"Nestlé Dominicana", contact:"Dpto. Marketing", email:"servicios.consumidor@do.nestle.com", phone:"+1 809-508-5100", status:"warm", industry:"retail", potential:0},
     {id:102, company:"Grupo Ramos (La Sirena / Pola / Aprezio)", contact:"Dpto. Marketing", email:"info@gruporamos.com", phone:"+1 809-472-4444", status:"warm", industry:"retail", potential:0},
-    {id:103, company:"PriceSmart Dominican Republic", contact:"Antonia Saul", email:"antonia.saul@pricesmart.com", phone:"+1 809-334-3333 (Corp)", status:"warm", industry:"retail", potential:0},
-    {id:104, company:"PLATINUM BROKERS", contact:"Recepción / Info", email:"info@platinumbrokersrd.com", phone:"+1 829-765-1804 (Corp)", status:"warm", industry:"inmobiliaria", potential:0},
-    {id:105, company:"PUNTA CANA SOLUTIONS", contact:"Gerencia / Admin", email:"admin@puntacanasolutions.com", phone:"+1 809-385-3735 (Corp)", status:"warm", industry:"inmobiliaria", potential:0},
-    {id:106, company:"ESKALA REAL ESTATE", contact:"Recepción / Info", email:"info@eskala.com.do", phone:"+1 809-993-5000 (Corp)", status:"warm", industry:"inmobiliaria", potential:0},
-    {id:107, company:"APARTAMENTOS RD", contact:"—", email:"comprobantes@apartamentosrd.com.do", phone:"+1 809-899-2679 (Corp)", status:"warm", industry:"inmobiliaria", potential:0},
-    {id:108, company:"BLUE CARIBBEAN PROPERTIES", contact:"Gerencia / Admin", email:"admin@bluecaribbeanproperties.com", phone:"+1 829-679-6758 (Corp)", status:"warm", industry:"inmobiliaria", potential:0},
-    {id:109, company:"INVERBANCA", contact:"Recepción / Info", email:"info@inverbancard.com", phone:"+1 809-534-7227 (Corp)", status:"warm", industry:"inmobiliaria", potential:0},
-    {id:110, company:"OFERTA INMOBILIARIA RD", contact:"Contabilidad / Pagos", email:"contabilidad@ofertainmobiliariard.com", phone:"+1 809-475-6318 (Corp)", status:"warm", industry:"inmobiliaria", potential:0},
-    {id:111, company:"ALVEARE REALTY", contact:"Contabilidad / Pagos", email:"contabilidad@alveare.do", phone:"+1 809-736-6712 (Corp)", status:"warm", industry:"inmobiliaria", potential:0},
-    {id:112, company:"MIS CASAS RD", contact:"Recepción / Info", email:"info@miscasasrd.com", phone:"+1 809-373-9270 (Corp)", status:"warm", industry:"inmobiliaria", potential:0},
-    {id:113, company:"THE CREST GROUP", contact:"Recepción / Info", email:"info@crestgroupdominicana.com", phone:"+1 809-905-5535 (Corp)", status:"warm", industry:"inmobiliaria", potential:0},
-    {id:114, company:"DOMUS RD", contact:"Recepción / Info", email:"info@domusrd.com", phone:"+1 809-915-9006 (Corp)", status:"warm", industry:"inmobiliaria", potential:0},
-    {id:115, company:"CANABLUE REAL ESTATE", contact:"Contabilidad / Pagos", email:"contabilidad@canablue.com", phone:"+1 809-975-3900 (Corp)", status:"warm", industry:"inmobiliaria", potential:0},
-    {id:116, company:"BEACHTOWN PROPERTY REAL ESTATE", contact:"—", email:"helen@beachtownproperty.com", phone:"+1 809-240-9699 (Corp)", status:"warm", industry:"inmobiliaria", potential:0},
-    {id:117, company:"BLACKLION PROPERTIES", contact:"Contabilidad / Pagos", email:"contabilidad@blacklionsd.com", phone:"+1 809-541-5940 (Corp)", status:"warm", industry:"inmobiliaria", potential:0},
+    {id:103, company:"PriceSmart Dominican Republic", contact:"Antonia Saul", email:"antonia.saul@pricesmart.com", phone:"—", status:"warm", industry:"retail", potential:0},
+    {id:104, company:"PLATINUM BROKERS", contact:"Recepción / Info", email:"info@platinumbrokersrd.com", phone:"—", status:"warm", industry:"inmobiliaria", potential:0},
+    {id:105, company:"PUNTA CANA SOLUTIONS", contact:"Gerencia / Admin", email:"admin@puntacanasolutions.com", phone:"—", status:"warm", industry:"inmobiliaria", potential:0},
+    {id:106, company:"ESKALA REAL ESTATE", contact:"Recepción / Info", email:"info@eskala.com.do", phone:"—", status:"warm", industry:"inmobiliaria", potential:0},
+    {id:107, company:"APARTAMENTOS RD", contact:"—", email:"comprobantes@apartamentosrd.com.do", phone:"—", status:"warm", industry:"inmobiliaria", potential:0},
+    {id:108, company:"BLUE CARIBBEAN PROPERTIES", contact:"Gerencia / Admin", email:"admin@bluecaribbeanproperties.com", phone:"—", status:"warm", industry:"inmobiliaria", potential:0},
+    {id:109, company:"INVERBANCA", contact:"Recepción / Info", email:"info@inverbancard.com", phone:"—", status:"warm", industry:"inmobiliaria", potential:0},
+    {id:110, company:"OFERTA INMOBILIARIA RD", contact:"Contabilidad / Pagos", email:"contabilidad@ofertainmobiliariard.com", phone:"—", status:"warm", industry:"inmobiliaria", potential:0},
+    {id:111, company:"ALVEARE REALTY", contact:"Contabilidad / Pagos", email:"contabilidad@alveare.do", phone:"—", status:"warm", industry:"inmobiliaria", potential:0},
+    {id:112, company:"MIS CASAS RD", contact:"Recepción / Info", email:"info@miscasasrd.com", phone:"—", status:"warm", industry:"inmobiliaria", potential:0},
+    {id:113, company:"THE CREST GROUP", contact:"Recepción / Info", email:"info@crestgroupdominicana.com", phone:"—", status:"warm", industry:"inmobiliaria", potential:0},
+    {id:114, company:"DOMUS RD", contact:"Recepción / Info", email:"info@domusrd.com", phone:"—", status:"warm", industry:"inmobiliaria", potential:0},
+    {id:115, company:"CANABLUE REAL ESTATE", contact:"Contabilidad / Pagos", email:"contabilidad@canablue.com", phone:"—", status:"warm", industry:"inmobiliaria", potential:0},
+    {id:116, company:"BEACHTOWN PROPERTY REAL ESTATE", contact:"—", email:"helen@beachtownproperty.com", phone:"—", status:"warm", industry:"inmobiliaria", potential:0},
+    {id:117, company:"BLACKLION PROPERTIES", contact:"Contabilidad / Pagos", email:"contabilidad@blacklionsd.com", phone:"—", status:"warm", industry:"inmobiliaria", potential:0},
     {id:118, company:"Carrefour Dominican Republic", contact:"Andrés Ferreras Márquez", email:"andres.ferreras@carrefour.com.do", phone:"—", status:"warm", industry:"retail", potential:0},
     {id:119, company:"Helados Bon", contact:"Juan Oscar Geraldino", email:"juan.oscar.geraldino@bon.com.do", phone:"—", status:"warm", industry:"retail", potential:0},
     {id:120, company:"Grupo Rica (Pasteurizadora)", contact:"Dpto. Marketing", email:"reclutador2@gruporica.com", phone:"—", status:"warm", industry:"retail", potential:0},
@@ -1320,17 +1316,16 @@ const PROSPECTS = {
   ],
   cargx:[
     // ── CARGX CORE PROSPECTS ──
-    {id:1, company:"Grupo Puntacana (F&B Supply)", contact:"Manuel Sajour", email:"m.sajour@puntacana.com", phone:"809-959-2222", status:"hot"},
-    {id:2, company:"United Petroleum (interno)", contact:"JT Sr.", email:"—", phone:"—", status:"hot"},
-    {id:3, company:"Hard Rock Hotel PC (Logistics)", contact:"Dir. de Compras", email:"—", phone:"809-687-0000", status:"warm"},
-    {id:4, company:"Grupo Ramos (Distribución)", contact:"Gerente Logística", email:"—", phone:"809-472-4444", status:"warm"},
+    {id:1, company:"Grupo Puntacana (F&B Supply)", contact:"Manuel Sajour", email:"m.sajour@puntacana.com", phone:"+1 809-959-2222", status:"hot"},
+    {id:3, company:"Hard Rock Hotel PC (Logistics)", contact:"Dir. de Compras", email:"—", phone:"+1 809-687-0000", status:"warm"},
+    {id:4, company:"Grupo Ramos (Distribución)", contact:"Gerente Logística", email:"—", phone:"+1 809-472-4444", status:"warm"},
     // ── ALL VERIFIED EMAILS (shared across companies) ──
     {id:5, company:"Frito-Lay (PepsiCo)", contact:"Ana Paola Prieto", email:"ana.prieto@pepsico.com", phone:"—", status:"warm"},
     {id:6, company:"PepsiCo Beverages DR", contact:"Mateus Caldeira", email:"mateus.caldeira@pepsico.com", phone:"—", status:"warm"},
     {id:7, company:"Coca-Cola FEMSA", contact:"Ana V. García", email:"ana.garcia@coca-colafemsa.com", phone:"—", status:"warm"},
     {id:8, company:"Philip Morris DR", contact:"Gustavo Liberatti", email:"gustavo.liberatti@pmi.com", phone:"—", status:"warm"},
-    {id:9, company:"Cervecería Nacional (AB InBev)", contact:"Mildred Santana", email:"Institucional.CND@ab-inbev.com", phone:"809-562-5000", status:"warm"},
-    {id:10, company:"Ron Brugal", contact:"Mario Pujols", email:"mario.pujols@brugal.com.do", phone:"809-566-5651", status:"warm"},
+    {id:9, company:"Cervecería Nacional (AB InBev)", contact:"Mildred Santana", email:"Institucional.CND@ab-inbev.com", phone:"+1 809-562-5000", status:"warm"},
+    {id:10, company:"Ron Brugal", contact:"Mario Pujols", email:"mario.pujols@brugal.com.do", phone:"+1 809-566-5651", status:"warm"},
     {id:11, company:"Cap Cana", contact:"Nicolle Reyes", email:"n.reyes@capcana.com", phone:"—", status:"warm"},
     {id:12, company:"Supermercados Bravo", contact:"Yudelka Frías", email:"yudelka.frias@bravo.com.do", phone:"—", status:"warm"},
     {id:13, company:"Banreservas", contact:"Gisselle Díaz Melo", email:"gisselle.melo@banreservas.com", phone:"—", status:"warm"},
@@ -1339,9 +1334,9 @@ const PROSPECTS = {
     {id:16, company:"Burger King DR", contact:"Isabel Turull", email:"isabel.turull@burgerking.com.do", phone:"—", status:"warm"},
     {id:17, company:"Min. Turismo / Go DR", contact:"Raquel Reyes", email:"raquel.reyes@godominicanrepublic.com", phone:"—", status:"warm"},
     {id:18, company:"Iberostar Dominicana", contact:"Angelica Albuerme", email:"angelica.albuerme@iberostar.com", phone:"—", status:"warm"},
-    {id:19, company:"Nestlé Dominicana", contact:"Brand Mgr", email:"servicios.consumidor@do.nestle.com", phone:"809-508-5100", status:"warm"},
-    {id:20, company:"El Dorado Water Park", contact:"Dpto. Comercial", email:"comercial@eldoradowaterpark.com", phone:"809-959-1777", status:"warm"},
-    {id:21, company:"Coco Bongo", contact:"Aurelia / Marketing", email:"aurelia@cocobongo.com.do", phone:"809-466-1111", status:"warm"},
+    {id:19, company:"Nestlé Dominicana", contact:"Brand Mgr", email:"servicios.consumidor@do.nestle.com", phone:"+1 809-508-5100", status:"warm"},
+    {id:20, company:"El Dorado Water Park", contact:"Dpto. Comercial", email:"comercial@eldoradowaterpark.com", phone:"+1 809-959-1777", status:"warm"},
+    {id:21, company:"Coco Bongo", contact:"Aurelia / Marketing", email:"aurelia@cocobongo.com.do", phone:"+1 809-466-1111", status:"warm"}
   ],
   lavazza:[
     // ── LAVAZZA · DEPURADO TIER S (552 contactos HoReCa) ──
@@ -1351,21 +1346,21 @@ const PROSPECTS = {
     {id:1003, company:"Flor de café", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-482-3853", status:"hot", industry:"restaurante", potential:0},
     {id:1004, company:"Dos Cafés", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-296-6359", status:"hot", industry:"restaurante", potential:0},
     {id:1005, company:"Praline Bakery & Coffee", contact:"Gerencia / Comercial", email:"—", phone:"+1 849-639-8121", status:"hot", industry:"restaurante", potential:0},
-    {id:1006, company:"Casa barista Coffee", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-692-4995 / +1 829-247-0142", status:"hot", industry:"restaurante", potential:0},
-    {id:1007, company:"El Extraño José", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-612-7021 / +1 809-863-7484", status:"hot", industry:"restaurante", potential:0},
+    {id:1006, company:"Casa barista Coffee", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-692-4995", status:"hot", industry:"restaurante", potential:0},
+    {id:1007, company:"El Extraño José", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-612-7021", status:"hot", industry:"restaurante", potential:0},
     {id:1008, company:"El Café de Tery", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-734-5768", status:"hot", industry:"restaurante", potential:0},
     {id:1009, company:"Café del Yaroa", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-825-2230", status:"hot", industry:"restaurante", potential:0},
     {id:1010, company:"La Trattoria del Café", contact:"Gerencia / Comercial", email:"—", phone:"+1 849-499-6556", status:"hot", industry:"restaurante", potential:0},
     {id:1011, company:"Luthers Coffee & More", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-384-8186", status:"hot", industry:"restaurante", potential:0},
     {id:1012, company:"El Café de la Abuela", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-894-1290", status:"hot", industry:"restaurante", potential:0},
     {id:1013, company:"Malcriao Coffee Shop", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-316-5254", status:"hot", industry:"restaurante", potential:0},
-    {id:1014, company:"CCS / Caribbean Concession", contact:"Yelissa Miolan Peña", email:"ymiolan@ccs.com.do", phone:"+1 809-334-4141 (809) / +1 809-959-0520 (Corp)", status:"hot", industry:"restaurante", potential:0},
+    {id:1014, company:"CCS / Caribbean Concession", contact:"Yelissa Miolan Peña", email:"ymiolan@ccs.com.do", phone:"—", status:"hot", industry:"restaurante", potential:0},
     {id:1015, company:"DREAMS PUNTA CANA RESORT & SPA", contact:"Recepción / Reservaciones", email:"reservations.drepc@dreamsresorts.com", phone:"+1 809-682-0404", status:"hot", industry:"restaurante", potential:0},
     {id:1016, company:"Cervecería Nacional Dominicana (AB InBev)", contact:"Mildred Santana", email:"Institucional.CND@ab-inbev.com", phone:"+1 809-487-3200", status:"hot", industry:"restaurante", potential:0},
     {id:1017, company:"Dolphin Discovery Punta Cana", contact:"Paola Dominici", email:"—", phone:"+1 809-903-8522", status:"hot", industry:"restaurante", potential:0},
     {id:1018, company:"Scape Park Cap Cana", contact:"Servicio al Cliente", email:"servicioalcliente@scapepark.com", phone:"+1 809-390-3576", status:"hot", industry:"restaurante", potential:0},
     {id:1019, company:"AMANERA", contact:"Recepción / Reservaciones", email:"amanera.res@aman.com", phone:"+1 809-589-2888", status:"hot", industry:"restaurante", potential:0},
-    {id:1020, company:"BAHIA PRINCIPE FANTASIA PUNTA CANA", contact:"Recepción / Reservaciones", email:"info.fantasiapuntacana@bahia-principe.com", phone:"+1 809-552-1444 (809)", status:"hot", industry:"restaurante", potential:0},
+    {id:1020, company:"BAHIA PRINCIPE FANTASIA PUNTA CANA", contact:"Recepción / Reservaciones", email:"info.fantasiapuntacana@bahia-principe.com", phone:"+1 809-552-1444", status:"hot", industry:"restaurante", potential:0},
     {id:1021, company:"BAHIA PRINCIPE GRAND CAYACOA", contact:"Recepción / Reservaciones", email:"gerentereservascaribebppuj@bahia-principe.com", phone:"+1 809-538-3131", status:"hot", industry:"restaurante", potential:0},
     {id:1022, company:"BAHIA PRINCIPE GRAND LA ROMANA", contact:"Recepción / Reservaciones", email:"info.romana@bahia-principe.com", phone:"+1 809-412-1010", status:"hot", industry:"restaurante", potential:0},
     {id:1023, company:"BAHIA PRINCIPE LUXURY SAMANÁ", contact:"Recepción / Reservaciones", email:"reservationsbpusa@bahiaprincipe.com", phone:"+1 809-538-3434", status:"hot", industry:"restaurante", potential:0},
@@ -1382,20 +1377,20 @@ const PROSPECTS = {
     {id:1034, company:"GRAND PARADISE PLAYA DORADA", contact:"Recepción / Reservaciones", email:"infoplayadorada@amhsamarina.com", phone:"+1 809-320-3663", status:"hot", industry:"restaurante", potential:0},
     {id:1035, company:"GRAND PARADISE SAMANÁ", contact:"Recepción / Reservaciones", email:"infosamana@amsamarina.com", phone:"+1 809-538-0020", status:"hot", industry:"restaurante", potential:0},
     {id:1036, company:"HAMPTON BY HILTON SANTO DOMINGO AIRPORT", contact:"Recepción / Reservaciones", email:"info.hampton@ddphotels.do", phone:"+1 809-375-4000", status:"hot", industry:"restaurante", potential:0},
-    {id:1037, company:"Eden Roc Cap Cana", contact:"Paola Galán Medrano", email:"paola.galan@edenroccapcana.com", phone:"+1 809-695-5555 (Corp)", status:"hot", industry:"restaurante", potential:0},
+    {id:1037, company:"Eden Roc Cap Cana", contact:"Paola Galán Medrano", email:"paola.galan@edenroccapcana.com", phone:"—", status:"hot", industry:"restaurante", potential:0},
     {id:1038, company:"BE LIVE COLLECTION MARIEN", contact:"Recepción / Reservaciones", email:"—", phone:"+1 809-320-1515", status:"hot", industry:"restaurante", potential:0},
     {id:1039, company:"BE LIVE EXPERIENCE HAMACA BEACH", contact:"Recepción / Reservaciones", email:"—", phone:"+1 809-523-4611", status:"hot", industry:"restaurante", potential:0},
     {id:1040, company:"Merengue Express", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-525-2100", status:"hot", industry:"restaurante", potential:0},
     {id:1041, company:"Sarah Restaurante", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-289-8613", status:"hot", industry:"restaurante", potential:0},
     {id:1042, company:"Giulia Cucina", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-761-5262", status:"hot", industry:"restaurante", potential:0},
-    {id:1043, company:"Anthonys Coal Fired Pizza", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-373-6685 / +1 809-248-4833", status:"hot", industry:"restaurante", potential:0},
-    {id:1044, company:"Botaniko Restaurant", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-744-4671 / +1 849-220-9277", status:"hot", industry:"restaurante", potential:0},
+    {id:1043, company:"Anthonys Coal Fired Pizza", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-373-6685", status:"hot", industry:"restaurante", potential:0},
+    {id:1044, company:"Botaniko Restaurant", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-744-4671", status:"hot", industry:"restaurante", potential:0},
     {id:1045, company:"Detroit Pizza", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-755-4616", status:"hot", industry:"restaurante", potential:0},
     {id:1046, company:"Zola Restaurant", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-955-3635", status:"hot", industry:"restaurante", potential:0},
     {id:1047, company:"Vittorio 1953 Ristorante", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-373-1953", status:"hot", industry:"restaurante", potential:0},
     {id:1048, company:"Santino Cucina e Vino", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-368-1155", status:"hot", industry:"restaurante", potential:0},
     {id:1049, company:"Casa Tuvá", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-863-2625", status:"hot", industry:"restaurante", potential:0},
-    {id:1050, company:"Trattoria De Tomasi", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-732-2224 / +1 809-732-2246", status:"hot", industry:"restaurante", potential:0},
+    {id:1050, company:"Trattoria De Tomasi", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-732-2224", status:"hot", industry:"restaurante", potential:0},
     {id:1051, company:"Italia in Bocca", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-732-1695", status:"hot", industry:"restaurante", potential:0},
     {id:1052, company:"Huracán Café", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-552-1046", status:"hot", industry:"restaurante", potential:0},
     {id:1053, company:"Pizzeria Trattoria Martini", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-476-0644", status:"hot", industry:"restaurante", potential:0},
@@ -1416,9 +1411,9 @@ const PROSPECTS = {
     {id:1068, company:"Little Caesars", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-593-6209", status:"hot", industry:"restaurante", potential:0},
     {id:1069, company:"Fabrizios Pizza", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-633-1515", status:"hot", industry:"restaurante", potential:0},
     {id:1070, company:"La Locanda", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-378-0099", status:"hot", industry:"restaurante", potential:0},
-    {id:1071, company:"Mitre", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-472-1787 / +1 829-345-6478", status:"hot", industry:"restaurante", potential:0},
+    {id:1071, company:"Mitre", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-472-1787", status:"hot", industry:"restaurante", potential:0},
     {id:1072, company:"Aglio y Olio", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-549-7888", status:"hot", industry:"restaurante", potential:0},
-    {id:1073, company:"La Forchetta", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-368-3030 / +1 809-603-9443", status:"hot", industry:"restaurante", potential:0},
+    {id:1073, company:"La Forchetta", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-368-3030", status:"hot", industry:"restaurante", potential:0},
     {id:1074, company:"Tracadero", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-906-3664", status:"hot", industry:"restaurante", potential:0},
     {id:1075, company:"El Concon", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-526-2652", status:"hot", industry:"restaurante", potential:0},
     {id:1076, company:"Pizza & Pepperoni", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-574-4079", status:"hot", industry:"restaurante", potential:0},
@@ -1428,10 +1423,10 @@ const PROSPECTS = {
     {id:1080, company:"BE LIVE COLLECTION CANOA", contact:"Recepción / Reservaciones", email:"—", phone:"+1 809-682-2662", status:"hot", industry:"restaurante", potential:0},
     {id:1081, company:"BOUTIQUE HOTEL PALACIO", contact:"Recepción / Reservaciones", email:"reservations@hotel-palacio.com", phone:"+1 809-682-4730", status:"hot", industry:"restaurante", potential:0},
     {id:1082, company:"CARIBBEAN HOUSE", contact:"Recepción / Reservaciones", email:"joelaguareles@gmail.com", phone:"+1 829-815-5940", status:"hot", industry:"restaurante", potential:0},
-    {id:1083, company:"CASA VEINTIUNO – BOUTIQUE B&B", contact:"Recepción / Reservaciones", email:"veinti-uno@casaveintiuno.com", phone:"+1 829-342-8089 (829)", status:"hot", industry:"restaurante", potential:0},
+    {id:1083, company:"CASA VEINTIUNO – BOUTIQUE B&B", contact:"Recepción / Reservaciones", email:"veinti-uno@casaveintiuno.com", phone:"+1 829-342-8089", status:"hot", industry:"restaurante", potential:0},
     {id:1084, company:"COMPLEJO ECOTURÍSTICO ANGOSTURA", contact:"Recepción / Reservaciones", email:"info.ecoangostura@gmail.com", phone:"+1 829-539-8753", status:"hot", industry:"restaurante", potential:0},
     {id:1085, company:"COMPLEJO ECOTURÍSTICO SONIDO DEL YAQUE", contact:"Recepción / Reservaciones", email:"sonidodelyaque@gmail.com", phone:"+1 829-727-7413", status:"hot", industry:"restaurante", potential:0},
-    {id:1086, company:"DAN AND MANTY'S GUESTHOUSE AND HOSTEL", contact:"Recepción / Reservaciones", email:"topdeckgames@yahoo.com", phone:"+1 849-873-5742 (849)", status:"hot", industry:"restaurante", potential:0},
+    {id:1086, company:"DAN AND MANTY'S GUESTHOUSE AND HOSTEL", contact:"Recepción / Reservaciones", email:"topdeckgames@yahoo.com", phone:"+1 849-873-5742", status:"hot", industry:"restaurante", potential:0},
     {id:1087, company:"DOMINICAN TREE HOUSE VILLAGE", contact:"Recepción / Reservaciones", email:"dominicantreehousevillage@gmail.com", phone:"+1 829-542-3005", status:"hot", industry:"restaurante", potential:0},
     {id:1088, company:"ECOLODGE ECOCAMPO LA SANGRÍA", contact:"Recepción / Reservaciones", email:"ecocampolasangria@gmail.com", phone:"+1 829-814-4689", status:"hot", industry:"restaurante", potential:0},
     {id:1089, company:"EL GALLO ECOLODGE", contact:"Recepción / Reservaciones", email:"info@galloecolodge.com", phone:"+1 849-860-1414", status:"hot", industry:"restaurante", potential:0},
@@ -1443,7 +1438,7 @@ const PROSPECTS = {
     {id:1095, company:"BILLINI HOTEL", contact:"Recepción / Reservaciones", email:"reservations@billinihotel.com", phone:"+1 809-338-4040", status:"hot", industry:"restaurante", potential:0},
     {id:1096, company:"BLUE JACKTAR", contact:"Recepción / Reservaciones", email:"reservas@bluejacktar.com", phone:"+1 809-320-3800", status:"hot", industry:"restaurante", potential:0},
     {id:1097, company:"BLUEBAY VILLAS DORADAS", contact:"Recepción / Reservaciones", email:"reservas.pop@bluebayresorts.com", phone:"+1 809-320-3000", status:"hot", industry:"restaurante", potential:0},
-    {id:1098, company:"CASA HEMINGWAY", contact:"Recepción / Reservaciones", email:"reservaciones@clubhemingway.com", phone:"+1 809-526-2203 (809)", status:"hot", industry:"restaurante", potential:0},
+    {id:1098, company:"CASA HEMINGWAY", contact:"Recepción / Reservaciones", email:"reservaciones@clubhemingway.com", phone:"+1 809-526-2203", status:"hot", industry:"restaurante", potential:0},
     {id:1099, company:"CASA MARINA BEACH & REEF", contact:"Recepción / Reservaciones", email:"info@amhsamarina.com", phone:"+1 809-571-3535", status:"hot", industry:"restaurante", potential:0},
     {id:1100, company:"CASAS DEL XVI", contact:"Recepción / Reservaciones", email:"concierge@casasdelxvi.com", phone:"+1 809-688-4061", status:"hot", industry:"restaurante", potential:0},
     {id:1101, company:"CHALET TROPICAL VILLAGE B&B", contact:"Recepción / Reservaciones", email:"sarah@chalettropical.com", phone:"+1 809-901-0738", status:"hot", industry:"restaurante", potential:0},
@@ -1463,8 +1458,8 @@ const PROSPECTS = {
     {id:1115, company:"HOSTAL DOÑA CHAVA", contact:"Recepción / Reservaciones", email:"hostalchava069@gmail.com", phone:"+1 809-524-0332", status:"hot", industry:"restaurante", potential:0},
     {id:1116, company:"HOSTEL PLAZA TOLEDO", contact:"Recepción / Reservaciones", email:"hostelplazatoledo@gmail.com", phone:"+1 809-688-7649", status:"hot", industry:"restaurante", potential:0},
     {id:1117, company:"HOTEL AL MARE", contact:"Recepción / Reservaciones", email:"joha_perez76@hotmail.com", phone:"+1 809-510-2240", status:"hot", industry:"restaurante", potential:0},
-    {id:1118, company:"Palladium Hotel Group", contact:"Linda Gonzalez", email:"linda.gonzalez@palladiumhotelgroup.com", phone:"+1 809-221-0719 (Corp) / +1 809-221-8149 (Móvil)", status:"hot", industry:"restaurante", potential:0},
-    {id:1119, company:"Casa de Campo Resort & Villas", contact:"Richard Rodriguez", email:"richard.rodriguez@casadecampo.com.do", phone:"+1 809-523-8698 (Corp)", status:"hot", industry:"restaurante", potential:0},
+    {id:1118, company:"Palladium Hotel Group", contact:"Linda Gonzalez", email:"linda.gonzalez@palladiumhotelgroup.com", phone:"—", status:"hot", industry:"restaurante", potential:0},
+    {id:1119, company:"Casa de Campo Resort & Villas", contact:"Richard Rodriguez", email:"richard.rodriguez@casadecampo.com.do", phone:"—", status:"hot", industry:"restaurante", potential:0},
     {id:1120, company:"Trufa Negra", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-489-5673", status:"warm", industry:"restaurante", potential:0},
     {id:1121, company:"Teresa Restaurant", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-375-2350", status:"warm", industry:"restaurante", potential:0},
     {id:1122, company:"La Vyuda", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-760-4919", status:"warm", industry:"restaurante", potential:0},
@@ -1495,7 +1490,7 @@ const PROSPECTS = {
     {id:1147, company:"Sal marina Restaurant", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-526-1220", status:"warm", industry:"restaurante", potential:0},
     {id:1148, company:"Noah", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-971-0550", status:"warm", industry:"restaurante", potential:0},
     {id:1149, company:"Paladart", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-526-1855", status:"warm", industry:"restaurante", potential:0},
-    {id:1150, company:"Mila Restaurante", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-532-6452 / +1 849-410-6623", status:"warm", industry:"restaurante", potential:0},
+    {id:1150, company:"Mila Restaurante", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-532-6452", status:"warm", industry:"restaurante", potential:0},
     {id:1151, company:"Pearl Beach Club", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-933-3171", status:"warm", industry:"restaurante", potential:0},
     {id:1152, company:"Peperoni", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-523-2228", status:"warm", industry:"restaurante", potential:0},
     {id:1153, company:"Laurel Food & Wine", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-908-0200", status:"warm", industry:"restaurante", potential:0},
@@ -1505,7 +1500,7 @@ const PROSPECTS = {
     {id:1157, company:"MonCarlo Restaurant", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-539-1213", status:"warm", industry:"restaurante", potential:0},
     {id:1158, company:"Saga Restaurant", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-276-7900", status:"warm", industry:"restaurante", potential:0},
     {id:1159, company:"Falafel", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-688-9714", status:"warm", industry:"restaurante", potential:0},
-    {id:1160, company:"Alta Vista Restaurant", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-277-0290 / +1 849-858-6984", status:"warm", industry:"restaurante", potential:0},
+    {id:1160, company:"Alta Vista Restaurant", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-277-0290", status:"warm", industry:"restaurante", potential:0},
     {id:1161, company:"Camp David Ranch", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-276-6400", status:"warm", industry:"restaurante", potential:0},
     {id:1162, company:"El Meson de la Cava", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-533-2818", status:"warm", industry:"restaurante", potential:0},
     {id:1163, company:"Makoto SDQ", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-373-1356", status:"warm", industry:"restaurante", potential:0},
@@ -1513,22 +1508,22 @@ const PROSPECTS = {
     {id:1165, company:"Olis Room - Nikkei Cuisine", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-712-8444", status:"warm", industry:"restaurante", potential:0},
     {id:1166, company:"Make Sushi by Cristino", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-254-0045", status:"warm", industry:"restaurante", potential:0},
     {id:1167, company:"Etsuko Sushi", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-940-2728", status:"warm", industry:"restaurante", potential:0},
-    {id:1168, company:"Shibuya", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-955-3256 / +1 809-602-0773", status:"warm", industry:"restaurante", potential:0},
+    {id:1168, company:"Shibuya", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-955-3256", status:"warm", industry:"restaurante", potential:0},
     {id:1169, company:"Bonsai Sushi", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-544-7921", status:"warm", industry:"restaurante", potential:0},
-    {id:1170, company:"Samurai", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-565-1621 / +1 849-886-5916", status:"warm", industry:"restaurante", potential:0},
+    {id:1170, company:"Samurai", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-565-1621", status:"warm", industry:"restaurante", potential:0},
     {id:1171, company:"Yao Asian Cuisine", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-472-2011", status:"warm", industry:"restaurante", potential:0},
     {id:1172, company:"Coritown Korean BBQ", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-965-6626", status:"warm", industry:"restaurante", potential:0},
     {id:1173, company:"Charcoal Fire Kissed Kitchen", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-986-8638", status:"warm", industry:"restaurante", potential:0},
     {id:1174, company:"Rotana Restaurante", contact:"Gerencia / Comercial", email:"—", phone:"+1 849-639-3222", status:"warm", industry:"restaurante", potential:0},
     {id:1175, company:"Mesón de Bari Naco", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-692-0670", status:"warm", industry:"restaurante", potential:0},
     {id:1176, company:"Pa Stela Restaurant", contact:"Gerencia / Comercial", email:"—", phone:"+1 849-507-8575", status:"warm", industry:"restaurante", potential:0},
-    {id:1177, company:"Paila Restaurant", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-444-4005 / +1 829-444-4021", status:"warm", industry:"restaurante", potential:0},
+    {id:1177, company:"Paila Restaurant", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-444-4005", status:"warm", industry:"restaurante", potential:0},
     {id:1178, company:"Penda Express", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-277-1480", status:"warm", industry:"restaurante", potential:0},
     {id:1179, company:"Gijón Restaurante - Sidrería", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-770-9777", status:"warm", industry:"restaurante", potential:0},
     {id:1180, company:"Santo Ceviche", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-638-9000", status:"warm", industry:"restaurante", potential:0},
     {id:1181, company:"Cumbre Bonita", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-396-0186", status:"warm", industry:"restaurante", potential:0},
     {id:1182, company:"La Costilla de Adán", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-848-7222", status:"warm", industry:"restaurante", potential:0},
-    {id:1183, company:"Tiro Libre", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-334-1787 / +1 809-696-2400", status:"warm", industry:"restaurante", potential:0},
+    {id:1183, company:"Tiro Libre", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-334-1787", status:"warm", industry:"restaurante", potential:0},
     {id:1184, company:"La Casita del Mofongo Mocano", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-578-0034", status:"warm", industry:"restaurante", potential:0},
     {id:1185, company:"Coctel del Mar", contact:"Gerencia / Comercial", email:"—", phone:"+1 849-628-8893", status:"warm", industry:"restaurante", potential:0},
     {id:1186, company:"Gangnam Korean Food & Market", contact:"Gerencia / Comercial", email:"—", phone:"+1 849-522-3951", status:"warm", industry:"restaurante", potential:0},
@@ -1539,12 +1534,12 @@ const PROSPECTS = {
     {id:1191, company:"100 Montaditos", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-482-8710", status:"warm", industry:"restaurante", potential:0},
     {id:1192, company:"Helado Dude", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-487-5015", status:"warm", industry:"restaurante", potential:0},
     {id:1193, company:"Paletas Bajo Cero", contact:"Gerencia / Comercial", email:"—", phone:"+1 849-404-9935", status:"warm", industry:"restaurante", potential:0},
-    {id:1194, company:"Titi Cerdos", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-475-7830 / +1 829-675-5152", status:"warm", industry:"restaurante", potential:0},
+    {id:1194, company:"Titi Cerdos", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-475-7830", status:"warm", industry:"restaurante", potential:0},
     {id:1195, company:"Punto Marino Restaurante", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-594-8399", status:"warm", industry:"restaurante", potential:0},
     {id:1196, company:"Los Burros Geniales", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-201-1229", status:"warm", industry:"restaurante", potential:0},
     {id:1197, company:"WaterFront Restaurant", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-571-3024", status:"warm", industry:"restaurante", potential:0},
     {id:1198, company:"Nene Repostería", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-508-2632", status:"warm", industry:"restaurante", potential:0},
-    {id:1199, company:"Restaurante Plaza Merengue", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-525-3832 / +1 809-525-7545", status:"warm", industry:"restaurante", potential:0},
+    {id:1199, company:"Restaurante Plaza Merengue", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-525-3832", status:"warm", industry:"restaurante", potential:0},
     {id:1200, company:"Alberto Repostería", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-587-6397", status:"warm", industry:"restaurante", potential:0},
     {id:1201, company:"El Anzuelo", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-435-2011", status:"warm", industry:"restaurante", potential:0},
     {id:1202, company:"Restaurante El Higuero", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-947-8065", status:"warm", industry:"restaurante", potential:0},
@@ -1563,16 +1558,16 @@ const PROSPECTS = {
     {id:1215, company:"La Kasita Burgers", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-593-9063", status:"warm", industry:"restaurante", potential:0},
     {id:1216, company:"Cacharepa", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-263-9999", status:"warm", industry:"restaurante", potential:0},
     {id:1217, company:"Andres Carnes by Gibbar", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-378-6571", status:"warm", industry:"restaurante", potential:0},
-    {id:1218, company:"Mr. Grilled", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-784-6861 / +1 849-376-1919", status:"warm", industry:"restaurante", potential:0},
+    {id:1218, company:"Mr. Grilled", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-784-6861", status:"warm", industry:"restaurante", potential:0},
     {id:1219, company:"Restaurante Delicias de Bávaro", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-552-1347", status:"warm", industry:"restaurante", potential:0},
     {id:1220, company:"El Pulpo Borracho", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-438-8611", status:"warm", industry:"restaurante", potential:0},
     {id:1221, company:"Michi Restaurant & Café", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-578-9607", status:"warm", industry:"restaurante", potential:0},
-    {id:1222, company:"Mas que Pastelitos", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-598-3387 / +1 809-704-0963", status:"warm", industry:"restaurante", potential:0},
+    {id:1222, company:"Mas que Pastelitos", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-598-3387", status:"warm", industry:"restaurante", potential:0},
     {id:1223, company:"Lungomare Bar and Grill", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-643-6383", status:"warm", industry:"restaurante", potential:0},
     {id:1224, company:"Pollo Rey", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-535-1000", status:"warm", industry:"restaurante", potential:0},
     {id:1225, company:"Santoña Gastro Bar", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-794-5207", status:"warm", industry:"restaurante", potential:0},
     {id:1226, company:"El Patio Café & Repostería", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-735-9131", status:"warm", industry:"restaurante", potential:0},
-    {id:1227, company:"Café de París", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-589-2405 / +1 809-778-0687", status:"warm", industry:"restaurante", potential:0},
+    {id:1227, company:"Café de París", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-589-2405", status:"warm", industry:"restaurante", potential:0},
     {id:1228, company:"Porchetta", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-907-7115", status:"warm", industry:"restaurante", potential:0},
     {id:1229, company:"Caramella Bakery", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-549-4218", status:"warm", industry:"restaurante", potential:0},
     {id:1230, company:"Ambrosía Boutique Catering", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-473-4249", status:"warm", industry:"restaurante", potential:0},
@@ -1584,7 +1579,7 @@ const PROSPECTS = {
     {id:1236, company:"The Deck", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-382-3549", status:"warm", industry:"restaurante", potential:0},
     {id:1237, company:"Don Pio", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-455-7373", status:"warm", industry:"restaurante", potential:0},
     {id:1238, company:"D'Alemania Gourmet", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-532-2866", status:"warm", industry:"restaurante", potential:0},
-    {id:1239, company:"Formosa Cafetería", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-562-9260 / +1 809-915-5683", status:"warm", industry:"restaurante", potential:0},
+    {id:1239, company:"Formosa Cafetería", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-562-9260", status:"warm", industry:"restaurante", potential:0},
     {id:1240, company:"Crocante Bistro Café", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-373-8899", status:"warm", industry:"restaurante", potential:0},
     {id:1241, company:"Portofino Restaurant", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-339-8807", status:"warm", industry:"restaurante", potential:0},
     {id:1242, company:"La Rosticería", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-549-5229", status:"warm", industry:"restaurante", potential:0},
@@ -1684,7 +1679,7 @@ const PROSPECTS = {
     {id:1336, company:"Pastelitos Express", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-285-7580", status:"warm", industry:"restaurante", potential:0},
     {id:1337, company:"Pastelitos Valerio", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-435-5165", status:"warm", industry:"restaurante", potential:0},
     {id:1338, company:"Altos de Moca", contact:"Gerencia / Comercial", email:"—", phone:"+1 849-246-3080", status:"warm", industry:"restaurante", potential:0},
-    {id:1339, company:"D Luis Parrillada", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-686-2940 / +1 849-889-4912", status:"warm", industry:"restaurante", potential:0},
+    {id:1339, company:"D Luis Parrillada", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-686-2940", status:"warm", industry:"restaurante", potential:0},
     {id:1340, company:"Expreso Jardín chino", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-412-0506", status:"warm", industry:"restaurante", potential:0},
     {id:1341, company:"Loop", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-937-3121", status:"warm", industry:"restaurante", potential:0},
     {id:1342, company:"Lu-ga", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-998-9090", status:"warm", industry:"restaurante", potential:0},
@@ -1696,18 +1691,18 @@ const PROSPECTS = {
     {id:1348, company:"Muelle 47", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-807-5260", status:"warm", industry:"restaurante", potential:0},
     {id:1349, company:"Tierra & Mar", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-538-2436", status:"warm", industry:"restaurante", potential:0},
     {id:1350, company:"Chichita", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-528-3012", status:"warm", industry:"restaurante", potential:0},
-    {id:1351, company:"Españolerias", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-566-5315 / +1 809-732-8040", status:"warm", industry:"restaurante", potential:0},
+    {id:1351, company:"Españolerias", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-566-5315", status:"warm", industry:"restaurante", potential:0},
     {id:1352, company:"El Zaguán", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-573-5508", status:"warm", industry:"restaurante", potential:0},
     {id:1353, company:"Mesón de Bari", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-689-5546", status:"warm", industry:"restaurante", potential:0},
     {id:1354, company:"Mesón Iberia", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-530-7200", status:"warm", industry:"restaurante", potential:0},
     {id:1355, company:"Market Restaurant", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-378-2222", status:"warm", industry:"restaurante", potential:0},
     {id:1356, company:"Aguas Blancas Restaurant", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-539-1561", status:"warm", industry:"restaurante", potential:0},
     {id:1357, company:"Tony Roma's", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-535-5454", status:"warm", industry:"restaurante", potential:0},
-    {id:1358, company:"El Corrido", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-544-4626 / +1 809-788-9681", status:"warm", industry:"restaurante", potential:0},
+    {id:1358, company:"El Corrido", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-544-4626", status:"warm", industry:"restaurante", potential:0},
     {id:1359, company:"Porcao", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-549-5493", status:"warm", industry:"restaurante", potential:0},
-    {id:1360, company:"Shorthorn Steak & Sea Food", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-475-1301 / +1 809-475-1302", status:"warm", industry:"restaurante", potential:0},
+    {id:1360, company:"Shorthorn Steak & Sea Food", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-475-1301", status:"warm", industry:"restaurante", potential:0},
     {id:1361, company:"Ananda", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-476-7341", status:"warm", industry:"restaurante", potential:0},
-    {id:1362, company:"Gran Parador Bellamar Smoke House", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-741-6182 / +1 849-919-2907", status:"warm", industry:"restaurante", potential:0},
+    {id:1362, company:"Gran Parador Bellamar Smoke House", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-741-6182", status:"warm", industry:"restaurante", potential:0},
     {id:1363, company:"La Barra", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-508-6060", status:"warm", industry:"restaurante", potential:0},
     {id:1364, company:"Don Tato", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-262-0675", status:"warm", industry:"restaurante", potential:0},
     {id:1365, company:"Crema Pasteleria", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-813-2103", status:"warm", industry:"restaurante", potential:0},
@@ -1722,7 +1717,7 @@ const PROSPECTS = {
     {id:1374, company:"Alma Llanera", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-508-6327", status:"warm", industry:"restaurante", potential:0},
     {id:1375, company:"Kalenda", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-861-2781", status:"warm", industry:"restaurante", potential:0},
     {id:1376, company:"Barra Payan", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-689-6654", status:"warm", industry:"restaurante", potential:0},
-    {id:1377, company:"Solo Pastelitos", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-533-5875 / +1 829-655-0425", status:"warm", industry:"restaurante", potential:0},
+    {id:1377, company:"Solo Pastelitos", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-533-5875", status:"warm", industry:"restaurante", potential:0},
     {id:1378, company:"Pastry Repostería", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-532-0202", status:"warm", industry:"restaurante", potential:0},
     {id:1379, company:"Machupicchu", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-688-8099", status:"warm", industry:"restaurante", potential:0},
     {id:1380, company:"Repostería Miguelina", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-296-6105", status:"warm", industry:"restaurante", potential:0},
@@ -1730,7 +1725,7 @@ const PROSPECTS = {
     {id:1382, company:"Vizcaya Restaurant", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-689-3006", status:"warm", industry:"restaurante", potential:0},
     {id:1383, company:"Baskin Robbins", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-331-3131", status:"warm", industry:"restaurante", potential:0},
     {id:1384, company:"Casa Avila", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-955-3158", status:"warm", industry:"restaurante", potential:0},
-    {id:1385, company:"Cubanissimo", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-533-4451 / +1 849-916-5531", status:"warm", industry:"restaurante", potential:0},
+    {id:1385, company:"Cubanissimo", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-533-4451", status:"warm", industry:"restaurante", potential:0},
     {id:1386, company:"Ñam Ñam korean snack cuisine", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-472-0273", status:"warm", industry:"restaurante", potential:0},
     {id:1387, company:"Típico Bonao", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-525-3941", status:"warm", industry:"restaurante", potential:0},
     {id:1388, company:"Lorenzo's Restaurant", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-539-2008", status:"warm", industry:"restaurante", potential:0},
@@ -1738,12 +1733,12 @@ const PROSPECTS = {
     {id:1390, company:"Jade", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-724-0101", status:"warm", industry:"restaurante", potential:0},
     {id:1391, company:"Andres Carnes", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-797-2586", status:"warm", industry:"restaurante", potential:0},
     {id:1392, company:"Duma Delicias Arabes", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-533-2765", status:"warm", industry:"restaurante", potential:0},
-    {id:1393, company:"T.G.I Fridays", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-955-8443 / +1 809-563-3332", status:"warm", industry:"restaurante", potential:0},
-    {id:1394, company:"Aubergine", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-374-1382 / +1 809-729-9364", status:"warm", industry:"restaurante", potential:0},
-    {id:1395, company:"La Carnita", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-777-8888 / +1 829-444-7000 / +1 829-555-9999", status:"warm", industry:"restaurante", potential:0},
+    {id:1393, company:"T.G.I Fridays", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-955-8443", status:"warm", industry:"restaurante", potential:0},
+    {id:1394, company:"Aubergine", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-374-1382", status:"warm", industry:"restaurante", potential:0},
+    {id:1395, company:"La Carnita", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-777-8888", status:"warm", industry:"restaurante", potential:0},
     {id:1396, company:"Tizón Meats", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-592-2636", status:"warm", industry:"restaurante", potential:0},
-    {id:1397, company:"La Rogel", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-692-2402 / +1 809-863-2974", status:"warm", industry:"restaurante", potential:0},
-    {id:1398, company:"Boga Boga Menú", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-472-0849 / +1 809-472-0950", status:"warm", industry:"restaurante", potential:0},
+    {id:1397, company:"La Rogel", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-692-2402", status:"warm", industry:"restaurante", potential:0},
+    {id:1398, company:"Boga Boga Menú", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-472-0849", status:"warm", industry:"restaurante", potential:0},
     {id:1399, company:"The Bulldog Pub", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-883-1985", status:"warm", industry:"restaurante", potential:0},
     {id:1400, company:"The Green Room", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-222-8734", status:"warm", industry:"restaurante", potential:0},
     {id:1401, company:"Selva SDQ", contact:"Gerencia / Comercial", email:"—", phone:"+1 829-202-7272", status:"warm", industry:"restaurante", potential:0},
@@ -1752,23 +1747,23 @@ const PROSPECTS = {
     {id:1404, company:"Amable Pasteles en Hojas", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-529-4500", status:"cold", industry:"restaurante", potential:0},
     {id:1405, company:"La Desayuneria", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-626-2535", status:"cold", industry:"restaurante", potential:0},
     {id:1406, company:"Subway", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-732-7000", status:"cold", industry:"restaurante", potential:0},
-    {id:1407, company:"KFC República Dominicana", contact:"Marketing Team", email:"marketing@kfc.com.do", phone:"+1 809-508-0000 (Corp) / +1 809-226-0000 (Santiago) (Móvil)", status:"cold", industry:"restaurante", potential:0},
-    {id:1408, company:"Lopesan Hotel Group", contact:"Marketing Team", email:"marketing@lopesan.com", phone:"+1 809-221-8555 (Corp) / +1 829-954-3233 (Móvil)", status:"cold", industry:"restaurante", potential:0},
-    {id:1409, company:"Domino's Dominican Republic", contact:"Marketing Team", email:"marketing@dominos.com.do", phone:"+1 809-948-4848 (Corp)", status:"cold", industry:"restaurante", potential:0},
-    {id:1410, company:"CCS", contact:"Pablo Aguilera", email:"paguilera@ccs.com.do", phone:"+1 809-959-0520 (Corp)", status:"hot", industry:"restaurante", potential:0},
+    {id:1407, company:"KFC República Dominicana", contact:"Marketing Team", email:"marketing@kfc.com.do", phone:"—", status:"cold", industry:"restaurante", potential:0},
+    {id:1408, company:"Lopesan Hotel Group", contact:"Marketing Team", email:"marketing@lopesan.com", phone:"—", status:"cold", industry:"restaurante", potential:0},
+    {id:1409, company:"Domino's Dominican Republic", contact:"Marketing Team", email:"marketing@dominos.com.do", phone:"—", status:"cold", industry:"restaurante", potential:0},
+    {id:1410, company:"CCS", contact:"Pablo Aguilera", email:"paguilera@ccs.com.do", phone:"—", status:"hot", industry:"restaurante", potential:0},
     {id:1411, company:"Bendito café", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-232-7598", status:"hot", industry:"restaurante", potential:0},
     {id:1412, company:"ALSOL LUXURY VILLAGE", contact:"Recepción / Reservaciones", email:"reservations@alsoldr.com", phone:"+1 809-469-7500", status:"hot", industry:"restaurante", potential:0},
     {id:1413, company:"BAHIA PRINCIPE GRAND EL PORTILLO", contact:"Recepción / Reservaciones", email:"gerentereservascaribebppuj@bahia-principe.com", phone:"+1 809-240-6100", status:"hot", industry:"restaurante", potential:0},
     {id:1414, company:"Coco Bongo Punta Cana", contact:"Aurelia / Marketing", email:"aurelia@cocobongo.com.do", phone:"+1 809-466-1111", status:"hot", industry:"restaurante", potential:0},
     {id:1415, company:"CARIBE CLUB PRINCESS BEACH RESORT & SPA", contact:"Recepción / Reservaciones", email:"res2.caribe@princess-hotels.com", phone:"+1 809-687-7788", status:"hot", industry:"restaurante", potential:0},
     {id:1416, company:"El Dorado Water Park", contact:"Dpto. Comercial", email:"comercial@eldoradowaterpark.com", phone:"+1 809-959-1777", status:"hot", industry:"restaurante", potential:0},
-    {id:1417, company:"BAHIA PRINCIPE LUXURY AMBAR", contact:"Recepción / Reservaciones", email:"info.ambar@bahia-principe.com", phone:"+1 809-468-4115 (809)", status:"hot", industry:"restaurante", potential:0},
+    {id:1417, company:"BAHIA PRINCIPE LUXURY AMBAR", contact:"Recepción / Reservaciones", email:"info.ambar@bahia-principe.com", phone:"+1 809-468-4115", status:"hot", industry:"restaurante", potential:0},
     {id:1418, company:"BAVARO PRINCESS ALL SUITES RESORT, SPA & CASINO", contact:"Recepción / Reservaciones", email:"reservas.bavaro@princess-hotels.com", phone:"+1 809-221-2311", status:"hot", industry:"restaurante", potential:0},
     {id:1419, company:"DREAMS LA ROMANA RESORT & SPA", contact:"Recepción / Reservaciones", email:"reservations.drelr@dreamsresorts.com", phone:"+1 809-221-8880", status:"hot", industry:"restaurante", potential:0},
-    {id:1420, company:"EL EMBAJADOR, A ROYAL HIDEAWAY HOTEL", contact:"Recepción / Reservaciones", email:"reservasee@do.occidentalhotels.com", phone:"+1 809-221-2131 (809)", status:"hot", industry:"restaurante", potential:0},
+    {id:1420, company:"EL EMBAJADOR, A ROYAL HIDEAWAY HOTEL", contact:"Recepción / Reservaciones", email:"reservasee@do.occidentalhotels.com", phone:"+1 809-221-2131", status:"hot", industry:"restaurante", potential:0},
     {id:1421, company:"FOUR POINTS BY SHERATON PUNTACANA VILLAGE", contact:"Recepción / Reservaciones", email:"reservationsfp@puntacana.com", phone:"+1 809-959-2222", status:"hot", industry:"restaurante", potential:0},
-    {id:1422, company:"GRAND PALLADIUM BÁVARO RESORT & SPA- ALL SUITES HOTEL", contact:"Recepción / Reservaciones", email:"cr3.america@palladiumhotelgroup.com", phone:"+1 809-221-8149 / +1 809-562-8222", status:"hot", industry:"restaurante", potential:0},
-    {id:1423, company:"HOTEL ALISEI & SPA", contact:"Recepción / Reservaciones", email:"info@aliseihotelspa.com", phone:"+1 809-240-5555 (809)", status:"hot", industry:"restaurante", potential:0},
+    {id:1422, company:"GRAND PALLADIUM BÁVARO RESORT & SPA- ALL SUITES HOTEL", contact:"Recepción / Reservaciones", email:"cr3.america@palladiumhotelgroup.com", phone:"+1 809-221-8149", status:"hot", industry:"restaurante", potential:0},
+    {id:1423, company:"HOTEL ALISEI & SPA", contact:"Recepción / Reservaciones", email:"info@aliseihotelspa.com", phone:"+1 809-240-5555", status:"hot", industry:"restaurante", potential:0},
     {id:1424, company:"BE LIVE COLLECTION PUNTA CANA", contact:"Recepción / Reservaciones", email:"—", phone:"+1 809-686-9898", status:"hot", industry:"restaurante", potential:0},
     {id:1425, company:"Ristorante Angelo", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-686-3586", status:"hot", industry:"restaurante", potential:0},
     {id:1426, company:"Mozzarella Pizza Place", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-242-4888", status:"hot", industry:"restaurante", potential:0},
@@ -1787,14 +1782,14 @@ const PROSPECTS = {
     {id:1439, company:"EMOTIONS BY HODELPA", contact:"Recepción / Reservaciones", email:"emotions@hodelpa.com", phone:"+1 809-683-1000", status:"hot", industry:"restaurante", potential:0},
     {id:1440, company:"Barceló Hotels RD", contact:"Dpto. Marketing RD", email:"info.do@barcelo.com", phone:"+1 809-686-5797", status:"hot", industry:"restaurante", potential:0},
     {id:1441, company:"Hard Rock Hotel & Casino Punta Cana", contact:"Ivan Corzo", email:"ivan.corzo@hardrockhotelpuntacana.com", phone:"+1 809-687-0000", status:"hot", industry:"restaurante", potential:0},
-    {id:1442, company:"W Punta Cana Marriott", contact:"Miriam Hernandez", email:"miriam.hernandez@marriott.com", phone:"+1 809-466-0003 (Corp)", status:"hot", industry:"restaurante", potential:0},
-    {id:1443, company:"EL BEATERIO CASA – MUSEO", contact:"Recepción / Reservaciones", email:"elbeaterio@elbeaterio.fr", phone:"+1 809-687-8657 (809)", status:"hot", industry:"restaurante", potential:0},
-    {id:1444, company:"Iberostar Dominicana", contact:"Angelica Albuerme", email:"angelica.albuerme@iberostar.com", phone:"+1 809-221-6500 (Corp)", status:"hot", industry:"restaurante", potential:0},
+    {id:1442, company:"W Punta Cana Marriott", contact:"Miriam Hernandez", email:"miriam.hernandez@marriott.com", phone:"—", status:"hot", industry:"restaurante", potential:0},
+    {id:1443, company:"EL BEATERIO CASA – MUSEO", contact:"Recepción / Reservaciones", email:"elbeaterio@elbeaterio.fr", phone:"+1 809-687-8657", status:"hot", industry:"restaurante", potential:0},
+    {id:1444, company:"Iberostar Dominicana", contact:"Angelica Albuerme", email:"angelica.albuerme@iberostar.com", phone:"—", status:"hot", industry:"restaurante", potential:0},
     {id:1445, company:"Meliá Caribe Beach Resort PC", contact:"Gerente Comercial", email:"meliacaribebeach@melia.com", phone:"+1 809-221-1290", status:"hot", industry:"restaurante", potential:0},
-    {id:1446, company:"The St. Regis Cap Cana", contact:"Federico Rodriguez", email:"federico.rodriguez@stregis-capcana.com", phone:"+1 809-469-7088 (Corp)", status:"hot", industry:"restaurante", potential:0},
-    {id:1447, company:"Secrets Resorts", contact:"Janjce Gentry", email:"janjce.gentry@secretsresorts.com", phone:"+1 809-221-4646 (Corp)", status:"hot", industry:"restaurante", potential:0},
-    {id:1448, company:"Hyatt Zilara & Ziva Cap Cana", contact:"Paola Gómez", email:"paola.gomez@hyatt.com", phone:"+1 809-469-7090 (Corp)", status:"hot", industry:"restaurante", potential:0},
-    {id:1449, company:"ALBACHIARA HOTEL RESIDENCE", contact:"Recepción / Reservaciones", email:"albaclarahotel@gmail.com", phone:"+1 809-240-5240 (809)", status:"hot", industry:"restaurante", potential:0},
+    {id:1446, company:"The St. Regis Cap Cana", contact:"Federico Rodriguez", email:"federico.rodriguez@stregis-capcana.com", phone:"—", status:"hot", industry:"restaurante", potential:0},
+    {id:1447, company:"Secrets Resorts", contact:"Janjce Gentry", email:"janjce.gentry@secretsresorts.com", phone:"—", status:"hot", industry:"restaurante", potential:0},
+    {id:1448, company:"Hyatt Zilara & Ziva Cap Cana", contact:"Paola Gómez", email:"paola.gomez@hyatt.com", phone:"—", status:"hot", industry:"restaurante", potential:0},
+    {id:1449, company:"ALBACHIARA HOTEL RESIDENCE", contact:"Recepción / Reservaciones", email:"albaclarahotel@gmail.com", phone:"+1 809-240-5240", status:"hot", industry:"restaurante", potential:0},
     {id:1450, company:"ALSOL DEL MAR", contact:"Recepción / Reservaciones", email:"reservations@alsoldr.com", phone:"+1 809-469-7520", status:"hot", industry:"restaurante", potential:0},
     {id:1451, company:"BARCELÓ DOMINICAN BEACH", contact:"Recepción / Reservaciones", email:"dominicanbeach@barcelo.com", phone:"+1 809-221-0714", status:"hot", industry:"restaurante", potential:0},
     {id:1452, company:"BARCELÓ SANTO DOMINGO", contact:"Recepción / Reservaciones", email:"santodomingo@barcelo.com", phone:"+1 809-563-5000", status:"hot", industry:"restaurante", potential:0},
@@ -1860,14 +1855,14 @@ const PROSPECTS = {
     {id:1512, company:"La Libanesa", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-562-2124", status:"warm", industry:"restaurante", potential:0},
     {id:1513, company:"De Nosotros Empanadas", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-563-4444", status:"warm", industry:"restaurante", potential:0},
     {id:1514, company:"Kogi Grill Korean Fun Eating", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-227-5577", status:"warm", industry:"restaurante", potential:0},
-    {id:1515, company:"Bella Cristal", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-565-5856 / +1 809-540-2923", status:"warm", industry:"restaurante", potential:0},
+    {id:1515, company:"Bella Cristal", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-565-5856", status:"warm", industry:"restaurante", potential:0},
     {id:1516, company:"Patagonia Grill", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-562-5046", status:"warm", industry:"restaurante", potential:0},
     {id:1517, company:"Asadero los Argentinos", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-566-1499", status:"warm", industry:"restaurante", potential:0},
     {id:1518, company:"Outback Steak House", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-566-5550", status:"warm", industry:"restaurante", potential:0},
     {id:1519, company:"Applebees", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-566-1669", status:"warm", industry:"restaurante", potential:0},
     {id:1520, company:"Square One Café", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-241-5384", status:"cold", industry:"restaurante", potential:0},
     {id:1521, company:"Squina Street Cuisine By Chilin", contact:"Gerencia / Comercial", email:"—", phone:"+1 809-565-2823", status:"cold", industry:"restaurante", potential:0},
-    {id:1522, company:"Brugal Rum", contact:"Marketing Team", email:"marketing@brugal-rum.com", phone:"+1 809-566-5651 (Corp)", status:"cold", industry:"restaurante", potential:0},
+    {id:1522, company:"Brugal Rum", contact:"Marketing Team", email:"marketing@brugal-rum.com", phone:"—", status:"cold", industry:"restaurante", potential:0},
     {id:1523, company:"W2M / World2Meet", contact:"Ana Perelló", email:"ana.perello@w2m.com", phone:"—", status:"hot", industry:"general", potential:0},
     {id:1524, company:"Aero Yacht Club", contact:"Isidro Naranjo", email:"isidro.naranjo@aeroyachtclub.com", phone:"—", status:"hot", industry:"general", potential:0},
     {id:1525, company:"BAHIA PRINCIPE GRAND AQUAMARINE", contact:"Recepción / Reservaciones", email:"info.aquamarine@bahia-principe.com", phone:"—", status:"hot", industry:"restaurante", potential:0},
@@ -2047,8 +2042,12 @@ function openGmail(brand){
   const subj = document.getElementById(brand+'Subject').textContent;
   const body = document.getElementById(brand+'Body').textContent;
   const to = (p.email && p.email!=='—') ? p.email : '';
-  const url = 'https://mail.google.com/mail/?view=cm&fs=1&to='+encodeURIComponent(to)+'&su='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
-  window.open(url, '_blank');
+  // Abrir Gmail desde la cuenta de la empresa que envía (authuser).
+  // SEND_FROM se define más abajo en el archivo pero está disponible al momento del click.
+  const from = (typeof SEND_FROM!=='undefined' && SEND_FROM[brand]) ? SEND_FROM[brand] : '';
+  const auth = from ? ('authuser='+encodeURIComponent(from)+'&') : '';
+  const url = 'https://mail.google.com/mail/?'+auth+'view=cm&fs=1&tf=1&to='+encodeURIComponent(to)+'&su='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+  window.open(url, '_blank', 'noopener');
 }
 
 // Allow Enter to login
@@ -2139,6 +2138,7 @@ function setSendAs(brand){
     c.classList.toggle('active', c.dataset.brand===brand);
   });
   if(_tplCtx){ _tplCtx.brand = brand; refillTemplates(); applyTemplate(); }
+  if(typeof updateFromInfo==='function') updateFromInfo();
 }
 
 function findProspectAnywhere(id){
@@ -2152,6 +2152,14 @@ function findProspectAnywhere(id){
 
 const PROSP_FILTERS = { brand:'all', status:'all', has:'all' };
 const SENDER = { name:'Juan Tomás Díaz Rainieri', wa:'18299XXXXXX' /* edit if needed */ };
+
+// Remitente por empresa — Gmail compose se abre con authuser=<correo>
+// Si el usuario tiene varias cuentas en Chrome, Gmail abre el compose desde la cuenta indicada.
+const SEND_FROM = {
+  gmp:   'globalmediapartners@gmail.com',
+  ust:   'Unitedtechmobile@gmail.com',
+  cargx: 'cesarguzman2901@gmail.com'
+};
 
 // Plantillas por marca y tipo
 const PROSP_TEMPLATES = {
@@ -2299,6 +2307,7 @@ function openTplModal(id, channel){
   _tplCtx = { p, brand, channel };
   document.getElementById('tplTitle').textContent = (channel==='email'?'✉️ Componer email para ':'💬 Mensaje WhatsApp para ') + (p.company||'');
   document.getElementById('tplSub').textContent = (p.contact||'') + ' · ' + (channel==='email'?(p.email||'sin email'):(p.phone||'sin teléfono'));
+  updateFromInfo();
   // Llenar plantillas según canal
   const sel = document.getElementById('tplSelect');
   sel.innerHTML='';
@@ -2361,19 +2370,46 @@ function closeTplModal(){
   _tplCtx = null;
 }
 
+function updateFromInfo(){
+  const el = document.getElementById('tplFromInfo');
+  if(!el || !_tplCtx) return;
+  const { channel } = _tplCtx;
+  if(channel==='email'){
+    const from = SEND_FROM[SEND_AS] || '(no configurado)';
+    el.textContent = '✉️ Desde: ' + from;
+    el.style.display = 'block';
+  } else {
+    el.textContent = '';
+    el.style.display = 'none';
+  }
+}
+
 function sendNow(){
   if(!_tplCtx) return;
-  const { p, channel } = _tplCtx;
+  const { p, brand, channel } = _tplCtx;
   const subject = document.getElementById('tplSubject').value;
   const body = document.getElementById('tplBody').value;
   if(channel==='email'){
-    const url = 'mailto:'+encodeURIComponent(p.email)+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
-    window.location.href = url;
+    if(!p.email || p.email==='—'){alert('Sin email válido');return}
+    // Abrir Gmail Compose desde la cuenta de la empresa correspondiente (authuser).
+    // Si la cuenta no está logueada en Chrome, Gmail pedirá login a esa cuenta.
+    const fromAccount = SEND_FROM[brand] || '';
+    const params = new URLSearchParams({
+      view: 'cm',
+      fs:   '1',
+      tf:   '1',
+      to:   p.email,
+      su:   subject,
+      body: body
+    });
+    const auth = fromAccount ? ('authuser='+encodeURIComponent(fromAccount)+'&') : '';
+    const url = 'https://mail.google.com/mail/?'+auth+params.toString();
+    window.open(url, '_blank', 'noopener');
   } else {
     const phone = normalizePhone(p.phone);
     if(!phone){alert('Sin teléfono válido');return}
     const url = 'https://wa.me/'+phone+'?text='+encodeURIComponent(body);
-    window.open(url, '_blank');
+    window.open(url, '_blank', 'noopener');
   }
   closeTplModal();
 }
